@@ -1,16 +1,15 @@
-
-import React from 'react'
-import { Router, Switch, Route } from 'react-router-dom'
+import React from 'react';
+import { Route, Router, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { connect } from 'react-redux'
-import browserHistory from 'utils/browserHistory'
-import { Loading } from './components'
+import { connect } from 'react-redux';
+import browserHistory from 'utils/browserHistory';
+import { Loading } from './components';
 
-const MainPage = React.lazy(() => import('pages/MainPage'))
+const MainPage = React.lazy(() => import('pages/MainPage'));
 
 class InitializationLayer extends React.Component {
 
-  render () {
+  render() {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <Router history={browserHistory}>
@@ -21,12 +20,12 @@ class InitializationLayer extends React.Component {
           </Switch>
         </Router>
       </ThemeProvider>
-    )
+    );
   }
 }
 
 const mapStateToProps = ({ themeReducer: { themeColors } }) => ({
   themeColors,
-})
+});
 
-export default connect(mapStateToProps, null)(InitializationLayer)
+export default connect(mapStateToProps, null)(InitializationLayer);

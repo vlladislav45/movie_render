@@ -6,41 +6,41 @@ import './styles.css';
 import { AuthButton, ProfileCircle } from 'components/basic';
 
 const AuthNav = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const { isLoggedIn } = useSelector(({ auth }) => ({
-        isLoggedIn: auth.isLoggedIn,
-    }));
-    
-    const login = () => {
-        // TODO: take credentials from input
-        dispatch(attemptLogin('', ''));
-    }
+  const { isLoggedIn } = useSelector(({ auth }) => ({
+    isLoggedIn: auth.isLoggedIn,
+  }));
 
-    const logOut = () => dispatch(logout());
-    
-    return isLoggedIn 
+  const login = () => {
+    // TODO: take credentials from input
+    dispatch(attemptLogin('stefan', 'stefan123'));
+  };
+
+  const logOut = () => dispatch(logout());
+
+  return isLoggedIn
     ? (
-        <div className='auth'>
-            <ProfileCircle />
-            <AuthButton 
-                title='logout'
-                onClick={logOut}
-            />
-        </div>
+      <div className='auth'>
+        <ProfileCircle/>
+        <AuthButton
+          title='logout'
+          onClick={logOut}
+        />
+      </div>
     )
     : (
-    <div className='auth'>
-        <AuthButton 
-            title = 'login'
-            onClick = {login}
+      <div className='auth'>
+        <AuthButton
+          title='login'
+          onClick={login}
         />
-        <AuthButton 
-            title = 'register'
-            onClick = {login}
+        <AuthButton
+          title='register'
+          onClick={login}
         />
-    </div>
-    )
-}
+      </div>
+    );
+};
 
 export default AuthNav;

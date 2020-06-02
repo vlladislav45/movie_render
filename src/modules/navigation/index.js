@@ -4,8 +4,8 @@ import Logo from './Logo';
 import Title from './Title';
 
 export {
-    AuthNav,
-    TopNavBar,
-    Logo,
-    Title,
-}
+  AuthNav,
+  TopNavBar,
+  Logo,
+  Title,
+};
