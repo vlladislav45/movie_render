@@ -4,7 +4,7 @@ import { ThemedComponent } from 'components/basic';
 export const StyledContainer = styled(ThemedComponent)`
     border-radius:50%;
     transition: box-shadow .3s;
-`
+`;
 export const StyledProfileCircle = styled.div`
     border-radius: 50%;
     width: ${props => props.size}px;

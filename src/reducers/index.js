@@ -5,6 +5,6 @@ import themeReducer from './themeReducer';
 const reducers = combineReducers({
   auth,
   themeReducer,
-})
+});
 
-export default reducers
+export default reducers;

@@ -1,5 +1,5 @@
 import MainPage from './MainPage';
 
 export {
-    MainPage,
-}
+  MainPage,
+};

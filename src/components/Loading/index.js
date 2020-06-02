@@ -1,9 +1,9 @@
-import React from 'react'
-import './styles.css'
+import React from 'react';
+import './styles.css';
 
 const Loading = ({ isLoading = true }) => {
 
-  function renderLoading () {
+  function renderLoading() {
     return (
       isLoading && (
         <div className="loading-container">
@@ -14,12 +14,12 @@ const Loading = ({ isLoading = true }) => {
           </div>
         </div>
       )
-    )
+    );
   }
 
   return (
     renderLoading()
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;

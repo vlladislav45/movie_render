@@ -4,26 +4,26 @@ import { StyledAuthButton } from './style';
 
 const AuthButton = ({ title, onClick, ...rest }) => {
 
-    const { themeColors: { neon } } = useSelector(({ themeReducer: { themeColors } }) => ({
-        themeColors,
-    }))
+  const { themeColors: { neon } } = useSelector(({ themeReducer: { themeColors } }) => ({
+    themeColors,
+  }));
 
 
-    return (
-    <StyledAuthButton 
-        className="auth-btn" 
-        onClick={onClick}
-        background={neon}
-        color={'#000'}
-        {...rest}
-     >
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            {title}
-    </StyledAuthButton> 
-    )
-}
+  return (
+    <StyledAuthButton
+      className="auth-btn"
+      onClick={onClick}
+      background={neon}
+      color={'#000'}
+      {...rest}
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      {title}
+    </StyledAuthButton>
+  );
+};
 
-export default AuthButton
+export default AuthButton;
