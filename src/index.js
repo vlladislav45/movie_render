@@ -1,10 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import InitializationLayer from './InitializationLayer';
+import store from './redux-store';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
+    <Provider store={store}>
+      <InitializationLayer/>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
