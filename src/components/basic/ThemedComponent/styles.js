@@ -10,8 +10,9 @@ export const StyledThemedComponent = styled.div`
             box-shadow: ${applyShadow(elevation)};
 
             ${isDark && `
-                background: rgba(${r}, ${g}, ${b}, 0.${100 - Math.ceil(elevation * elevationStep)});
-                box-shadow: ${applyShadow(elevation / 2)};
+                position: relative;
+                // background: rgba(${r}, ${g}, ${b}, 0.${100 - Math.ceil(elevation * elevationStep)}) !important;
+                box-shadow: ${applyShadow(elevation)}, inset 0 0 0 2000px rgba(255,255,255, 0.${Math.ceil(elevation * elevationStep)});
             `};
         `;
 }

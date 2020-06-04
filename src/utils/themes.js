@@ -16,7 +16,7 @@ export default {
     error: '#B00020',
   },
   [DARK_THEME]: {
-    primary: '#1F1B24',
+    primary: '#121212',
     primaryDark: '#00796B',
     primaryLight: '#80CBC4',
     secondary: '#E040FB',

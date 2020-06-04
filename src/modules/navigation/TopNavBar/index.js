@@ -25,7 +25,7 @@ const TopNavBar = () => {
       <Logo/>
       <Title/>
       <AuthNav/>
-      <button onClick={toggleTheme}>Theme</button>
+      {/*<button onClick={toggleTheme}>Theme</button>*/}
       {/* <Genres /> */}
     </StyledTopNav>
   );

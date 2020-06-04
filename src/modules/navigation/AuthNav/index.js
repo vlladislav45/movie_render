@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { attemptLogin, logout } from 'reducers/auth';
+import { ReactComponent as MenuIcon } from 'assets/icons/menu-24px.svg';
 
 import './styles.css';
 import { AuthButton, ProfileCircle } from 'components/basic';
@@ -21,12 +22,13 @@ const AuthNav = () => {
 
   return isLoggedIn
     ? (
-      <div className='auth'>
-        <ProfileCircle/>
-        <AuthButton
-          title='logout'
-          onClick={logOut}
-        />
+      <div className='logged-in'>
+        <ProfileCircle />
+        <MenuIcon style={{ color: 'red' }} title='dfasdasdas' />
+      {/*  <AuthButton*/}
+      {/*    title='logout'*/}
+      {/*    onClick={logOut}*/}
+      {/*  />*/}
       </div>
     )
     : (

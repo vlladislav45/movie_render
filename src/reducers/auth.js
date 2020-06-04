@@ -55,20 +55,26 @@ const LOGOUT = 'LOGOUT';
 // }
 
 export const attemptLogin = (account, password) => dispatch => {
-  const formData = new FormData();
-  formData.append('login', account);
-  formData.append('password', password);
-
-  AuthAPI.login(formData).then(res => {
-    // TODO: API call
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res,
-    });
-  })
-    .catch(err => {
-      console.error(err);
-    });
+  dispatch({
+    type: LOGIN_SUCCESS,
+    payload: {
+      username: 'vlad',
+    },
+  });
+  // const formData = new FormData();
+  // formData.append('login', account);
+  // formData.append('password', password);
+  //
+  // AuthAPI.login(formData).then(res => {
+  //   // TODO: API call
+  //   dispatch({
+  //     type: LOGIN_SUCCESS,
+  //     payload: res,
+  //   });
+  // })
+  //   .catch(err => {
+  //     console.error(err);
+  //   });
 };
 
 export const logout = () => ({

@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { connect } from 'react-redux';
 import browserHistory from 'utils/browserHistory';
 import { Loading } from './components';
+import { DropDown } from './components/';
 
 const MainPage = React.lazy(() => import('pages/MainPage'));
 
@@ -12,13 +13,15 @@ class InitializationLayer extends React.Component {
   render() {
     return (
       <ThemeProvider theme={this.props.themeColors}>
-        <Router history={browserHistory}>
-          <Switch>
-            <React.Suspense fallback={<Loading/>}>
-              <Route path='/' component={MainPage}/>
-            </React.Suspense>
-          </Switch>
-        </Router>
+        {/*<div style={{ background: this.props.themeColors.background, height: '100vh' }}>*/}
+          <Router history={browserHistory}>
+            <Switch>
+              <React.Suspense fallback={<Loading/>}>
+                <Route path='/' component={MainPage}/>
+              </React.Suspense>
+            </Switch>
+          </Router>
+        {/*</div>*/}
       </ThemeProvider>
     );
   }

@@ -4,3 +4,6 @@
     align-items: center;
 }
 
+.logged-in > :nth-child(1) {
+    float:right;
+}
