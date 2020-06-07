@@ -1,32 +1,44 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { AuthButton } from 'components/basic';
-import { logout } from 'reducers/auth';
 
-import { StyledDropDown } from './styles.js';
+import { DropDownList, StyledDropDown } from './styles.js';
+import DropDownItem from './DropDownItem';
 
-export const DropDown = () => {
+export const DropDown = ({ topOffset, items = {} }) => {
   const dispatch = useDispatch();
 
   const { isOpen } = useSelector(({
-    uiReducer: { userDropDownOpen },
-    auth: { isLoggedIn },
-  }) => ({
+                                    uiReducer: { userDropDownOpen },
+                                    auth: { isLoggedIn },
+                                  }) => ({
     isOpen: userDropDownOpen && isLoggedIn,
   }));
-
-  const logOut = () => dispatch(logout());
 
   return (
     <StyledDropDown
       isOpen={isOpen}
+      topOffset={topOffset}
     >
-        <AuthButton
-          title='logout'
-          onClick={logOut}
-        />
+      <DropDownList>
+        {items.map((item, index) => (
+          <DropDownItem
+            key={index}
+            element={item}
+          />
+        ))}
+      </DropDownList>
     </StyledDropDown>
-  )
+  );
+};
+
+DropDown.propTypes = {
+  topOffset: PropTypes.number.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+    icon: PropTypes.elementType,
+  })),
 };
 
 export default DropDown;

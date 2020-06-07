@@ -4,7 +4,6 @@ import { ThemeProvider } from 'styled-components';
 import { connect } from 'react-redux';
 import browserHistory from 'utils/browserHistory';
 import { Loading } from './components';
-import { DropDown } from './components/';
 
 const MainPage = React.lazy(() => import('pages/MainPage'));
 

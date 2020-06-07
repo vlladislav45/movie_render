@@ -24,7 +24,7 @@ const AuthNav = () => {
     ? (
       <div className='logged-in'>
         <ProfileCircle />
-        <MenuIcon style={{ color: 'red' }} title='dfasdasdas' />
+        {/*<MenuIcon style={{ color: 'red' }} title='dfasdasdas' />*/}
       {/*  <AuthButton*/}
       {/*    title='logout'*/}
       {/*    onClick={logOut}*/}

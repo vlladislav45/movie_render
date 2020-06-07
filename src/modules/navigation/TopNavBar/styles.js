@@ -7,23 +7,23 @@ export const StyledTopNav = styled(ThemedComponent)`
   return `
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
             padding: 50px;
             background:  ${primary};
             
             // Logo
             & > :nth-child(1) {
-              width: 5%;
+              flex-grow: 1;
             }
             
             // Title
             & > :nth-child(2) {
-              width: 50%;
+              flex-grow: 4;
             }
             
             // AuthNav
             & > :nth-child(3) {
-              width: 45%;
+              flex-grow: 1;
+              align-self: center;
             }
         `;
 }

@@ -61,12 +61,12 @@ export const attemptLogin = (account, password) => dispatch => {
       username: 'vlad',
     },
   });
+
   // const formData = new FormData();
-  // formData.append('login', account);
+  // formData.append('username', account);
   // formData.append('password', password);
   //
   // AuthAPI.login(formData).then(res => {
-  //   // TODO: API call
   //   dispatch({
   //     type: LOGIN_SUCCESS,
   //     payload: res,
