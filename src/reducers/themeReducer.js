@@ -21,6 +21,7 @@ export default (state = initialState, action) => {
   const { type, payload } = action;
   switch ( type ) {
     case CHANGE_THEME:
+      document.body.style.background = themes[payload].surface;
       return {
         ...state,
         themeName: payload,

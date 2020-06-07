@@ -6,6 +6,9 @@ import { logout } from 'reducers/auth';
 import { AuthNav, Logo, Title } from 'modules/navigation';
 import DropDown from '../DropDown';
 import { ReactComponent as HamIcon } from '../../../assets/icons/menu-24px.svg';
+import { ReactComponent as PaletteIcon } from '../../../assets/icons/palette-24px.svg';
+import { ReactComponent as LogoutIcon } from '../../../assets/icons/logout-24px.svg';
+import { ReactComponent as ArrowIcon } from '../../../assets/icons/arrow_drop_down-24px.svg';
 import { StyledTopNav } from './styles';
 
 const TopNavBar = () => {
@@ -32,8 +35,6 @@ const TopNavBar = () => {
 
   const logOut = () => dispatch(logout());
 
-
-
   return (
     <>
       <StyledTopNav
@@ -44,13 +45,14 @@ const TopNavBar = () => {
         <Logo/>
         <Title/>
         <AuthNav/>
-        {/*<button onClick={toggleTheme}>Theme</button>*/}
         {/* <Genres /> */}
       </StyledTopNav>
       <DropDown
         topOffset={navHeight}
         items={[
-          { name: 'logout', onClick: logOut, icon: HamIcon },
+          { name: 'logout', onClick: logOut, icon: LogoutIcon },
+          { name: 'toggle theme', onClick: toggleTheme, icon: PaletteIcon },
+          { name: 'profile', onClick: logOut },
         ]}
       />
     </>

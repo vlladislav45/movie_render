@@ -1,13 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { IconContainer } from './styles';
 
 const DropDownIcon = ({ IconComponent }) => {
   const { color } = useSelector(({ themeReducer }) => ({
-    color: themeReducer.themeColors.primary,
+    color: themeReducer.themeColors.textColor,
   }));
 
   return (
-    <IconComponent style={{ fill: color }}/>
+    <IconContainer>
+      <IconComponent style={{ fill: color }}/>
+    </IconContainer>
   );
 }
 

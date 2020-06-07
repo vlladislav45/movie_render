@@ -84,6 +84,9 @@ export const logout = () => ({
 const initialState = {
   isLoggedIn: true,
   isLoading: false,
+  loggedInUser: {
+    username: 'Stefan',
+  }
 };
 
 export default (state = initialState, action) => {

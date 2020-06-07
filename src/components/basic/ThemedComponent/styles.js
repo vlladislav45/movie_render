@@ -1,19 +1,27 @@
 import styled from 'styled-components';
-import { applyShadow, elevationStep, hexToRgb } from 'utils/colorUtils';
+import { applyShadow, elevationStep } from 'utils/colorUtils';
 
-export const StyledThemedComponent = styled.div`
-    ${({ theme: { primary, textColor }, elevation, isDark }) => {
-  const { r, g, b } = hexToRgb(primary);
-  return `
+export const StyledThemedComponent = styled.div`${
+  ({ theme: { textColor, surface }, elevation, isDark, shouldElevateWhenHover }) => {
+    return `
+            background: ${surface};
             color: ${textColor};
             box-shadow: ${applyShadow(elevation)};
 
             ${isDark && `
-                // position: relative;
-                // background: rgba(${r}, ${g}, ${b}, 0.${100 - Math.ceil(elevation * elevationStep)}) !important;
-                box-shadow: ${applyShadow(elevation)}, inset 0 0 0 2000px rgba(255,255,255, 0.${Math.ceil(elevation * elevationStep)});
+                box-shadow: ${applyShadow(elevation)}, inset 0 0 0 2000px rgba(255,255,255, ${(elevation * elevationStep) / 100});
             `};
+            
+            transition: all .5s;
+            
+            &:hover {
+              ${shouldElevateWhenHover && ` 
+                  box-shadow: ${applyShadow(elevation + 6)};
+                  ${isDark && `
+                      box-shadow: ${applyShadow(elevation + 6)}, inset 0 0 0 2000px rgba(255,255,255, ${(elevation + 6 * elevationStep) / 100});
+                  `};
+               `}
+            }
         `;
-}
-}
-`;
+  }
+}`;

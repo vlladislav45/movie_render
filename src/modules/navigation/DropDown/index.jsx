@@ -19,6 +19,7 @@ export const DropDown = ({ topOffset, items = {} }) => {
     <StyledDropDown
       isOpen={isOpen}
       topOffset={topOffset}
+      elevation={12}
     >
       <DropDownList>
         {items.map((item, index) => (
