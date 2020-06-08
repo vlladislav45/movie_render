@@ -1,14 +1,14 @@
 import React, { createRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BASE_THEME } from 'utils/themes';
+import { BASE_THEME, DARK_THEME } from 'utils/themes';
+import browserHistory from 'utils/browserHistory';
 import { setBaseTheme, setDarkTheme } from 'reducers/themeReducer';
 import { logout } from 'reducers/auth';
 import { AuthNav, Logo, Title } from 'modules/navigation';
+import { ReactComponent as PaletteIcon } from 'assets/icons/palette-24px.svg';
+import { ReactComponent as LogoutIcon } from 'assets/icons/logout-24px.svg';
+import { ReactComponent as ProfileIcon } from 'assets/icons/profile-24px.svg';
 import DropDown from '../DropDown';
-import { ReactComponent as HamIcon } from '../../../assets/icons/menu-24px.svg';
-import { ReactComponent as PaletteIcon } from '../../../assets/icons/palette-24px.svg';
-import { ReactComponent as LogoutIcon } from '../../../assets/icons/logout-24px.svg';
-import { ReactComponent as ArrowIcon } from '../../../assets/icons/arrow_drop_down-24px.svg';
 import { StyledTopNav } from './styles';
 
 const TopNavBar = () => {
@@ -41,6 +41,7 @@ const TopNavBar = () => {
         ref={navRef}
         className='top-nav'
         elevation={16}
+        isDark={themeName === DARK_THEME}
       >
         <Logo/>
         <Title/>
@@ -50,9 +51,9 @@ const TopNavBar = () => {
       <DropDown
         topOffset={navHeight}
         items={[
-          { name: 'logout', onClick: logOut, icon: LogoutIcon },
           { name: 'toggle theme', onClick: toggleTheme, icon: PaletteIcon },
-          { name: 'profile', onClick: logOut },
+          { name: 'profile', onClick: () => browserHistory.push('profile'), icon: ProfileIcon },
+          { name: 'logout', onClick: logOut, icon: LogoutIcon },
         ]}
       />
     </>

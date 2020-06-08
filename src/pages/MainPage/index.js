@@ -4,7 +4,6 @@ import { TopNavBar } from 'modules/navigation';
 const MainPage = () => {
 
   return <div>
-    <TopNavBar/>
   </div>;
 };
 

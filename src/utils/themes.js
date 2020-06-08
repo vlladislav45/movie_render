@@ -7,7 +7,7 @@ export default {
     primary: '#009688',
     primaryDark: '#00796B',
     primaryLight: '#80CBC4',
-    secondary: '#E040FB',
+    secondary: '#000000',
     surface: '#EFEEFF',
     neon: '#B2FF59',
     textColor: '#000000DD',
@@ -15,7 +15,7 @@ export default {
     error: '#B00020',
   },
   [DARK_THEME]: {
-    primary: '#121212',
+    primary: '#E040FB',
     primaryDark: '#00796B',
     primaryLight: '#80CBC4',
     secondary: '#E040FB',
