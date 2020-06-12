@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { toggleUserDropDown } from 'reducers/uiReducer'
+import React from 'react';
 
-import { StyledContainer, StyledProfileCircle, HoverDiv } from './styles';
+import { StyledContainer, StyledProfileCircle } from './styles';
 
-const ProfileCircle = ({ size = 50, elevation = 0, photoUrl, ...rest }) => {
+const ProfileCircle = ({ size = 50, photoUrl, ...rest }) => {
   const url = photoUrl || require('../../../assets/profile/blank-profile.png');
 
   return (
     <StyledContainer
-      elevation={elevation}
       {...rest}
     >
       <StyledProfileCircle

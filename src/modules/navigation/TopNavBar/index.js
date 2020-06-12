@@ -10,6 +10,7 @@ import { ReactComponent as LogoutIcon } from 'assets/icons/logout-24px.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/profile-24px.svg';
 import DropDown from '../DropDown';
 import { StyledTopNav } from './styles';
+import Genres from '../../../components/Genres';
 
 const TopNavBar = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const TopNavBar = () => {
         <Logo/>
         <Title/>
         <AuthNav/>
-        {/* <Genres /> */}
+         <Genres />
       </StyledTopNav>
       <DropDown
         topOffset={navHeight}

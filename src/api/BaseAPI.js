@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const API_SERVER = 'http://192.168.0.100';
+const API_SERVER = 'http://192.168.1.13';
 const API_PORT = '8090';
 const API_URL = `${API_SERVER}:${API_PORT}/`;
 

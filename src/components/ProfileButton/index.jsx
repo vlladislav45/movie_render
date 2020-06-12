@@ -8,7 +8,7 @@ import { ArrowIconContainer, StyledProfileButton, Username } from './styles';
 export const ProfileButton = () => {
   const dispatch = useDispatch();
 
-  const toggleHover = () => {
+  const toggleDropDown = () => {
     dispatch(toggleUserDropDown());
   };
 
@@ -23,10 +23,11 @@ export const ProfileButton = () => {
   return (
     <StyledProfileButton
       elevation={5}
+      onClick={toggleDropDown}
       shouldElevateWhenHover
-      onClick={toggleHover}
+      withRipple
     >
-      <ProfileCircle size={32} elevation={5} withBorder />
+      <ProfileCircle size={32} />
       <Username>
         {username}
       </Username>

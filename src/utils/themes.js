@@ -11,8 +11,10 @@ export default {
     surface: '#EFEEFF',
     neon: '#B2FF59',
     textColor: '#000000DD',
-    disable: '#00000037',
+    disabled: '#00000037',
     error: '#B00020',
+    accent: '#000f96',
+    isDark: false,
   },
   [DARK_THEME]: {
     primary: '#E040FB',
@@ -22,7 +24,8 @@ export default {
     surface: '#121212',
     neon: '#00909e',
     textColor: '#FFFFFFDD',
-    disable: '#FFFFFF37',
+    disabled: '#FFFFFF37',
     error: '#B00020',
+    isDark: true,
   }
 };

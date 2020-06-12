@@ -55,26 +55,27 @@ const LOGOUT = 'LOGOUT';
 // }
 
 export const attemptLogin = (account, password) => dispatch => {
-  dispatch({
-    type: LOGIN_SUCCESS,
-    payload: {
-      username: 'vlad',
-    },
-  });
+  // dispatch({
+  //   type: LOGIN_SUCCESS,
+  //   payload: {
+  //     username: 'vlad',
+  //   },
+  // });
 
-  // const formData = new FormData();
-  // formData.append('username', account);
-  // formData.append('password', password);
-  //
-  // AuthAPI.login(formData).then(res => {
-  //   dispatch({
-  //     type: LOGIN_SUCCESS,
-  //     payload: res,
-  //   });
-  // })
-  //   .catch(err => {
-  //     console.error(err);
-  //   });
+  const formData = new FormData();
+  formData.append('username', account);
+  formData.append('password', password);
+
+  AuthAPI.login(formData).then(res => {
+    const { data } = res;
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: data,
+    });
+  })
+    .catch(err => {
+      console.error(err);
+    });
 };
 
 export const logout = () => ({

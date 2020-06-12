@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
 
-export const StyledContainer = styled(ThemedComponent)`
+export const StyledContainer = styled.div`
     border-radius:50%;
     transition: box-shadow .3s;
 `;
+
 export const StyledProfileCircle = styled.div`
     border-radius: 50%;
     width: ${props => props.size}px;
@@ -16,17 +17,4 @@ export const StyledProfileCircle = styled.div`
     background-origin: content-box;
     background-size: contain;
     cursor: pointer;
-`;
-
-export const HoverDiv = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 300px;
-  height: 600px;
-  opacity: 0;
-  pointer-events: none;
-  // z-index: -10;
-  // background: rgba( 255, 0 ,0 , .5);
-  display: ${props => props.isVisible ? 'block' : 'none'};
 `;
