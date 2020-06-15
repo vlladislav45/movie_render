@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
+import { Input } from 'components/basic';
 
 const MoviesContainer = props => {
   const dispatch = useDispatch();
@@ -31,6 +32,14 @@ const MoviesContainer = props => {
 
   return (
     <StyledMoviesContainer>
+      <div style={{ zIndex: 999 }}>
+      <Input
+        label='Some Label'
+        text='Previous text'
+        helperText='helper'
+        errorText='error'
+      />
+      </div>
       {renderMovies()}
     </StyledMoviesContainer>
   );

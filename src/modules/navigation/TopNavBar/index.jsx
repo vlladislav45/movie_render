@@ -1,16 +1,17 @@
 import React, { createRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BASE_THEME, DARK_THEME } from 'utils/themes';
-import browserHistory from 'utils/browserHistory';
 import { setBaseTheme, setDarkTheme } from 'reducers/themeReducer';
 import { logout } from 'reducers/auth';
-import { AuthNav, Logo, Title } from 'modules/navigation';
+import { AuthNav, Logo, Title, SearchBar, DropDown } from 'modules/navigation';
+import { Genres } from 'components';
+import { BASE_THEME, DARK_THEME } from 'utils/themes';
+import browserHistory from 'utils/browserHistory';
 import { ReactComponent as PaletteIcon } from 'assets/icons/palette-24px.svg';
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout-24px.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/profile-24px.svg';
-import DropDown from '../DropDown';
+
 import { StyledTopNav } from './styles';
-import Genres from '../../../components/Genres';
+
 
 const TopNavBar = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const TopNavBar = () => {
   const { themeName } = useSelector(({ themeReducer }) => ({
     themeName: themeReducer.themeName,
   }));
+  const isDark = themeName === DARK_THEME;
 
   useEffect(() => {
     if ( navRef.current ) {
@@ -42,17 +44,18 @@ const TopNavBar = () => {
         ref={navRef}
         className='top-nav'
         elevation={16}
-        isDark={themeName === DARK_THEME}
+        isDark={isDark}
       >
         <Logo/>
         <Title/>
         <AuthNav/>
-         <Genres />
+        <Genres />
+        <SearchBar />
       </StyledTopNav>
       <DropDown
         topOffset={navHeight}
         items={[
-          { name: 'toggle theme', onClick: toggleTheme, icon: PaletteIcon },
+          { name: isDark? 'Base theme' : 'Dark theme', onClick: toggleTheme, icon: PaletteIcon },
           { name: 'profile', onClick: () => browserHistory.push('profile'), icon: ProfileIcon },
           { name: 'logout', onClick: logOut, icon: LogoutIcon },
         ]}
