@@ -4,16 +4,16 @@ export const DARK_THEME = 'DARK_THEME';
 
 export default {
   [BASE_THEME]: {
-    primary: '#009688',
+    primary: '#dc8e8e',
     primaryDark: '#00796B',
     primaryLight: '#80CBC4',
     secondary: '#000000',
     surface: '#EFEEFF',
-    neon: '#B2FF59',
+    neon: '#8edcdc',
     textColor: '#000000DD',
     disabled: '#00000037',
     error: '#B00020',
-    accent: '#000f96',
+    accent: '#8edcdc',
     isDark: false,
   },
   [DARK_THEME]: {
@@ -22,7 +22,7 @@ export default {
     primaryLight: '#80CBC4',
     secondary: '#E040FB',
     surface: '#121212',
-    neon: '#00909e',
+    neon: '#E040FB', // was #00909e
     textColor: '#FFFFFFDD',
     disabled: '#FFFFFF37',
     error: '#B00020',

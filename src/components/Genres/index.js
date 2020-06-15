@@ -1,15 +1,26 @@
-import React, { createRef, useEffect, useRef, useState } from 'react';
+import React, {
+  createRef,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { calcOffset, getLastInvisible } from 'utils/DomUtils';
-import { Arrow, Carousel, GenresContainer, GenresList, SingleGenre } from './styles';
-
+import {
+  Arrow,
+  Carousel,
+  GenresContainer,
+  GenresList,
+  SingleGenre,
+} from './styles';
 
 const Genres = () => {
-  const containerRef = useRef();
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
-  const [ offset, setOffset ] = useState(0);
-  const [ genres, setGenres ] = useState([]);
-  const [ genresRef, setGenresRef ] = useState({});
+  // Array with refs for all the genres
+  const [genresRef, setGenresRef] = useState({});
+
+  const [offset, setOffset] = useState(0);
+  const [genres, setGenres] = useState([]);
   const [leftEnd, setLeftEnd] = useState(true);
   const [rightEnd, setRightEnd] = useState(false);
 
@@ -21,57 +32,52 @@ const Genres = () => {
     setGenresRef(refs);
   }, []);
 
-  // Get the refs reversed, and check for the first ref that is visible
-  // Then take the previous ref (the last invisible)
-  function slideLeft() {
+  function slideLeft () {
     // Do nothing if we are at the left end
-    if(leftEnd) return;
+    if (leftEnd) return;
 
-    const genresRefsArray = Object.values(genresRef);
-    const firstHidden = getLastInvisible(genresRefsArray);
-
-    // The first hidden is the first element, now we slide it, next time we are the the end
-    if ( firstHidden === genresRefsArray[0].current ) {
-      setLeftEnd(true);
-    }
-
-    const offsetToBeVisible = calcOffset(firstHidden, leftArrowRef.current, true);
-    // We scroll left, so we are 100% not in the right end
-    setRightEnd(false);
-    setOffset(Math.min(0, offset + offsetToBeVisible));
+    slide('left');
   }
 
-  function slideRight() {
-
+  function slideRight () {
     // Do nothing if we are at the right end
-    if(rightEnd) return;
+    if (rightEnd) return;
 
-    const genresRefsArray = Object.values(genresRef).reverse();
+    slide('right');
+  }
+
+  /**
+   * Calculate and change the {@Link offset} of the carousel
+   * based on the direction
+   * @param direction oneOf([ 'left', 'right' ])
+   */
+  const slide = direction => {
+    const isLeft = direction === 'left';
+
+    // we slided, so we are not at the end
+    isLeft ? setRightEnd(false) : setLeftEnd(false);
+
+    let genresRefsArray = Object.values(genresRef);
+    if (!isLeft) genresRefsArray = genresRefsArray.reverse();
+
     const firstHidden = getLastInvisible(genresRefsArray);
 
     // The first hidden is the first element, now we slide it, next time we are the the end
-    if ( firstHidden === genresRefsArray[0].current ) {
-      setRightEnd(true);
+    if (firstHidden === genresRefsArray[0].current) {
+      isLeft ? setLeftEnd(true) : setRightEnd(true);
     }
 
-    const { right, width } = containerRef.current.getBoundingClientRect();
-    const { width: arrowWidth } = rightArrowRef.current.getBoundingClientRect();
-    const offsetToBeVisible = calcOffset(firstHidden, rightArrowRef.current, false);
-    // slided right, we are sure we are not at the left end
-    setLeftEnd(false);
-    const endOfCarousel = right - arrowWidth;
-    let newOffset = offset - offsetToBeVisible;
-    console.log(endOfCarousel);
-    console.log(newOffset);
-    if (Math.abs(newOffset) > endOfCarousel) {
-      newOffset = -endOfCarousel;
-    }
+    const slideArrow = isLeft ? leftArrowRef.current : rightArrowRef.current;
+    const offsetToBeVisible = calcOffset(firstHidden, slideArrow, isLeft);
 
-    console.log(newOffset)
+    const newOffset = isLeft
+      ? Math.min(0, offset + offsetToBeVisible)
+      : offset - offsetToBeVisible;
+
     setOffset(newOffset);
-  }
+  };
 
-  function renderGenres() {
+  function renderGenres () {
     return genres.map((genre, index) =>
       <SingleGenre
         key={index}
@@ -82,7 +88,7 @@ const Genres = () => {
   }
 
   return (
-    <GenresContainer ref={containerRef}>
+    <GenresContainer>
       <Arrow
         flipped={'true'}
         ref={leftArrowRef}
@@ -99,7 +105,7 @@ const Genres = () => {
       <Arrow
         ref={rightArrowRef}
         disabled={rightEnd}
-        onClick={slideRight}
+        onClickCapture={slideRight}
       />
     </GenresContainer>
   );

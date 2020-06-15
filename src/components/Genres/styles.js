@@ -17,8 +17,7 @@ export const Carousel = styled.div`
 
 export const GenresList = styled.ul`
     display: flex;
-    transform-style: preserve-3d; 
-    transition: transform .5s, opacity .5s, z-index .5s;
+    transition: transform .3s;
     
     ${props => props.offset && `
         transform: translateX(${props.offset}px);
@@ -44,21 +43,25 @@ export const Arrow = styled(ArrowSvg)`
   return `
       width: 48px;
       height: 48px;
-      stroke: ${theme.textColor};
       fill: ${fillColor};
       
-      transition: fill .3s ease;
+      & .outline {
+        stroke: ${theme.textColor};
+      }
+      
+      transition: fill .3s;
       
       ${!disabled && 'cursor: pointer'};
       ${flipped && 'transform: rotate(180deg)'};
+      
+      &:hover {
+        ${!disabled && `fill: ${fillColor}77;`}
+      }
+      
       ${disabled && `
         fill: ${theme.disabled};
         stroke: none; 
       `}
-      
-      &:hover {
-        fill: ${disabled ? '' : fillColor}99;
-      }
     `;
 }};
-`;
+`

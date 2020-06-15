@@ -17,10 +17,15 @@ export function isVisible(elem) {
   let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
   do {
     if (pointContainer === elem) return true;
-  } while (pointContainer = pointContainer.parentNode);
+  } while (pointContainer === pointContainer.parentNode);
   return false;
 }
 
+/**
+ * Return the last not visible(or semi not visible) genre of the array
+ * @param arr the array of genres
+ * @returns the last hidden element
+ */
 export function getLastInvisible(arr) {
   let lastInvisible = arr[0].current || arr[0];
   for (let element of arr) {
@@ -31,6 +36,7 @@ export function getLastInvisible(arr) {
     }
     lastInvisible = ref;
   }
+  return lastInvisible;
 }
 
 /**
@@ -43,50 +49,9 @@ export function getLastInvisible(arr) {
 export function calcOffset(elem, nextElement, isLeft = true) {
   const { x, width, right } = elem.getBoundingClientRect();
   const rect = nextElement.getBoundingClientRect();
-  const newX = isLeft ? right - rect.right : rect.x - width;
 
+  const newX = isLeft ? right - rect.right : rect.x - width;
   // 20 is the extra margin around element
   const offset = isLeft ? width - newX + 20 : x - newX + 20;
   return Math.abs(offset);
 }
-
-// export function createRipple() {
-//   ("html").on("click", ".btn", function(evt) {
-//     var btn = $(evt.currentTarget);
-//     var x = evt.pageX - btn.offset().left;
-//     var y = evt.pageY - btn.offset().top;
-//
-//     var duration = 1000;
-//     var animationFrame, animationStart;
-//
-//     var animationStep = function(timestamp) {
-//       if (!animationStart) {
-//         animationStart = timestamp;
-//       }
-//
-//       var frame = timestamp - animationStart;
-//       if (frame < duration) {
-//         var easing = (frame/duration) * (2 - (frame/duration));
-//
-//         var circle = "circle at " + x + "px " + y + "px";
-//         var color = "rgba(0, 0, 0, " + (0.3 * (1 - easing)) + ")";
-//         var stop = 90 * easing + "%";
-//
-//         btn.css({
-//           "background-image": "radial-gradient(" + circle + ", " + color + " " + stop + ", transparent " + stop + ")"
-//         });
-//
-//         animationFrame = window.requestAnimationFrame(animationStep);
-//       } else {
-//         $(btn).css({
-//           "background-image": "none"
-//         });
-//         window.cancelAnimationFrame(animationFrame);
-//       }
-//
-//     };
-//
-//     animationFrame = window.requestAnimationFrame(animationStep);
-//
-//   });
-// }

@@ -17,7 +17,7 @@ export const StyledDropDown = styled(ThemedComponent)`
 
 export const DropDownList = styled.ul``;
 
-export const StyledDropDownItem = styled.li`
+export const StyledDropDownItem = styled(ThemedComponent)`
   width: 100%;
   border-bottom: 1px solid #33333344;
   padding: 10px 0;
@@ -27,7 +27,7 @@ export const StyledDropDownItem = styled.li`
   align-items: center;
 
   &:hover {
-    background: ${props => props.theme.primary}44;
+    background: ${props => props.theme.surface}44;
   }
 `;
 
@@ -38,6 +38,7 @@ export const DropDownText = styled.span`
   font-family: 'Roboto', sans-serif;
   text-transform: capitalize;
   font-weight: 200;
+  user-select: none;
 `;
 
 export const IconContainer = styled.span`

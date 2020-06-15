@@ -1,26 +1,14 @@
+import { hexToRgb } from 'utils/colorUtils'
+
 const RIPPLE_DURATION = 800;
 
-export function createRipple(evt, isDark) {
+export function createRipple(evt, isDark, customColor) {
   let elem = evt.target;
 
   if ( elem.tagName.toLowerCase() === 'img' ) {
-    elem = elem.parentNode;
-    elem.style.position = 'relative';
-    const rippleElem = document.createElement('span');
-    rippleElem.classList.add('ripple');
-    rippleElem.style.position = 'absolute';
-    rippleElem.style.left = '0';
-    rippleElem.style.top = '0';
-    rippleElem.style.width = '100%';
-    rippleElem.style.height = '100%';
-    elem.appendChild(rippleElem);
-    elem = rippleElem;
-    setTimeout(() => {
-      rippleElem.remove();
-    }, RIPPLE_DURATION)
+    elem = createExtraElementForRipple(elem);
   } else {
     let classes = elem.className;
-
 
     // Get the first parent with ripple enabled
     while (isSvg(elem) ||
@@ -37,8 +25,19 @@ export function createRipple(evt, isDark) {
   }
   const x = evt.pageX - elem.getBoundingClientRect().left;
   const y = evt.pageY - elem.getBoundingClientRect().top;
+  const circle = 'circle at ' + x + 'px ' + y + 'px';
 
   let animationFrame, animationStart;
+
+  let rippleColor;
+  if (customColor) {
+    const { r, g, b } = hexToRgb(customColor)
+    rippleColor = `rgba(${r},${g},${b}, `;
+  } else {
+    rippleColor = isDark ? 'rgba(255, 255, 255, ' : 'rgba(0, 0, 0, ';
+  }
+
+  console.log(rippleColor)
 
   const animationStep = function (timestamp) {
     if ( !animationStart ) {
@@ -49,9 +48,7 @@ export function createRipple(evt, isDark) {
     if ( frame < RIPPLE_DURATION ) {
       const easing = (frame / RIPPLE_DURATION) * (2 - (frame / RIPPLE_DURATION));
 
-      const rippleColor = isDark ? 'rgba(255, 255, 255, ' : 'rgba(0, 0, 0, ';
-      const circle = 'circle at ' + x + 'px ' + y + 'px';
-      const color = rippleColor + (0.4 * (1 - easing)) + ')';
+      const color = rippleColor + (0.45 * (1 - easing)) + ')';
       const stop = 90 * easing + '%';
       elem.style['background-image'] = 'radial-gradient(' + circle + ', ' + color + ' ' + stop + ', transparent ' + stop + ')';
 
@@ -70,4 +67,23 @@ function isSvg(elem) {
   const { tagName } = elem;
   return tagName.toLowerCase() === 'svg' ||
     tagName.toLowerCase() === 'path';
+}
+
+function createExtraElementForRipple (elem) {
+  elem = elem.parentNode
+  elem.style.position = 'relative'
+  const rippleElem = document.createElement('span')
+  rippleElem.classList.add('ripple')
+  rippleElem.style.position = 'absolute'
+  rippleElem.style.left = '0'
+  rippleElem.style.top = '0'
+  rippleElem.style.width = '100%'
+  rippleElem.style.height = '100%'
+  elem.appendChild(rippleElem)
+  elem = rippleElem
+  setTimeout(() => {
+    rippleElem.remove()
+  }, RIPPLE_DURATION)
+
+  return elem;
 }

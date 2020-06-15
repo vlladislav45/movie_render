@@ -17,8 +17,6 @@ const AuthNav = () => {
     dispatch(attemptLogin('stefan', 'stefan123'));
   };
 
-  const logOut = () => dispatch(logout());
-
   function renderLoggedInNav() {
     return (
       <div className='logged-in auth'>

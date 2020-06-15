@@ -18,3 +18,4 @@ export const StyledProfileCircle = styled.div`
     background-size: contain;
     cursor: pointer;
 `;
+
