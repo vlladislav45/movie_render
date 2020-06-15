@@ -1,9 +1,9 @@
 import Loading from './Loading';
 import Genres from './Genres';
-import DropDown from './DropDown';
+import ProfileButton from './ProfileButton';
 
 export {
+  ProfileButton,
   Loading,
-  DropDown,
   Genres,
 };

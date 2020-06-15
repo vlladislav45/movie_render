@@ -5,6 +5,7 @@ export const TitleContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     max-width: 50%;
+    text-align: center;
 `;
 
 export const StyledTitle = styled.h1`

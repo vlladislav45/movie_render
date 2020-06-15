@@ -4,27 +4,28 @@ export const DARK_THEME = 'DARK_THEME';
 
 export default {
   [BASE_THEME]: {
-    primary: '#009688',
+    primary: '#dc8e8e',
     primaryDark: '#00796B',
     primaryLight: '#80CBC4',
-    secondary: '#E040FB',
-    background: '#FEFEFE',
-    surface: '#DFDFDF',
-    neon: '#B2FF59',
+    secondary: '#000000',
+    surface: '#EFEEFF',
+    neon: '#8edcdc',
     textColor: '#000000DD',
-    disable: '#00000037',
+    disabled: '#00000037',
     error: '#B00020',
+    accent: '#8edcdc',
+    isDark: false,
   },
   [DARK_THEME]: {
-    primary: '#1F1B24',
+    primary: '#E040FB',
     primaryDark: '#00796B',
     primaryLight: '#80CBC4',
     secondary: '#E040FB',
-    background: '#121212',
     surface: '#121212',
-    neon: '#00909e',
+    neon: '#E040FB', // was #00909e
     textColor: '#FFFFFFDD',
-    disable: '#FFFFFF37',
+    disabled: '#FFFFFF37',
     error: '#B00020',
+    isDark: true,
   }
 };

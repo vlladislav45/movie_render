@@ -55,15 +55,22 @@ const LOGOUT = 'LOGOUT';
 // }
 
 export const attemptLogin = (account, password) => dispatch => {
+  // dispatch({
+  //   type: LOGIN_SUCCESS,
+  //   payload: {
+  //     username: 'vlad',
+  //   },
+  // });
+
   const formData = new FormData();
-  formData.append('login', account);
+  formData.append('username', account);
   formData.append('password', password);
 
   AuthAPI.login(formData).then(res => {
-    // TODO: API call
+    const { data } = res;
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res,
+      payload: data,
     });
   })
     .catch(err => {
@@ -78,6 +85,9 @@ export const logout = () => ({
 const initialState = {
   isLoggedIn: true,
   isLoading: false,
+  loggedInUser: {
+    username: 'Stefan',
+  }
 };
 
 export default (state = initialState, action) => {

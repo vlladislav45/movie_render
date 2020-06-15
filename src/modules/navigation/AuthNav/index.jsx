@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { attemptLogin, logout } from 'reducers/auth';
-
-import './styles.css';
-import { AuthButton, ProfileCircle } from 'components/basic';
+import { AuthButton } from 'components/basic';
+import { ProfileButton } from 'components';
+import { AuthNavContainer } from './styles';
 
 const AuthNav = () => {
   const dispatch = useDispatch();
@@ -17,19 +17,16 @@ const AuthNav = () => {
     dispatch(attemptLogin('stefan', 'stefan123'));
   };
 
-  const logOut = () => dispatch(logout());
-
-  return isLoggedIn
-    ? (
-      <div className='auth'>
-        <ProfileCircle/>
-        <AuthButton
-          title='logout'
-          onClick={logOut}
-        />
+  function renderLoggedInNav() {
+    return (
+      <div className='logged-in auth'>
+        <ProfileButton/>
       </div>
-    )
-    : (
+    );
+  }
+
+  function renderAnonymousNav() {
+    return (
       <div className='auth'>
         <AuthButton
           title='login'
@@ -41,6 +38,16 @@ const AuthNav = () => {
         />
       </div>
     );
+  }
+
+  return (
+    <AuthNavContainer>
+      {isLoggedIn
+        ? renderLoggedInNav()
+        : renderAnonymousNav()
+      }
+    </AuthNavContainer>
+  );
 };
 
 export default AuthNav;

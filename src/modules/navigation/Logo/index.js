@@ -10,9 +10,7 @@ const Logo = () => {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <div id="logo" className="first-logo"></div>
-
-
+      <div id="logo" className="first-logo" />
     </div>
   );
 };

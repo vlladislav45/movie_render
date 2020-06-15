@@ -9,6 +9,7 @@ export const StyledAuthButton = styled.a`
     text-transform: uppercase;
     letter-spacing: 4px;
     font-size: 24px;
+    font-weight: bold;
     overflow: hidden;
     transition: 0.2s;
 
