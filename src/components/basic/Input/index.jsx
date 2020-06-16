@@ -1,22 +1,28 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { ErrorText, HelperText, InputContainer } from './styles.js';
+import { ErrorText, HelperText, OuterContainer } from './styles.js';
 import FilledInput from './FilledInput';
-import { InputLabel } from './styles';
+import {
+  InputLabel,
+  StyledFilledInput,
+  StyledFilledInputContainer,
+} from './styles';
 
 const Input = props => {
-  const labelRef = useRef();
+  const {
+    leadingIcon: LeadingIcon, value: preFilledText = '',
+    type, label, helperText, errorText,
+    text, ...rest
+  } = props;
+
+  const id = useMemo(() => Input.nextId(), []);
   const inputRef = useRef();
 
+  const [value, setValue] = useState(preFilledText);
   const [isFocused, setIsFocused] = useState(false);
-  const { type, label, helperText, errorText, text, ...rest } = props;
 
-  useEffect(() => {
-
-  }, [inputRef]);
-
-  function renderBelowInput() {
-    if ( errorText )
+  function renderBelowInput () {
+    if (errorText)
       return (
         <ErrorText>
           {errorText}
@@ -28,46 +34,62 @@ const Input = props => {
         </HelperText>);
   }
 
-  function focusInput() {
+  function focusInput () {
+    if (isFocused)
+      return;
     setIsFocused(true);
     inputRef.current.focus();
   }
 
+  const withLeadingIcon = !!LeadingIcon;
   return (
-    <InputContainer
-      onClickCapture={focusInput}
+    <OuterContainer
+      id={id}
+      onClick={focusInput}
       {...rest}
     >
-      {label && <InputLabel
-        ref={labelRef}
-        labelRef={labelRef}
-        inputRef={inputRef}
+      <StyledFilledInputContainer
         focused={isFocused}
+        withLeadingIcon={withLeadingIcon}
       >
-        {label}
-      </InputLabel>}
-      {type === 'filled' && (
-        <FilledInput
+        {LeadingIcon && <LeadingIcon />}
+        {label && <InputLabel
+          htmlFor={id}
+          elevated={isFocused || !!value}
+          withLeadingIcon={withLeadingIcon}
+        >
+          {label}
+        </InputLabel>}
+        <StyledFilledInput
           ref={inputRef}
-          labelText={label}
           onBlur={() => setIsFocused(false)}
+          focused={isFocused}
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          withLeadingIcon={withLeadingIcon}
         />
-      )}
+      </StyledFilledInputContainer>
       {renderBelowInput()}
-    </InputContainer>
+    </OuterContainer>
   );
 };
 
 Input.propTypes = {
-  type: PropTypes.oneOf([ 'filled', 'textarea', 'outline' ]),
+  type: PropTypes.oneOf(['filled', 'textarea', 'outline']),
   label: PropTypes.string,
   helperText: PropTypes.string,
   errorText: PropTypes.string,
   text: PropTypes.string,
+  leadingIcon: PropTypes.element,
 };
 
 Input.defaultProps = {
   type: 'filled',
 };
+
+Input.nextId = (() => {
+  let id = 0;
+  return () => `input_${id++}`;
+})();
 
 export default Input;

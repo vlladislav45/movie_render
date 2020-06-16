@@ -1,8 +1,9 @@
 import React from 'react';
 import { Input } from 'components/basic';
+import { ReactComponent as SearchIcon } from 'assets/icons/search-24px.svg';
 
 const SearchBar = () => {
-  return <Input helperText='search' label='search'/>;
+  return <Input leadingIcon={SearchIcon} label='search'/>;
 };
 
 export default SearchBar;

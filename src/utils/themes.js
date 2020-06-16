@@ -13,7 +13,7 @@ export default {
     textColor: '#000000DD',
     disabled: '#00000037',
     error: '#B00020',
-    accent: '#8edcdc',
+    accent: '#6200ee',
     isDark: false,
   },
   [DARK_THEME]: {
@@ -26,6 +26,7 @@ export default {
     textColor: '#FFFFFFDD',
     disabled: '#FFFFFF37',
     error: '#B00020',
+    accent: '#E040FB',
     isDark: true,
   }
 };
