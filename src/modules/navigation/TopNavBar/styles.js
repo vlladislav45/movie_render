@@ -8,23 +8,24 @@ export const StyledTopNav = styled(ThemedComponent)`
             position: relative;
             display: flex;
             flex-wrap: wrap;
-            padding: 50px;
-            background:  ${isDark ? surface : primary};
+            padding: 48px 24px;
+            background:  ${isDark ? '#1f1b24' : primary};
             z-index: 999;
             
             // Logo
             & > :nth-child(1) {
-              flex-grow: 1;
+              flex-shrink: 1;
             }
             
             // Title
             & > :nth-child(2) {
-              flex-grow: 4;
+              flex-grow: 1;
+              align-self: center;
             }
             
             // AuthNav
             & > :nth-child(3) {
-              flex-grow: 1;
+              flex-shrink: 1;
               align-self: center;
             }
         `;

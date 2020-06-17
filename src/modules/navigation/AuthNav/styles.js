@@ -16,7 +16,6 @@ export const AuthNavContainer = styled.div`
 export const SearchBarContainer = styled.div`
   position: relative;
   top: 50px;
-  width: 60%;
 `;
 
 

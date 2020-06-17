@@ -26,6 +26,7 @@ export const ProfileButton = () => {
       onClick={toggleDropDown}
       shouldElevateWhenHover
       withRipple
+      rippleColor='primary'
     >
       <ProfileCircle size={32} />
       <Username>

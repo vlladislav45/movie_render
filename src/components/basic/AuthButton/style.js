@@ -7,7 +7,7 @@ export const StyledAuthButton = styled.a`
     color: ${({ background }) => background};
     text-transform: uppercase;
     letter-spacing: 4px;
-    font-size: 24px;
+    font-size: 1.15rem;
     font-weight: bold;
     overflow: hidden;
     transition: 0.2s;

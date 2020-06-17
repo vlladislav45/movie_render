@@ -39,7 +39,7 @@ const Input = props => {
   const hasError = !!errorText;
   const withLeadingIcon = !!LeadingIcon;
   const rippleClass = isFocused ? 'activate' : '';
-
+  const shouldShowPlaceholder = isFocused || !label;
   return (
     <OuterContainer
       id={id}
@@ -57,17 +57,19 @@ const Input = props => {
           htmlFor={id}
           elevated={isFocused || !!value}
           withLeadingIcon={withLeadingIcon}
+          hasError={hasError}
         >
           {label}
         </InputLabel>}
         <StyledFilledInput
           ref={inputRef}
+          hasError={hasError}
           focused={isFocused}
           value={value}
           onBlur={() => setIsFocused(false)}
           onChange={e => setValue(e.target.value)}
           withLeadingIcon={withLeadingIcon}
-          placeholder={isFocused ? placeholder : ''}
+          placeholder={shouldShowPlaceholder ? placeholder : ''}
           {...rest}
         />
       </StyledFilledInputContainer>

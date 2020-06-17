@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
 
-
 export const StyledDropDown = styled(ThemedComponent)`
   position: absolute;
   top: -5%;
@@ -19,7 +18,10 @@ export const DropDownList = styled.ul``;
 
 export const StyledDropDownItem = styled(ThemedComponent)`
   width: 100%;
-  border-bottom: 1px solid #33333344;
+  border-bottom: 1px solid ${({ theme: { isDark, disabled, surface } }) => isDark
+  ? surface
+  : disabled};
+  background-color: transparent;
   padding: 10px 0;
   text-align: center;
   cursor: pointer;
@@ -27,7 +29,7 @@ export const StyledDropDownItem = styled(ThemedComponent)`
   align-items: center;
 
   &:hover {
-    background: ${props => props.theme.surface}44;
+    background: ${props => props.theme.primary}44;
   }
 `;
 

@@ -4,7 +4,7 @@ import { ReactComponent as SearchIcon } from 'assets/icons/search-24px.svg';
 
 const SearchBar = () => {
   return (
-    <Input leadingIcon={SearchIcon} label='Search'/>
+    <Input class='search-input' leadingIcon={SearchIcon} label='Search'/>
   );
 };
 

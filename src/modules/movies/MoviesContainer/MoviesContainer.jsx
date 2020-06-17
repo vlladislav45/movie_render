@@ -32,6 +32,12 @@ const MoviesContainer = props => {
 
   return (
     <StyledMoviesContainer>
+      <div>
+        <Input label='Basic' helperText='Some helper text'/>
+        <Input errorText='error text' label='With Error' />
+        <Input helperText='helper text' placeholder='Placeholder' label='' />
+        <Input value='Prefilled' />
+      </div>
       {renderMovies()}
     </StyledMoviesContainer>
   );

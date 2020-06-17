@@ -14,19 +14,24 @@ export const OuterContainer = styled.div`
   align-items: baseline;
   position: relative;
   
-  font-family: 'Roboto', sans-serif;
-  font-size: 22px;
-  
   // Helper and error text
   & > p {
+    color: ${props => props.theme.isDark ? 'rgba(255,255,255,.6);' : 'rgba(0,0,0,.6);'};
     padding-left: 16px;
+    height: 16px;
+    align-self: bottom;
+    font-size: 0.65rem;
+    letter-spacing: 0.03em;
+    margin: 2px 0;
   }
 `;
 
 export const StyledFilledInputContainer = styled.div`${props => {
-  const { theme, focused, withLeadingIcon, error } = props;
-  const { surface, error: errorColor, primary, textColor, disabled, accent, isDark } = theme;
-  const background = isDark ? '#121212' : '#F5F5F5';
+  const { theme, focused, error } = props;
+  const { error: errorColor, primary, textColor, disabled, accent, isDark } = theme;
+  const background = isDark ? '#252525' : '#F5F5F5';
+  const hoverBg = isDark ? '#2e2e2e' : '#ECECEC';
+  const hoverBorderColor = isDark ? '#FFFFFF88' : '#00000088';
   return `
     transition: all .3s;
     display: flex;
@@ -34,7 +39,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
     overflow: hidden;
-    background: #F5F5F5;
+    background: ${background};
     border-bottom: 1px solid ${disabled};
     
     font-size: 1rem;
@@ -49,9 +54,11 @@ export const StyledFilledInputContainer = styled.div`${props => {
     `};
     
     &:hover {
-      background: #ECECEC;
+      ${!focused && `
+        background: ${hoverBg};
+      `};
       ${!focused && !error && `
-        border-bottom-color: #00000066;
+        border-bottom-color: ${hoverBorderColor};
       `};
     }
     
@@ -61,6 +68,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
       width: 24px;
       height 24px;
       align-self: center;
+      fill: ${textColor};
     }
     
     ${focused && `
@@ -70,7 +78,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
         width: 100%;
         height: 100%;
         border-radius: 80%;
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0, 0, 0, 0.1)'};
         animation-name: ripple-bg;
         animation-duration: .3s;
         animation-fill-mode: forwards;
@@ -80,16 +88,17 @@ export const StyledFilledInputContainer = styled.div`${props => {
 }}`;
 
 export const InputLabel = styled.label`${props => {
-  const { accent, textColor } = props.theme;
-  const { elevated, withLeadingIcon } = props;
+  const { accent, error, isDark } = props.theme;
+  const { elevated, withLeadingIcon, hasError } = props;
+  const color = isDark ? '#CCCCCC' : '#585858';
   return `
     position: absolute;
     
     font-family: 'Roboto', sans-serif;
-    color: #505050;
+    color: ${color};
     line-height: 1.15rem;
-    
-    
+    user-select: none;
+
     will-change: transform;
     transition: transform .3s ease, color .3s ease;
     transform-origin: left top;
@@ -104,6 +113,10 @@ export const InputLabel = styled.label`${props => {
       color: ${accent};
     `};
     
+    ${hasError && `
+      color: ${error};
+    `};
+    
     ${withLeadingIcon && `
       left: 48px;
     `};
@@ -112,14 +125,16 @@ export const InputLabel = styled.label`${props => {
 }}`;
 
 export const StyledFilledInput = styled(BaseInput)`${props => {
-  const { theme, focused, withLeadingIcon } = props;
-  const { accent } = theme;
+  const { theme, focused, withLeadingIcon, hasError } = props;
+  const { accent, error, textColor, isDark } = theme;
+  const color = isDark ? '#CCCCCC' : '#585858';
   return `
     align-self: flex-end;
     background: none;
     padding: 20px 16px 6px;
     caret-color: ${accent};
     z-index: 10;
+    color: ${textColor};
     
     cursor: ${focused ? 'text' : 'pointer'};
     
@@ -127,8 +142,16 @@ export const StyledFilledInput = styled(BaseInput)`${props => {
       padding-left: 48px;
     `};
     
+    ${hasError && `
+      caret-color: ${error};
+    `};
+    
     &::selection {
       background: ${accent}33;
+    }
+    
+    &::placeholder {
+      color: ${color};
     }
   `;
 }}`;
@@ -138,7 +161,7 @@ export const HelperText = styled.p`
 `;
 
 export const ErrorText = styled.p`
-  color: ${props => props.theme.error};
+  color: ${props => props.theme.error}!important;
 `;
 
 export const RippleElem = styled.span`
