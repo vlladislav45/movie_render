@@ -1,10 +1,22 @@
 import styled from 'styled-components';
 
 export const AuthNavContainer = styled.div`
-& > .auth {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  
+  
+  & > .auth {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    }
+  }
 `;
+
+export const SearchBarContainer = styled.div`
+  position: relative;
+  top: 50px;
+  width: 60%;
+`;
+
 

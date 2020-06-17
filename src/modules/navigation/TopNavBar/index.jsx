@@ -50,7 +50,6 @@ const TopNavBar = () => {
         <Title/>
         <AuthNav/>
         <Genres />
-        <SearchBar />
       </StyledTopNav>
       <DropDown
         topOffset={navHeight}

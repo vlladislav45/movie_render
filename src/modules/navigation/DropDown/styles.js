@@ -5,7 +5,7 @@ import { ThemedComponent } from 'components/basic';
 export const StyledDropDown = styled(ThemedComponent)`
   position: absolute;
   top: -5%;
-  right: 0px;
+  right: 0;
   width: 20%;
   min-width: 300px;
   transition: top .5s;
@@ -33,7 +33,7 @@ export const StyledDropDownItem = styled(ThemedComponent)`
 
 export const DropDownText = styled.span`
   padding-left: 30px;
-  font-size: 1.4rem;
+  font-size: 1rem;
   line-height: 1.2rem;
   font-family: 'Roboto', sans-serif;
   text-transform: capitalize;

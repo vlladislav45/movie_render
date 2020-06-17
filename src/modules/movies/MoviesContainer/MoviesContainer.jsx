@@ -32,14 +32,6 @@ const MoviesContainer = props => {
 
   return (
     <StyledMoviesContainer>
-      <div style={{ zIndex: 999 }}>
-      <Input
-        label='Some Label'
-        text='Previous text'
-        helperText='helper'
-        errorText='error'
-      />
-      </div>
       {renderMovies()}
     </StyledMoviesContainer>
   );

@@ -1,9 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { attemptLogin, logout } from 'reducers/auth';
+import { attemptLogin } from 'reducers/auth';
 import { AuthButton } from 'components/basic';
 import { ProfileButton } from 'components';
-import { AuthNavContainer } from './styles';
+import { SearchBar } from '../index';
+import { AuthNavContainer, SearchBarContainer } from './styles';
 
 const AuthNav = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,9 @@ const AuthNav = () => {
         ? renderLoggedInNav()
         : renderAnonymousNav()
       }
+      <SearchBarContainer>
+        <SearchBar/>
+      </SearchBarContainer>
     </AuthNavContainer>
   );
 };

@@ -4,7 +4,6 @@ export const StyledAuthButton = styled.a`
     cursor: pointer;
     position: relative;
     padding: 15px 30px;
-    margin-top: 50px;
     color: ${({ background }) => background};
     text-transform: uppercase;
     letter-spacing: 4px;

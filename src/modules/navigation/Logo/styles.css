@@ -1,7 +1,7 @@
 .first-logo {
     background: url("~assets/logo/filmi3k.gif") no-repeat;
     margin-right: auto;
-    width: 150px;
+    width: 100px;
     height: 100px;
     background-size: contain;
 }
@@ -9,11 +9,7 @@
 .second-logo {
     background: url("~assets/logo/filmi3k-loop.gif") no-repeat;
     margin-right: auto;
-    width: 150px;
+    width: 100px;
     height: 100px;
     background-size: contain;
-}
-
-h6 {
-    color: #000000;
 }

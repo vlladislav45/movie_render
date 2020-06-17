@@ -35,7 +35,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
     border-top-left-radius: 4px;
     overflow: hidden;
     background: #F5F5F5;
-    border-bottom: 1px solid #000000AA;
+    border-bottom: 1px solid ${disabled};
     
     font-size: 1rem;
     
@@ -113,12 +113,13 @@ export const InputLabel = styled.label`${props => {
 
 export const StyledFilledInput = styled(BaseInput)`${props => {
   const { theme, focused, withLeadingIcon } = props;
-  const { accent, surface, secondary, isDark } = theme;
+  const { accent } = theme;
   return `
     align-self: flex-end;
     background: none;
     padding: 20px 16px 6px;
     caret-color: ${accent};
+    z-index: 10;
     
     cursor: ${focused ? 'text' : 'pointer'};
     

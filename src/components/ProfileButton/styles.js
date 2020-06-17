@@ -10,7 +10,7 @@ export const StyledProfileButton = styled(ThemedComponent)`
 `;
 
 export const Username = styled.span`
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-family: 'Roboto', sans-serif;
   margin-left: 10px;
 `;
@@ -23,8 +23,8 @@ export const ArrowIconContainer = styled.span`
   ${props => props.isFlipped && 'transform: rotate(180deg);'}
   
   & > svg {
-    width: 36px;
-    height: 36px;
-    fill: ${props => props.theme.primary};
+    width: 2.2rem;
+    height: 2.2rem;
+    fill: ${props => props.theme.accent};
   }
 `;
