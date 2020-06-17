@@ -23,30 +23,35 @@ export const OuterContainer = styled.div`
   }
 `;
 
-
 export const StyledFilledInputContainer = styled.div`${props => {
-  const { theme, focused, withLeadingIcon } = props;
-  const { surface, secondary, primary, textColor, disabled, accent, isDark } = theme;
+  const { theme, focused, withLeadingIcon, error } = props;
+  const { surface, error: errorColor, primary, textColor, disabled, accent, isDark } = theme;
   const background = isDark ? '#121212' : '#F5F5F5';
   return `
+    transition: all .3s;
     display: flex;
     position: relative;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
-    
+    overflow: hidden;
     background: #F5F5F5;
-    border-bottom: 1px solid #00000088;
+    border-bottom: 1px solid #000000AA;
     
     font-size: 1rem;
     
     ${focused && `
-      border-bottom: 2px solid ${accent};
+      border-bottom-color: ${accent};
+    `};
+    
+    ${error && `
+      border-bottom-color: ${errorColor};
+      caret-color: ${errorColor};
     `};
     
     &:hover {
       background: #ECECEC;
-      ${!focused && `
-        border-bottom: 1px solid #00000033;
+      ${!focused && !error && `
+        border-bottom-color: #00000066;
       `};
     }
     
@@ -58,16 +63,30 @@ export const StyledFilledInputContainer = styled.div`${props => {
       align-self: center;
     }
     
+    ${focused && `
+      &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 80%;
+        background-color: rgba(0, 0, 0, 0.1);
+        animation-name: ripple-bg;
+        animation-duration: .3s;
+        animation-fill-mode: forwards;
+      }
+    `}
   `;
 }}`;
 
 export const InputLabel = styled.label`${props => {
-  const { accent } = props.theme;
+  const { accent, textColor } = props.theme;
   const { elevated, withLeadingIcon } = props;
   return `
     position: absolute;
     
     font-family: 'Roboto', sans-serif;
+    color: #505050;
     line-height: 1.15rem;
     
     
@@ -89,7 +108,7 @@ export const InputLabel = styled.label`${props => {
       left: 48px;
     `};
     
-  `
+  `;
 }}`;
 
 export const StyledFilledInput = styled(BaseInput)`${props => {
@@ -119,4 +138,45 @@ export const HelperText = styled.p`
 
 export const ErrorText = styled.p`
   color: ${props => props.theme.error};
+`;
+
+export const RippleElem = styled.span`
+  position: absolute;
+  will-change: width, left;
+  left: 50%;
+  height: 100%;
+  
+  border-bottom: 2px solid ${({ theme, hasError }) => hasError
+  ? theme.error
+  : theme.accent};
+  
+  &.activate {
+    animation-name: ripple;
+    animation-duration: .3s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes ripple{
+    0% {
+      width: 0%;
+      left: 50%;
+    }
+    100% {
+      width: 100%;
+      left: 0;
+      
+    }
+  }
+  
+  @keyframes ripple-bg {
+    from {
+      opacity: 0;
+      transform: scale(0);
+     }
+     to {
+      opacity: 1;
+      transform: scale(1.5);
+     }
+  }
 `;

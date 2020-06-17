@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorText, HelperText, OuterContainer } from './styles.js';
-import FilledInput from './FilledInput';
 import {
   InputLabel,
   StyledFilledInput,
   StyledFilledInputContainer,
+  RippleElem,
 } from './styles';
 
 const Input = props => {
@@ -41,7 +41,9 @@ const Input = props => {
     inputRef.current.focus();
   }
 
+  const hasError = !!errorText;
   const withLeadingIcon = !!LeadingIcon;
+  const rippleClass = isFocused ? 'activate' : '';
   return (
     <OuterContainer
       id={id}
@@ -49,9 +51,11 @@ const Input = props => {
       {...rest}
     >
       <StyledFilledInputContainer
+        error={hasError}
         focused={isFocused}
         withLeadingIcon={withLeadingIcon}
       >
+        <RippleElem hasError={hasError} className={rippleClass} />
         {LeadingIcon && <LeadingIcon />}
         {label && <InputLabel
           htmlFor={id}
