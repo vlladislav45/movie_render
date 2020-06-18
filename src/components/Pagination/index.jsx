@@ -12,7 +12,7 @@ const Pagination = ({ itemsCount, currentPage = 0, itemsPerPage = DEFAULT_ITEMS_
     setTotalPages(Math.ceil(itemsCount / itemsPerPage));
   }, [itemsCount, itemsPerPage]);
 
-  function selectedPage(page) {
+  function selectPage(page) {
     changeSelectedPage(page);
     onPageChange(page);
   }
@@ -23,8 +23,8 @@ const Pagination = ({ itemsCount, currentPage = 0, itemsPerPage = DEFAULT_ITEMS_
         return (
           <PageItem
             key={index}
-            isActive={selectedPage === index}
-            onClick={() => selectedPage(index)}
+            isActive={selectPage === index}
+            onClick={() => selectPage(index)}
           >
             {index + 1}
           </PageItem>
