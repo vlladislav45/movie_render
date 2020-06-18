@@ -37,8 +37,6 @@ export function createRipple(evt, isDark, customColor) {
     rippleColor = isDark ? 'rgba(255, 255, 255, ' : 'rgba(0, 0, 0, ';
   }
 
-  console.log(rippleColor)
-
   const animationStep = function (timestamp) {
     if ( !animationStart ) {
       animationStart = timestamp;

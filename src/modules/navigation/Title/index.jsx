@@ -8,9 +8,9 @@ const Title = () => {
       <StyledTitle>
         Глейдате онлайн филми
       </StyledTitle>
-      <StyledSubTitle>
-        Регистрирайте се и усетете максимално удоволствие
-      </StyledSubTitle>
+      {/*<StyledSubTitle>*/}
+      {/*  Регистрирайте се и усетете максимално удоволствие*/}
+      {/*</StyledSubTitle>*/}
     </TitleContainer>
   );
 };

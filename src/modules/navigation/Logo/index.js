@@ -9,7 +9,7 @@ const Logo = () => {
   }, 3000);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ width: '100px', display: 'flex', alignItems: 'center' }}>
       <div id="logo" className="first-logo" />
     </div>
   );

@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
 
-
 export const StyledDropDown = styled(ThemedComponent)`
   position: absolute;
   top: -5%;
-  right: 0px;
+  right: 0;
   width: 20%;
   min-width: 300px;
   transition: top .5s;
@@ -19,7 +18,10 @@ export const DropDownList = styled.ul``;
 
 export const StyledDropDownItem = styled(ThemedComponent)`
   width: 100%;
-  border-bottom: 1px solid #33333344;
+  border-bottom: 1px solid ${({ theme: { isDark, disabled, surface } }) => isDark
+  ? surface
+  : disabled};
+  background-color: transparent;
   padding: 10px 0;
   text-align: center;
   cursor: pointer;
@@ -27,13 +29,13 @@ export const StyledDropDownItem = styled(ThemedComponent)`
   align-items: center;
 
   &:hover {
-    background: ${props => props.theme.surface}44;
+    background: ${props => props.theme.primary}44;
   }
 `;
 
 export const DropDownText = styled.span`
   padding-left: 30px;
-  font-size: 1.4rem;
+  font-size: 1rem;
   line-height: 1.2rem;
   font-family: 'Roboto', sans-serif;
   text-transform: capitalize;

@@ -13,19 +13,20 @@ export default {
     textColor: '#000000DD',
     disabled: '#00000037',
     error: '#B00020',
-    accent: '#8edcdc',
+    accent: '#6200ee',
     isDark: false,
   },
   [DARK_THEME]: {
-    primary: '#E040FB',
-    primaryDark: '#00796B',
+    primary: '#BB86FC',
+    primaryDark: '#3700B3',
     primaryLight: '#80CBC4',
-    secondary: '#E040FB',
+    secondary: '#03DAC6',
     surface: '#121212',
     neon: '#E040FB', // was #00909e
     textColor: '#FFFFFFDD',
-    disabled: '#FFFFFF37',
-    error: '#B00020',
+    disabled: '#FFFFFF67',
+    error: '#CF6679',
+    accent: '#BB86FC',
     isDark: true,
   }
 };

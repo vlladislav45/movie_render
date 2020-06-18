@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { ReactComponent as ArrowSvg } from 'assets/icons/right-arrow-24px.svg';
 
+export const SLIDE_DURATION = 300;
+
 export const GenresContainer = styled.div`
     overflow: hidden;
-    width: 90%;
     margin: 50px auto 0;
     display: flex;
     flex-wrap: nowrap;
@@ -17,7 +18,7 @@ export const Carousel = styled.div`
 
 export const GenresList = styled.ul`
     display: flex;
-    transition: transform .3s;
+    transition: transform ${SLIDE_DURATION}ms ease;
     
     ${props => props.offset && `
         transform: translateX(${props.offset}px);
@@ -29,11 +30,11 @@ export const SingleGenre = styled.li`
     cursor: pointer;
     margin: 0 10px;
     line-height: 75px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: ${props => props.theme.textColor};
     
     &:hover {
-      opacity: .8;
+      opacity: .7;
     }
 `;
 
@@ -41,8 +42,8 @@ export const Arrow = styled(ArrowSvg)`
   ${({ disabled, flipped, theme }) => {
     const fillColor = theme.isDark ? theme.primary : theme.accent;
   return `
-      width: 48px;
-      height: 48px;
+      width: 2rem;
+      height: 2rem;
       fill: ${fillColor};
       
       & .outline {
@@ -55,7 +56,7 @@ export const Arrow = styled(ArrowSvg)`
       ${flipped && 'transform: rotate(180deg)'};
       
       &:hover {
-        ${!disabled && `fill: ${fillColor}77;`}
+        ${!disabled && `fill: ${fillColor}88;`}
       }
       
       ${disabled && `
