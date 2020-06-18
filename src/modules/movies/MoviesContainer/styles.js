@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
 
-const DEFAULT_MOVIES_PER_ROW = 5;
+const DEFAULT_MOVIES_PER_ROW = 3;
 const DEFAULT_SPACE_BETWEEN_MOVIE = 30;
 export const StyledMoviesContainer = styled.div`
   width: 80%;
@@ -32,10 +32,10 @@ export const SingleMovie = styled(ThemedComponent)`
 export const PosterContainer = styled.div`
   position: relative;
   
+  /* 16:9 aspect ratio */
   &::after {
     display: block;
     content: '';
-    /* 16:9 aspect ratio */
     padding-bottom: 62.55%;
   }
 `;
@@ -46,4 +46,26 @@ export const MoviePoster = styled.img`
     top: 0;
     width: 100%;
     height: 100%;
+`;
+
+export const MovieNameText = styled.p`
+  font-size: 1.3rem;
+  letter-spacing: 0.04rem;
+  font-family: 'Marck script', cursive;
+  text-align: center;
+  padding: 5px 10px;
+`;
+
+export const MetaData = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 12px 16px;
+`;
+
+export const MetaDataValue = styled.p`
+  font-size: 0.9rem;
+`;
+
+export const MetaDataKey = styled.p`
+  font-size: 0.9rem;
 `;

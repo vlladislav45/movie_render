@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
-import { Input } from 'components/basic';
+import { useDispatch, useSelector } from 'react-redux';
+import { MovieNameText, MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
+import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
+import { Rating, Pagination } from 'components';
 
 const MoviesContainer = props => {
   const dispatch = useDispatch();
-  const [ movies, setMovies ] = useState([]);
+  // const [ movies, setMovies ] = useState([]);
 
-  // const { movies } = useSelector(({ moviesReducer }) => ({
-  //   movies: moviesReducer.movies
-  // }));
+  const { movies } = useSelector(({ moviesReducer }) => ({
+    movies: moviesReducer.movies
+  }));
 
   useEffect(() => {
-    // dispatch(fetchMovies(0, 10));
-    const moviesFromBE = require('../stub.json');
-    setMovies(moviesFromBE);
+    dispatch(fetchMovies(0, 10));
+    dispatch(getMoviesCount());
+    // const moviesFromBE = require('../stub.json');
+    // setMovies(moviesFromBE);
   }, []);
 
   function renderMovies() {
     return movies.map(movie => (
         <SingleMovie shouldElevateWhenHover elevation={7} key={movie.movieName} withRipple>
-          <p>{movie.movieName}</p>
-          <p>{movie.year}</p>
+          <MovieNameText>{movie.movieName}</MovieNameText>
           <PosterContainer>
             <MoviePoster src={`data:image/png;base64,${movie.moviePoster}`}/>
           </PosterContainer>
+          <Rating rating={1} maxStars={5}/>
         </SingleMovie>
       )
     );
@@ -39,6 +41,8 @@ const MoviesContainer = props => {
       {/*  <Input value='Prefilled' />*/}
       {/*</div>*/}
       {renderMovies()}
+      <br />
+      <Pagination itemsCount={movies.length || 5} />
     </StyledMoviesContainer>
   );
 };
