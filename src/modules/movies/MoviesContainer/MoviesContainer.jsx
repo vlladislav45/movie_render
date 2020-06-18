@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { MovieNameText, MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
-import { getMoviesCount } from 'reducers/moviesReducer';
+import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
 import { Loading, Rating } from 'components';
 import MoviesPagination from '../MoviesPagination';
+import { MOVIES_PER_PAGE } from '../../../config/MoviesConfig';
 
 const MoviesContainer = props => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const MoviesContainer = props => {
   }));
 
   useEffect(() => {
+    dispatch(fetchMovies(0, MOVIES_PER_PAGE));
     dispatch(getMoviesCount());
     // const moviesFromBE = require('../stub.json');
     // setMovies(moviesFromBE);
@@ -24,7 +26,7 @@ const MoviesContainer = props => {
 
   function renderMovies() {
     return movies.map(movie => (
-        <SingleMovie shouldElevateWhenHover elevation={7} key={movie.movieName} withRipple>
+        <SingleMovie shouldElevateWhenHover elevation={8} key={movie.movieName} withRipple>
           <MovieNameText>{movie.movieName}</MovieNameText>
           <PosterContainer>
             <MoviePoster src={`data:image/png;base64,${movie.moviePoster}`}/>
@@ -35,12 +37,10 @@ const MoviesContainer = props => {
     );
   }
 
-  if (isLoading) return <Loading/>;
-
   return (
     <StyledMoviesContainer>
       <MoviesPagination itemsCount={movies.length || 5}/>
-      {renderMovies()}
+      {isLoading ? <Loading /> : renderMovies()}
     </StyledMoviesContainer>
   );
 };

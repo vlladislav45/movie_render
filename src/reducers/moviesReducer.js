@@ -10,23 +10,38 @@ export const fetchMovies = (page, size) => dispatch => {
     type: START_LOADING,
   });
 
-  MovieAPI.getByPage(page,size).then(res => {
-    const { data } = res;
+  setTimeout(() => {
+    const data = require('../modules/movies/stub.json');
+
     dispatch({
       type: FETCH_ALL_MOVIES,
-      payload: data,
+      payload: data.slice(page * size, page * size + size),
     })
-  })
+  }, 350);
+
+  // MovieAPI.getByPage(page,size).then(res => {
+  //   const { data } = res;
+  //   dispatch({
+  //     type: FETCH_ALL_MOVIES,
+  //     payload: data,
+  //   })
+  // })
 };
 
 export const getMoviesCount = () => dispatch => {
-  MovieAPI.getMoviesCount().then(res => {
-    const { data } = res;
-    dispatch({
-      type: MOVIES_COUNT,
-      payload: data,
-    })
-  })
+  const data = require('../modules/movies/stub.json');
+  dispatch({
+    type: MOVIES_COUNT,
+    payload: data.length,
+  });
+
+  // MovieAPI.getMoviesCount().then(res => {
+  //   const { data } = res;
+  //   dispatch({
+  //     type: MOVIES_COUNT,
+  //     payload: data,
+  //   })
+  // })
 };
 
 export const changeSelectedPage = newPage => ({

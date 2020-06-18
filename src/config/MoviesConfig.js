@@ -1,1 +1,1 @@
-export const MOVIES_PER_PAGE = 2;
+export const MOVIES_PER_PAGE = 3  ;
