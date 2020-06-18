@@ -27,7 +27,7 @@ export const DropDown = ({ topOffset, items = {} }) => {
     const { current } = ref;
 
     let clicked = document.elementFromPoint(e.clientX, e.clientY);
-    while (clicked !== document.body) {
+    while (clicked && clicked !== document.body) {
       if (clicked === current) return;
       clicked = clicked.parentNode;
     }

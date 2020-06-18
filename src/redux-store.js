@@ -1,10 +1,12 @@
 import { applyMiddleware, compose, createStore as createReduxStore } from 'redux';
+import movieFetchMiddleware from 'middlewares/movieFetchMiddleware';
 import thunk from 'redux-thunk';
 import reducers from './reducers';
 
 
 const middleware = [
   thunk,
+  movieFetchMiddleware,
   // Chain more middleWares here
 ];
 

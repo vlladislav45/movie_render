@@ -9,17 +9,23 @@ export const PageItem = styled.div`${props => {
     cursor: pointer;
     padding: 10px;
     
+    user-select: none;
+    text-align: center;
+    
     &:hover {
-      ${!isActive && 'background: ${surface}66;'};
+      ${!isActive && !isDisabled && `
+        box-shadow: inset 0 0 0 500px ${primary}22;
+      `};
     }
     
     ${isDisabled && `
       color: ${disabled};
       border-color: ${disabled};
+      cursor: inherit;
     `};
     
     ${isActive && `
-      color: ${primary};
+      color: ${textColor};
       border-color: ${primary};
       background: ${primary}66;
     `};
@@ -27,5 +33,12 @@ export const PageItem = styled.div`${props => {
 }}`;
 
 export const StyledPagination = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(${props => props.maxItems || 10}, 1fr);
+
+  padding: 4px 8px;
+  
+  & > ${PageItem} {
+    margin: 0 2px;
+  }
 `;

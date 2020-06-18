@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { MovieNameText, MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
-import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
-import { Rating, Pagination } from 'components';
+import { getMoviesCount } from 'reducers/moviesReducer';
+import { Loading, Rating } from 'components';
+import MoviesPagination from '../MoviesPagination';
 
 const MoviesContainer = props => {
   const dispatch = useDispatch();
   // const [ movies, setMovies ] = useState([]);
 
-  const { movies } = useSelector(({ moviesReducer }) => ({
-    movies: moviesReducer.movies
+  const { movies, isLoading } = useSelector(({ moviesReducer }) => ({
+    movies: moviesReducer.movies,
+    selectedPage: moviesReducer.selectedPage,
+    isLoading: moviesReducer.isLoading,
   }));
 
   useEffect(() => {
-    dispatch(fetchMovies(0, 10));
     dispatch(getMoviesCount());
     // const moviesFromBE = require('../stub.json');
     // setMovies(moviesFromBE);
@@ -32,19 +35,14 @@ const MoviesContainer = props => {
     );
   }
 
+  if (isLoading) return <Loading/>;
+
   return (
     <StyledMoviesContainer>
-      {/*<div>*/}
-      {/*  <Input label='Basic' helperText='Some helper text'/>*/}
-      {/*  <Input errorText='error text' label='With Error' />*/}
-      {/*  <Input helperText='helper text' placeholder='Placeholder' label='' />*/}
-      {/*  <Input value='Prefilled' />*/}
-      {/*</div>*/}
+      <MoviesPagination itemsCount={movies.length || 5}/>
       {renderMovies()}
-      <br />
-      <Pagination itemsCount={movies.length || 5} />
     </StyledMoviesContainer>
   );
 };
 
-export default MoviesContainer;
+export default withRouter(MoviesContainer);
