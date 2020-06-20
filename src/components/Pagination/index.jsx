@@ -1,54 +1,119 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
+import { XS_SM, L, XL, M, SM } from 'utils/mediaUtils';
 import { PageItem, StyledPagination } from './styles';
 
-const DEFAULT_ITEMS_PER_PAGE = 2;
-const Pagination = ({ itemsCount, currentPage = 0, itemsPerPage = DEFAULT_ITEMS_PER_PAGE, onPageChange, ...rest }) => {
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentSelected, changeSelectedPage] = useState(currentPage);
+const DEFAULT_ITEMS_PER_PAGE = 3;
 
+// ONLY ODD NUMBERS
+function getMaxPages (device) {
+  switch (device) {
+    case XS_SM:
+      return 3;
+    case SM:
+      return 5;
+    case M:
+      return 7;
+    case L:
+      return 11;
+    case XL:
+      return 15;
+    default: // FullHD and above
+      return 25;
+  }
+}
+
+const Pagination = ({ itemsCount, onPageChange, currentPage = 0, itemsPerPage = DEFAULT_ITEMS_PER_PAGE, ...rest }) => {
+  const { device } = useDeviceDimensions();
+  const maxPages = getMaxPages(device);
+  const [totalPages, setTotalPages] = useState(0);
+  const [selectedPage, changeSelectedPage] = useState(currentPage);
 
   useEffect(() => {
     setTotalPages(Math.ceil(itemsCount / itemsPerPage));
   }, [itemsCount, itemsPerPage]);
 
-  function selectPage(page) {
-    if (page < 0 || page >= totalPages)
+  function selectPage (page) {
+    if (page < 0 || page >= totalPages || page === selectedPage)
       return;
 
     changeSelectedPage(page);
-    console.log(onPageChange)
     if (onPageChange)
       onPageChange(page);
   }
 
-  return (
-    <StyledPagination id='pagination'>
-      {totalPages > 0 &&
+  const getPages = () => {
+    if (totalPages < maxPages)
+      return [...Array(totalPages)].map((empty, index) => index);
+
+    // How many pages around the selected page should be rendered
+    const PAGE_OFFSET = (maxPages - 1) / 2;
+    let pages = [];
+
+    let startPage = Math.max(0, selectedPage - PAGE_OFFSET);
+    let endPage = Math.min(totalPages - 1, selectedPage + PAGE_OFFSET);
+
+    // If we are at the beginning or the end
+    // and we render less items than the max items (we want consistent pages)
+    if (startPage === 0 && startPage + endPage + 2 <= maxPages)
+      endPage += maxPages - endPage - 1;
+    if (endPage === totalPages - 1 && endPage - startPage + 2 <= maxPages)
+      startPage -= maxPages - endPage + startPage - 1;
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
+  const renderPages = () =>
+    getPages().map(pageNumber => {
+      return (
         <PageItem
-          isDisabled={currentSelected === 0}
-          onClick={() => selectPage(currentSelected - 1)}
+          key={pageNumber}
+          isActive={selectedPage === pageNumber}
+          onClick={() => selectPage(pageNumber)}
         >
-          {'Previous'}
+          {pageNumber + 1}
         </PageItem>
-      }
-      {[...Array(totalPages)].map((und, index) => {
-        return (
-          <PageItem
-            key={index}
-            isActive={currentSelected === index}
-            onClick={() => selectPage(index)}
-          >
-            {index + 1}
-          </PageItem>
-        );
-      })}
+      );
+    });
+
+  const isOverFlow = totalPages >= maxPages;
+
+  function goPrevOrFirst() {
+    if (!isOverFlow)
+      changeSelectedPage(selectedPage - 1);
+    else
+      changeSelectedPage(0);
+  }
+
+  function goNextOrLast() {
+    if (!isOverFlow)
+      changeSelectedPage(selectedPage + 1);
+    else
+      changeSelectedPage(totalPages - 1);
+  }
+
+  return (
+    <StyledPagination {...rest}>
       {totalPages > 0 &&
       <PageItem
-        onClick={() => selectPage(currentSelected + 1)}
-        isDisabled={currentSelected === totalPages-1}
+        isDisabled={selectedPage === 0}
+        onClick={goPrevOrFirst}
       >
-        {'Next'}
+        {isOverFlow ? 'First' : 'Previous'}
+      </PageItem>
+      }
+      {renderPages()}
+      {totalPages > 0 &&
+      <PageItem
+        onClick={goNextOrLast}
+        isDisabled={selectedPage === totalPages - 1}
+      >
+        {isOverFlow ? 'Last' : 'Next'}
       </PageItem>
       }
     </StyledPagination>
