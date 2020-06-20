@@ -1,5 +1,6 @@
 import React, { createRef, useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import { Arrow, Carousel, GenresContainer, GenresList, SingleGenre, SLIDE_DURATION, } from './styles';
 
 // If the carousel is sliding, user should not be able to initiate another slide
@@ -19,6 +20,8 @@ const Genres = () => {
   const [leftEnd, setLeftEnd] = useState(true);
   const [rightEnd, setRightEnd] = useState(false);
 
+  const { width: screenWidth } = useDeviceDimensions();
+
   useEffect(() => {
     const genresFromBackend = require('./stub.json').genres;
     const refs = {};
@@ -33,12 +36,7 @@ const Genres = () => {
     setRightEnd(false);
   }, [isOverflow]);
 
-  // Check once when refs are populated, and then on window resize
-  useLayoutEffect(checkIfOverflows, [genresRef]);
-  useLayoutEffect(() => {
-    window.addEventListener('resize', checkIfOverflows);
-    return () => window.removeEventListener('resize', checkIfOverflows);
-  });
+  useLayoutEffect(checkIfOverflows, [genresRef, screenWidth]);
 
   function checkIfOverflows() {
     const first = Object.values(genresRef)[0]?.current;

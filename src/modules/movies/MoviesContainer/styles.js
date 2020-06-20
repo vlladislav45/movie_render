@@ -1,32 +1,38 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
+import {
+  MOVIES_PER_PAGE,
+  SINGLE_MOVIE_HEIGHT,
+} from 'config/MoviesConfig';
 
-const DEFAULT_MOVIES_PER_ROW = 3;
-const DEFAULT_SPACE_BETWEEN_MOVIE = 30;
+const COLUMNS = 3;
+const ROWS = Math.ceil(MOVIES_PER_PAGE / COLUMNS);
+const height = ROWS * SINGLE_MOVIE_HEIGHT;
 export const StyledMoviesContainer = styled.div`
   width: 80%;
+  height: ${height}px;
   margin: 30px auto;
-  display: flex;
-  flex-wrap: wrap;
+  
+  display: grid;
+  grid-template-columns: repeat(${COLUMNS}, 1fr);
+  grid-template-rows: min-content repeat(${ROWS}, auto);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  
+  // Pagination
+  & > :nth-child(1) {
+    grid-column: span ${COLUMNS};
+    grid-row: auto;
+  }
+  
+  & > .loading-container {
+    grid-column: span ${COLUMNS};
+    grid-row: span ${ROWS};
+  }
 `;
 
 export const SingleMovie = styled(ThemedComponent)`
-  ${props => {
-    const count = props.moviesPerRow || DEFAULT_MOVIES_PER_ROW;
-    const space = props.spaceBetweenMovies || DEFAULT_SPACE_BETWEEN_MOVIE;
-    return `
-      margin: 20px ${space}px 0 0;
-      width: calc(1/${count}*100% - (1 - 1/${count})*${space}px);
-      
-      &:nth-child(${count}n) {
-        margin-right: 0;
-      }
-      
-      &:nth-child(-n+${count}) {
-          margin-top: 0;
-      }
-    `
-  }}
+  
 `;
 
 export const PosterContainer = styled.div`

@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { MovieNameText, MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
 import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
-import { Rating, Pagination } from 'components';
+import { Loading, Rating } from 'components';
+import MoviesPagination from '../MoviesPagination';
+import { MOVIES_PER_PAGE } from '../../../config/MoviesConfig';
 
 const MoviesContainer = props => {
   const dispatch = useDispatch();
   // const [ movies, setMovies ] = useState([]);
 
-  const { movies } = useSelector(({ moviesReducer }) => ({
-    movies: moviesReducer.movies
+  const { movies, isLoading } = useSelector(({ moviesReducer }) => ({
+    movies: moviesReducer.movies,
+    selectedPage: moviesReducer.selectedPage,
+    isLoading: moviesReducer.isLoading,
   }));
 
   useEffect(() => {
-    dispatch(fetchMovies(0, 10));
+    dispatch(fetchMovies(0, MOVIES_PER_PAGE));
     dispatch(getMoviesCount());
     // const moviesFromBE = require('../stub.json');
     // setMovies(moviesFromBE);
@@ -21,7 +26,7 @@ const MoviesContainer = props => {
 
   function renderMovies() {
     return movies.map(movie => (
-        <SingleMovie shouldElevateWhenHover elevation={7} key={movie.movieName} withRipple>
+        <SingleMovie shouldElevateWhenHover elevation={8} key={movie.movieName} withRipple>
           <MovieNameText>{movie.movieName}</MovieNameText>
           <PosterContainer>
             <MoviePoster src={`data:image/png;base64,${movie.moviePoster}`}/>
@@ -34,17 +39,10 @@ const MoviesContainer = props => {
 
   return (
     <StyledMoviesContainer>
-      {/*<div>*/}
-      {/*  <Input label='Basic' helperText='Some helper text'/>*/}
-      {/*  <Input errorText='error text' label='With Error' />*/}
-      {/*  <Input helperText='helper text' placeholder='Placeholder' label='' />*/}
-      {/*  <Input value='Prefilled' />*/}
-      {/*</div>*/}
-      {renderMovies()}
-      <br />
-      <Pagination itemsCount={movies.length || 5} />
+      <MoviesPagination itemsCount={movies.length || 5}/>
+      {isLoading ? <Loading /> : renderMovies()}
     </StyledMoviesContainer>
   );
 };
 
-export default MoviesContainer;
+export default withRouter(MoviesContainer);

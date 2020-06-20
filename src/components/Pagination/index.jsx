@@ -1,35 +1,121 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
+import { XS_SM, L, XL, M, SM } from 'utils/mediaUtils';
 import { PageItem, StyledPagination } from './styles';
 
-const DEFAULT_ITEMS_PER_PAGE = 2;
-const Pagination = ({ itemsCount, currentPage = 0, itemsPerPage = DEFAULT_ITEMS_PER_PAGE, onPageChange, ...rest }) => {
+const DEFAULT_ITEMS_PER_PAGE = 3;
+
+// ONLY ODD NUMBERS
+function getMaxPages (device) {
+  switch (device) {
+    case XS_SM:
+      return 3;
+    case SM:
+      return 5;
+    case M:
+      return 7;
+    case L:
+      return 11;
+    case XL:
+      return 15;
+    default: // FullHD and above
+      return 25;
+  }
+}
+
+const Pagination = ({ itemsCount, onPageChange, currentPage = 0, itemsPerPage = DEFAULT_ITEMS_PER_PAGE, ...rest }) => {
+  const { device } = useDeviceDimensions();
+  const maxPages = getMaxPages(device);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedPage, changeSelectedPage] = useState(currentPage);
-
 
   useEffect(() => {
     setTotalPages(Math.ceil(itemsCount / itemsPerPage));
   }, [itemsCount, itemsPerPage]);
 
-  function selectPage(page) {
+  function selectPage (page) {
+    if (page < 0 || page >= totalPages || page === selectedPage)
+      return;
+
     changeSelectedPage(page);
-    onPageChange(page);
+    if (onPageChange)
+      onPageChange(page);
+  }
+
+  const getPages = () => {
+    if (totalPages < maxPages)
+      return [...Array(totalPages)].map((empty, index) => index);
+
+    // How many pages around the selected page should be rendered
+    const PAGE_OFFSET = (maxPages - 1) / 2;
+    let pages = [];
+
+    let startPage = Math.max(0, selectedPage - PAGE_OFFSET);
+    let endPage = Math.min(totalPages - 1, selectedPage + PAGE_OFFSET);
+
+    // If we are at the beginning or the end
+    // and we render less items than the max items (we want consistent pages)
+    if (startPage === 0 && startPage + endPage + 2 <= maxPages)
+      endPage += maxPages - endPage - 1;
+    if (endPage === totalPages - 1 && endPage - startPage + 2 <= maxPages)
+      startPage -= maxPages - endPage + startPage - 1;
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
+  const renderPages = () =>
+    getPages().map(pageNumber => {
+      return (
+        <PageItem
+          key={pageNumber}
+          isActive={selectedPage === pageNumber}
+          onClick={() => selectPage(pageNumber)}
+        >
+          {pageNumber + 1}
+        </PageItem>
+      );
+    });
+
+  const isOverFlow = totalPages >= maxPages;
+
+  function goPrevOrFirst() {
+    if (!isOverFlow)
+      changeSelectedPage(selectedPage - 1);
+    else
+      changeSelectedPage(0);
+  }
+
+  function goNextOrLast() {
+    if (!isOverFlow)
+      changeSelectedPage(selectedPage + 1);
+    else
+      changeSelectedPage(totalPages - 1);
   }
 
   return (
-    <StyledPagination id='pagination'>
-      {[...Array(totalPages)].map((und, index) => {
-        return (
-          <PageItem
-            key={index}
-            isActive={selectPage === index}
-            onClick={() => selectPage(index)}
-          >
-            {index + 1}
-          </PageItem>
-        );
-      })}
+    <StyledPagination {...rest}>
+      {totalPages > 0 &&
+      <PageItem
+        isDisabled={selectedPage === 0}
+        onClick={goPrevOrFirst}
+      >
+        {isOverFlow ? 'First' : 'Previous'}
+      </PageItem>
+      }
+      {renderPages()}
+      {totalPages > 0 &&
+      <PageItem
+        onClick={goNextOrLast}
+        isDisabled={selectedPage === totalPages - 1}
+      >
+        {isOverFlow ? 'Last' : 'Next'}
+      </PageItem>
+      }
     </StyledPagination>
   );
 };
