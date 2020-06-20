@@ -73,6 +73,7 @@ const Pagination = ({ itemsCount, onPageChange, currentPage = 0, itemsPerPage = 
       return (
         <PageItem
           key={pageNumber}
+          className='page-number'
           isActive={selectedPage === pageNumber}
           onClick={() => selectPage(pageNumber)}
         >

@@ -9,9 +9,9 @@ const BaseInput = styled.input`
 `;
 
 export const OuterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
+  //display: flex;
+  //flex-direction: column;
+  //align-items: baseline;
   position: relative;
   
   // Helper and error text

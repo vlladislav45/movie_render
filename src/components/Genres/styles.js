@@ -4,8 +4,9 @@ import { ReactComponent as ArrowSvg } from 'assets/icons/right-arrow-24px.svg';
 export const SLIDE_DURATION = 300;
 
 export const GenresContainer = styled.div`
+    // To be centered in the grid
+    ${props => !props.isOverflow && 'justify-self: center;'};
     overflow: hidden;
-    margin: 50px auto 0;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;

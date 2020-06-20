@@ -7,7 +7,7 @@ import { Arrow, Carousel, GenresContainer, GenresList, SingleGenre, SLIDE_DURATI
 // because offset will be calculated wrong
 let isSliding = false;
 
-const Genres = () => {
+const Genres = props => {
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
 
@@ -117,7 +117,7 @@ const Genres = () => {
   }
 
   return (
-    <GenresContainer>
+    <GenresContainer {...props} isOverflow={isOverflow}>
       {isOverflow &&
         <Arrow
           flipped={'true'}

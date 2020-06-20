@@ -1,10 +1,12 @@
 import React from 'react';
 import { StyledSubTitle, StyledTitle, TitleContainer } from './styles';
 
-const Title = () => {
+const Title = props => {
 
   return (
-    <TitleContainer>
+    <TitleContainer
+      {...props}
+    >
       <StyledTitle>
         Глейдате онлайн филми
       </StyledTitle>

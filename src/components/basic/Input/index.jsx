@@ -7,10 +7,10 @@ const Input = props => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
     type, label, helperText, errorText,
-    text, placeholder, ...rest
+    text, placeholder, id, ...rest
   } = props;
 
-  const id = useMemo(() => Input.nextId(), []);
+  const inputId = useMemo(() => id || Input.nextId(), []);
   const inputRef = useRef();
 
   const [ value, setValue ] = useState(preFilledText);
@@ -42,11 +42,11 @@ const Input = props => {
   const shouldShowPlaceholder = isFocused || !label;
   return (
     <OuterContainer
-      id={id}
-      onClick={focusInput}
+      id={inputId}
       {...rest}
     >
       <StyledFilledInputContainer
+        onClick={focusInput}
         error={hasError}
         focused={isFocused}
         withLeadingIcon={withLeadingIcon}
@@ -54,7 +54,7 @@ const Input = props => {
         <RippleElem hasError={hasError} className={rippleClass}/>
         {LeadingIcon && <LeadingIcon/>}
         {label && <InputLabel
-          htmlFor={id}
+          htmlFor={inputId}
           elevated={isFocused || !!value}
           withLeadingIcon={withLeadingIcon}
           hasError={hasError}

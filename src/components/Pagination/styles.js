@@ -13,6 +13,10 @@ export const PageItem = styled.div`${props => {
     user-select: none;
     text-align: center;
     
+    &.page-number {
+      font-family: 'Lobster', cursive;
+    }
+    
     &:hover {
       ${!isActive && !isDisabled && `
         box-shadow: inset 0 0 0 500px ${primary}44;
