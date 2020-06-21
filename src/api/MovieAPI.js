@@ -5,7 +5,9 @@ class MovieAPI extends BaseAPI {
 
   getMoviesCount = () => this.get('/movies/count');
 
-  getMoviePoster = poster => this.get(`/movie/poster?posterName=${poster}`);
+  getSingleMovie = movieId => this.get(`/movies/single/${movieId}`);
+
+  getStream = movieId => this.get('/stream/mp4/Kenpachi')
 }
 
 export default new MovieAPI();

@@ -11,6 +11,7 @@ import { checkMedia } from './utils/mediaUtils';
 
 const MainPage = React.lazy(() => import('pages/MainPage'));
 const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
+const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));
 
 
 
@@ -42,9 +43,10 @@ class InitializationLayer extends React.Component {
           <Router history={browserHistory}>
             <Switch>
               <React.Suspense fallback={<Loading/>}>
+                <Route path='/profile' component={ProfilePage}/>
+                <Route path='/movie/:movieId' component={SingleMoviePage}/>
                 <Route exact path='/home' component={MainPage}/>
                 <Redirect to={{ pathname: '/home', search: browserHistory.location.search}} />
-                <Route path='/profile' component={ProfilePage}/>
               </React.Suspense>
             </Switch>
           </Router>

@@ -27,7 +27,7 @@ export const StyledMoviesContainer = styled.div`${props => {
     }`;
 }}`;
 
-export const SingleMovie = styled(ThemedComponent)`
+export const SingleMovieLink = styled(ThemedComponent)`
   
 `;
 
@@ -56,18 +56,4 @@ export const MovieNameText = styled.p`
   font-family: 'Marck script', cursive;
   text-align: center;
   padding: 5px 10px;
-`;
-
-export const MetaData = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 12px 16px;
-`;
-
-export const MetaDataValue = styled.p`
-  font-size: 0.9rem;
-`;
-
-export const MetaDataKey = styled.p`
-  font-size: 0.9rem;
 `;
