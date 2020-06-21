@@ -22,7 +22,7 @@ export const ProfileButton = () => {
 
   return (
     <StyledProfileButton
-      elevation={5}
+      elevation={1}
       onClick={toggleDropDown}
       shouldElevateWhenHover
       withRipple

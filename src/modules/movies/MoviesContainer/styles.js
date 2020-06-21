@@ -1,35 +1,31 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
-import {
-  MOVIES_PER_PAGE,
-  SINGLE_MOVIE_HEIGHT,
-} from 'config/MoviesConfig';
 
-const COLUMNS = 3;
-const ROWS = Math.ceil(MOVIES_PER_PAGE / COLUMNS);
-const height = ROWS * SINGLE_MOVIE_HEIGHT;
-export const StyledMoviesContainer = styled.div`
-  width: 80%;
-  height: ${height}px;
-  margin: 30px auto;
-  
-  display: grid;
-  grid-template-columns: repeat(${COLUMNS}, 1fr);
-  grid-template-rows: min-content repeat(${ROWS}, auto);
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-  
-  // Pagination
-  & > :nth-child(1) {
-    grid-column: span ${COLUMNS};
-    grid-row: auto;
-  }
-  
-  & > .loading-container {
-    grid-column: span ${COLUMNS};
-    grid-row: span ${ROWS};
-  }
-`;
+export const StyledMoviesContainer = styled.div`${props => {
+  const { moviesPerPage } = props;
+  const COLUMNS = 3;
+  const ROWS = Math.ceil(moviesPerPage / COLUMNS);
+  return `
+    width: 80%;
+    margin: 30px auto;
+    
+    display: grid;
+    grid-template-columns: repeat(${COLUMNS}, 1fr);
+    grid-template-rows: repeat(${ROWS}, min-content);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    
+    // Pagination
+    & > :nth-child(1) {
+      grid-column: span ${COLUMNS};
+      grid-row: auto;
+    }
+    
+    & > .loading-container {
+      grid-column: span ${COLUMNS};
+      grid-row: span ${ROWS};
+    }`;
+}}`;
 
 export const SingleMovie = styled(ThemedComponent)`
   

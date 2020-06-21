@@ -45,6 +45,8 @@ export const Arrow = styled(ArrowSvg)`
   return `
       width: 2rem;
       height: 2rem;
+      min-width: 24px;
+      min-height: 24px;
       fill: ${fillColor};
       
       & .outline {

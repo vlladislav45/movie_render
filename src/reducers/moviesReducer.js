@@ -1,16 +1,21 @@
 import MovieAPI from 'api/MovieAPI';
+import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
 
 export const CHANGE_SELECTED_PAGE = 'CHANGE_SELECTED_PAGE';
 export const FETCH_ALL_MOVIES = 'FETCH_ALL_MOVIES';
 const MOVIES_COUNT = 'MOVIES_COUNT';
 const START_LOADING = 'START_LOADING';
+const CHANGE_MOVIES_PER_PAGE = 'CHANGE_MOVIES_PER_PAGE';
 
+// Only for testing purposes
+let timeout;
 export const fetchMovies = (page, size) => dispatch => {
+  clearTimeout(timeout);
   dispatch({
     type: START_LOADING,
   });
 
-  setTimeout(() => {
+  timeout = setTimeout(() => {
     const data = require('../modules/movies/stub.json');
 
     dispatch({
@@ -49,10 +54,16 @@ export const changeSelectedPage = newPage => ({
   payload: newPage,
 });
 
+export const changeMoviesPerPage = moviesPerPage => ({
+  type: CHANGE_MOVIES_PER_PAGE,
+  payload: moviesPerPage || DEFAULT_MOVIES_PER_PAGE,
+});
+
 const initialState = {
   movies: [],
   count: 0,
   selectedPage: 0,
+  moviesPerPage: DEFAULT_MOVIES_PER_PAGE,
   isLoading: false,
 };
 
@@ -72,6 +83,10 @@ export default ( state = initialState, action) => {
     case CHANGE_SELECTED_PAGE: return {
       ...state,
       selectedPage: payload,
+    };
+    case CHANGE_MOVIES_PER_PAGE: return {
+      ...state,
+      moviesPerPage: payload,
     };
     case START_LOADING: return {
       ...state,

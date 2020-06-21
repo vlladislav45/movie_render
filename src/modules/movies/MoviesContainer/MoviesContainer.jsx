@@ -1,32 +1,29 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { MovieNameText, MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
 import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
 import { Loading, Rating } from 'components';
 import MoviesPagination from '../MoviesPagination';
-import { MOVIES_PER_PAGE } from '../../../config/MoviesConfig';
+import { MovieNameText, MoviePoster, PosterContainer, SingleMovie, StyledMoviesContainer } from './styles';
 
-const MoviesContainer = props => {
+const MoviesContainer = () => {
   const dispatch = useDispatch();
-  // const [ movies, setMovies ] = useState([]);
 
-  const { movies, isLoading } = useSelector(({ moviesReducer }) => ({
+  const { movies, moviesPerPage, isLoading } = useSelector(({ moviesReducer }) => ({
     movies: moviesReducer.movies,
     selectedPage: moviesReducer.selectedPage,
+    moviesPerPage: moviesReducer.moviesPerPage,
     isLoading: moviesReducer.isLoading,
   }));
 
   useEffect(() => {
-    dispatch(fetchMovies(0, MOVIES_PER_PAGE));
+    dispatch(fetchMovies(0, moviesPerPage));
     dispatch(getMoviesCount());
-    // const moviesFromBE = require('../stub.json');
-    // setMovies(moviesFromBE);
-  }, []);
+  }, [moviesPerPage]);
 
   function renderMovies() {
     return movies.map(movie => (
-        <SingleMovie shouldElevateWhenHover elevation={8} key={movie.movieName} withRipple>
+        <SingleMovie shouldElevateWhenHover elevation={8} key={Math.random()} withRipple>
           <MovieNameText>{movie.movieName}</MovieNameText>
           <PosterContainer>
             <MoviePoster src={`data:image/png;base64,${movie.moviePoster}`}/>
@@ -38,8 +35,10 @@ const MoviesContainer = props => {
   }
 
   return (
-    <StyledMoviesContainer>
-      <MoviesPagination itemsCount={movies.length || 5}/>
+    <StyledMoviesContainer
+      moviesPerPage={moviesPerPage}
+    >
+      <MoviesPagination/>
       {isLoading ? <Loading /> : renderMovies()}
     </StyledMoviesContainer>
   );

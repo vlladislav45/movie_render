@@ -50,7 +50,7 @@ const Genres = props => {
       setOffset(0);
     }
 
-    if (!isVisible(first) || !isVisible(last)) {
+    if (!isVisible(first, 'left') || !isVisible(last, 'right')) {
       setIsOverflow(true);
     }
     else

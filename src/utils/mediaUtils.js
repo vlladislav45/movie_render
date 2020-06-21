@@ -21,5 +21,5 @@ export function checkMedia() {
       return mediasKey;
   }
 
-  return XL;
+  return L;
 }

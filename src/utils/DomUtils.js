@@ -1,22 +1,41 @@
 //https://stackoverflow.com/a/41698614
-export function isVisible(elem) {
+/**
+ * Check if element is visible
+ * @param elem the element to check
+ * @param fromPosition optional, if we want to check if its visible from left top right ot bot position
+ * (for example if we dont pass this prop, it will check if the center of the element is visible,
+ * but if we pass fromPosition = 'right' it will check if the right most side is visible)
+ * @return {boolean}
+ */
+export function isVisible(elem, fromPosition) {
+
   if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');
 
   const { width, height, left, top } = elem.getBoundingClientRect();
   if (elem.offsetWidth + elem.offsetHeight + height + width === 0) {
     return false;
   }
-  const elemCenter   = {
-    x: left + elem.offsetWidth / 2,
-    y: top + elem.offsetHeight / 2
-  };
+  const coordinatesFromElem = {};
+  if (fromPosition) {
+    if (fromPosition === 'right' || fromPosition === 'left') {
+      coordinatesFromElem.x = elem.getBoundingClientRect()[fromPosition];
+      coordinatesFromElem.y = elem.getBoundingClientRect().top + elem.offsetHeight / 2;
+      // add 1 extra pixel because of resize recalculation throttling
+      fromPosition === 'right' ? coordinatesFromElem.x -= 1 : coordinatesFromElem.x += 1;
+    }
+    // TODO: For top and bottom, if needed
+  } else {
+    coordinatesFromElem.x = left + elem.offsetWidth / 2;
+    coordinatesFromElem.y = top + elem.offsetHeight / 2;
+  }
 
-  if (elemCenter.x < 0) return false;
-  if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
-  if (elemCenter.y < 0) return false;
-  if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
-  let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
+  if (coordinatesFromElem.x < 0) return false;
+  if (coordinatesFromElem.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
+  if (coordinatesFromElem.y < 0) return false;
+  if (coordinatesFromElem.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
+  let pointContainer = document.elementFromPoint(coordinatesFromElem.x, coordinatesFromElem.y);
   do {
+    if (!pointContainer) return false;
     if (pointContainer === elem) return true;
   } while (pointContainer = pointContainer.parentNode);
 

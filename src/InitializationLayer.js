@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
+import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { connect } from 'react-redux';
 import { throttle } from 'lodash';
@@ -17,7 +17,7 @@ const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
 class InitializationLayer extends React.Component {
   constructor (props) {
     super(props);
-    this.getWindowDimensions = throttle(this.getWindowDimensions, 250).bind(this);
+    this.getWindowDimensions = throttle(this.getWindowDimensions, 300).bind(this);
   }
 
   getWindowDimensions() {
@@ -39,10 +39,11 @@ class InitializationLayer extends React.Component {
       <ThemeProvider theme={this.props.themeColors}>
         <TopNavBar/>
         <div>
-          <Router history={browserHistory} onClick={this.click}>
+          <Router history={browserHistory}>
             <Switch>
               <React.Suspense fallback={<Loading/>}>
-                <Route path='/' component={MainPage}/>
+                <Route exact path='/home' component={MainPage}/>
+                <Redirect to={{ pathname: '/home', search: browserHistory.location.search}} />
                 <Route path='/profile' component={ProfilePage}/>
               </React.Suspense>
             </Switch>

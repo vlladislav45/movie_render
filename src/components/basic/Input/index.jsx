@@ -13,24 +13,25 @@ const Input = props => {
   const inputId = useMemo(() => id || Input.nextId(), []);
   const inputRef = useRef();
 
-  const [ value, setValue ] = useState(preFilledText);
-  const [ isFocused, setIsFocused ] = useState(false);
+  const [value, setValue] = useState(preFilledText);
+  const [isFocused, setIsFocused] = useState(false);
 
   function renderBelowInput() {
-    if ( errorText )
+    if (errorText)
       return (
         <ErrorText>
           {errorText}
         </ErrorText>);
-    else
+    else if (helperText)
       return (
         <HelperText>
           {helperText}
         </HelperText>);
+    else return null;
   }
 
   function focusInput() {
-    if ( isFocused )
+    if (isFocused)
       return;
     setIsFocused(true);
     inputRef.current.focus();
@@ -79,12 +80,12 @@ const Input = props => {
 };
 
 Input.propTypes = {
-  type: PropTypes.oneOf([ 'filled', 'textarea', 'outline' ]),
+  type: PropTypes.oneOf(['filled', 'textarea', 'outline']),
   label: PropTypes.string,
   helperText: PropTypes.string,
   errorText: PropTypes.string,
   text: PropTypes.string,
-  leadingIcon: PropTypes.oneOfType([ PropTypes.element, PropTypes.object ]),
+  leadingIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.object]),
 };
 
 Input.defaultProps = {

@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { MOVIES_PER_PAGE } from 'config/MoviesConfig';
+import qs from 'query-string';
 import { Pagination } from 'components';
-import { changeSelectedPage } from 'reducers/moviesReducer';
+import { changeMoviesPerPage, changeSelectedPage } from 'reducers/moviesReducer';
 
-const MoviesPagination = () => {
+const MoviesPagination = ({ history }) => {
   const dispatch = useDispatch();
+  const { search, pathname } = useLocation();
 
-  const { count, selectedPage } = useSelector(({ moviesReducer }) => ({
+  const { count, selectedPage, moviesPerPage } = useSelector(({ moviesReducer }) => ({
     count: moviesReducer.count,
     selectedPage: moviesReducer.selectedPage,
+    moviesPerPage: moviesReducer.moviesPerPage,
   }));
 
+  const [currentPage, setCurrentPage] = useState(selectedPage);
+
+  useEffect(() => {
+    const query = qs.parse(search);
+    if (query.items && !isNaN(Number(query.items))) {
+      dispatch(changeMoviesPerPage((Number(query.items))));
+    }
+    if (query.page && !isNaN(Number(query.page))) {
+      setCurrentPage(Number(query.page) - 1)
+    }
+  }, [search]);
+
+
   function changePage(page) {
+    history.push(pathname + `?page=${page + 1}&items=${moviesPerPage}`);
     dispatch(changeSelectedPage(page));
   }
 
@@ -21,12 +38,12 @@ const MoviesPagination = () => {
       <Pagination
         onPageChange={changePage}
         itemsCount={count}
-        currentPage={selectedPage}
-        itemsPerPage={MOVIES_PER_PAGE}
+        currentPage={currentPage}
+        itemsPerPage={moviesPerPage}
       />
     </div>
   );
 
 };
 
-export default MoviesPagination;
+export default withRouter(MoviesPagination);
