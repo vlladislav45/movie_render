@@ -1,17 +1,27 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
 import { FULL_HD, XL, L, M, SM, XS_SM } from 'utils/mediaUtils';
+import { applyShadow } from 'utils/colorUtils';
 
-
-export const StyledTopNav = styled(ThemedComponent)`
-    ${({ theme: { primary, isDark }, device }) => {
-  const darkSurfaceWithPrimary = '#1f1b24';
+export const StyledTopNav = styled.div`
+    ${({ theme: { primary, onPrimary, secondary, isDark }, device }) => {
+  // This is actually with 16% primary overlay (as opposed to 8% recommendation)
+  const darkSurfaceWithPrimary = '#233234';
+  // const darkSurfaceWithPrimary = '#1f1b24';
   return `
             position: relative;
             width: 100%;
             padding: 48px 24px;
+            // Simulate 16 elevation, without being material component 
+            // (to prevent overlay in dark theme)
             background:  ${isDark ? darkSurfaceWithPrimary : primary};
+            box-shadow: ${applyShadow(16)};
+            color: ${onPrimary};
             z-index: 999;
+            
+             & ::selection {
+               background: ${secondary}66;
+             }
             
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(0, auto));

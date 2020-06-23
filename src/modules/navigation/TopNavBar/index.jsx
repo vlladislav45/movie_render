@@ -44,7 +44,6 @@ const TopNavBar = () => {
       <StyledTopNav
         ref={navRef}
         className='top-nav'
-        elevation={16}
         device={device}
       >
         <Logo id='logo'/>

@@ -5,14 +5,14 @@ import {
 } from 'utils/colorUtils';
 
 export const StyledThemedComponent = styled.div`${
-  ({ theme: { textColor, surface, isDark }, elevation, shouldElevateWhenHover, size }) => {
+  ({ theme: { onSurface, surface, isDark }, elevation, shouldElevateWhenHover, size }) => {
     const borderRadius = (size === 'm' || size === 's')
       ? 4
       : 0;
     
     return `
             background: ${surface};
-            color: ${textColor};
+            color: ${onSurface};
             box-shadow: ${applyShadow(elevation)};
             
             border-radius: ${borderRadius}px;

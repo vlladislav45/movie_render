@@ -4,7 +4,7 @@ import { IconContainer } from './styles';
 
 const DropDownIcon = ({ IconComponent }) => {
   const { color } = useSelector(({ themeReducer }) => ({
-    color: themeReducer.themeColors.textColor,
+    color: themeReducer.themeColors.onSurface,
   }));
 
   return (

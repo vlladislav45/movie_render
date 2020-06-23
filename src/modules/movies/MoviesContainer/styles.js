@@ -12,7 +12,7 @@ export const StyledMoviesContainer = styled.div`${props => {
     display: grid;
     grid-template-columns: repeat(${COLUMNS}, 1fr);
     grid-template-rows: repeat(${ROWS}, min-content);
-    grid-column-gap: 10px;
+    grid-column-gap: 30px;
     grid-row-gap: 10px;
     
     // Pagination
@@ -28,7 +28,11 @@ export const StyledMoviesContainer = styled.div`${props => {
 }}`;
 
 export const SingleMovieLink = styled(ThemedComponent)`
-  
+// Margin between all the children
+  & > * {
+    margin: 10px 0;
+    font-family: 'Lato', sans-serif;
+  }
 `;
 
 export const PosterContainer = styled.div`
@@ -51,9 +55,22 @@ export const MoviePoster = styled.img`
 `;
 
 export const MovieNameText = styled.p`
-  font-size: 1.3rem;
-  letter-spacing: 0.04rem;
-  font-family: 'Marck script', cursive;
+  font-size: 1.2rem;
   text-align: center;
-  padding: 5px 10px;
+  color: ${props => props.theme.onSurface};
+`;
+
+// TODO: Maybe remove
+export const Year = styled.p`
+  text-align: center;
+  color: ${props => props.theme.onSurface};
+  font-size: 1rem;
+`;
+
+export const Views = styled.p`
+  margin-top: -10px;
+  font-weight: bold;
+  text-align: center;
+  color: ${props => props.theme.secondary};
+  font-size: .8rem;
 `;

@@ -28,7 +28,7 @@ const SingleMovie = ({ match: { params } }) => {
         value = Object.values(value)
       }
       info.push(
-        <MovieDataPair pairKey={key} pairValue={value}/>
+        <MovieDataPair key={Math.random()} pairKey={key} pairValue={value}/>
       );
     }
     return info;
@@ -37,9 +37,9 @@ const SingleMovie = ({ match: { params } }) => {
   return (
     <div>
       {renderMovieInfo()}
-      <video width="540" height="310" controls>
-        <source src={`${API_URL}stream/mp4/Kenpachi`} type="video/mp4"/>
-      </video>
+      {/*<video width="540" height="310" controls>*/}
+      {/*  <source src={`${API_URL}stream/mp4/Kenpachi`} type="video/mp4"/>*/}
+      {/*</video>*/}
     </div>
   );
 };

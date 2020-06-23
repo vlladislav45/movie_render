@@ -1,13 +1,18 @@
 import React, { useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorText, HelperText, OuterContainer } from './styles.js';
-import { InputLabel, RippleElem, StyledFilledInput, StyledFilledInputContainer, } from './styles';
+import {
+  InputLabel,
+  RippleElem,
+  StyledFilledInput,
+  StyledFilledInputContainer,
+} from './styles';
 
 const Input = props => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
     type, label, helperText, errorText,
-    text, placeholder, id, ...rest
+    text, placeholder, id, onPrimary = false, ...rest
   } = props;
 
   const inputId = useMemo(() => id || Input.nextId(), []);
@@ -16,7 +21,7 @@ const Input = props => {
   const [value, setValue] = useState(preFilledText);
   const [isFocused, setIsFocused] = useState(false);
 
-  function renderBelowInput() {
+  function renderBelowInput () {
     if (errorText)
       return (
         <ErrorText>
@@ -30,7 +35,7 @@ const Input = props => {
     else return null;
   }
 
-  function focusInput() {
+  function focusInput () {
     if (isFocused)
       return;
     setIsFocused(true);
@@ -51,14 +56,21 @@ const Input = props => {
         error={hasError}
         focused={isFocused}
         withLeadingIcon={withLeadingIcon}
+        isOnPrimary={onPrimary}
       >
-        <RippleElem hasError={hasError} className={rippleClass}/>
+        <RippleElem
+          hasError={hasError}
+          className={rippleClass}
+          isOnPrimary={onPrimary}
+        />
         {LeadingIcon && <LeadingIcon/>}
         {label && <InputLabel
           htmlFor={inputId}
           elevated={isFocused || !!value}
+          isFocused={isFocused}
           withLeadingIcon={withLeadingIcon}
           hasError={hasError}
+          isOnPrimary={onPrimary}
         >
           {label}
         </InputLabel>}
@@ -68,6 +80,7 @@ const Input = props => {
           focused={isFocused}
           value={value}
           onBlur={() => setIsFocused(false)}
+          onFocus={() => setIsFocused(true)}
           onChange={e => setValue(e.target.value)}
           withLeadingIcon={withLeadingIcon}
           placeholder={shouldShowPlaceholder ? placeholder : ''}
@@ -86,6 +99,7 @@ Input.propTypes = {
   errorText: PropTypes.string,
   text: PropTypes.string,
   leadingIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.object]),
+  onPrimary: PropTypes.bool, // Flag to use secondary for accent instead of primary
 };
 
 Input.defaultProps = {

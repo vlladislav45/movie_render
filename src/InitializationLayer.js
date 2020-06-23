@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { connect } from 'react-redux';
 import { throttle } from 'lodash';
 import browserHistory from 'utils/browserHistory';
+import { Wrapper } from './baseStyles';
 import { Loading } from './components';
 import { TopNavBar } from './modules/navigation';
 import { changeWindowDimensions } from './reducers/uiReducer';
@@ -39,7 +40,7 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <TopNavBar/>
-        <div>
+        <Wrapper>
           <Router history={browserHistory}>
             <Switch>
               <React.Suspense fallback={<Loading/>}>
@@ -50,7 +51,7 @@ class InitializationLayer extends React.Component {
               </React.Suspense>
             </Switch>
           </Router>
-        </div>
+        </Wrapper>
       </ThemeProvider>
     );
   }

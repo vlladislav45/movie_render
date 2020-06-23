@@ -1,6 +1,6 @@
 import { hexToRgb } from 'utils/colorUtils'
 
-const RIPPLE_DURATION = 800;
+const RIPPLE_DURATION = 600;
 
 export function createRipple(evt, isDark, customColor) {
   let elem = evt.target;
@@ -31,7 +31,7 @@ export function createRipple(evt, isDark, customColor) {
 
   let rippleColor;
   if (customColor) {
-    const { r, g, b } = hexToRgb(customColor)
+    const { r, g, b } = hexToRgb(customColor);
     rippleColor = `rgba(${r},${g},${b}, `;
   } else {
     rippleColor = isDark ? 'rgba(255, 255, 255, ' : 'rgba(0, 0, 0, ';
@@ -45,8 +45,7 @@ export function createRipple(evt, isDark, customColor) {
     const frame = timestamp - animationStart;
     if ( frame < RIPPLE_DURATION ) {
       const easing = (frame / RIPPLE_DURATION) * (2 - (frame / RIPPLE_DURATION));
-
-      const color = rippleColor + (0.45 * (1 - easing)) + ')';
+      const color = rippleColor + (0.35 * (1 - easing)) + ')';
       const stop = 90 * easing + '%';
       elem.style['background-image'] = 'radial-gradient(' + circle + ', ' + color + ' ' + stop + ', transparent ' + stop + ')';
 

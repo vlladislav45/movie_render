@@ -2,13 +2,14 @@ import styled from 'styled-components';
 
 export const PageItem = styled.div`${props => {
   const { theme, isDisabled, isActive } = props;
-  const { textColor, primary, accent, surface, disabled } = theme;
+  const { onSurface, primary, onSurfaceMD, disabled } = theme;
   return `
-    color: ${textColor};
-    border: 1px solid ${disabled};
+    color: ${onSurfaceMD};
+    border: 1px solid ${onSurfaceMD};
     cursor: pointer;
     padding: 10px;
     font-size: 0.7rem;
+    transition: all .2s ease;
     
     user-select: none;
     text-align: center;
@@ -30,8 +31,7 @@ export const PageItem = styled.div`${props => {
     `};
     
     ${isActive && `
-      color: ${textColor};
-      border-color: ${primary};
+      color: ${onSurface};
       background: ${primary}88;
     `};
   `;

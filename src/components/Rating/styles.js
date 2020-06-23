@@ -9,6 +9,6 @@ export const StarContainer = styled.div`
   height: 1.5rem;
   display: inline-block;
   & > svg {   
-    fill: ${props => props.theme.accent};
+    fill: ${props => props.theme.secondary};
   }
 `;

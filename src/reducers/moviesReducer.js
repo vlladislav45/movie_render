@@ -9,13 +9,13 @@ const START_LOADING = 'START_LOADING';
 const CHANGE_MOVIES_PER_PAGE = 'CHANGE_MOVIES_PER_PAGE';
 
 // Only for testing purposes
-let timeout;
+// let timeout;
 export const fetchMovies = (page, size) => dispatch => {
   // clearTimeout(timeout);
-  // dispatch({
-  //   type: START_LOADING,
-  // });
-  //
+  dispatch({
+    type: START_LOADING,
+  });
+
   // timeout = setTimeout(() => {
   //   const data = require('../modules/movies/stub.json');
   //
