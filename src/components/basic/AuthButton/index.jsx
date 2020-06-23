@@ -4,7 +4,7 @@ import { StyledAuthButton } from './style';
 
 const AuthButton = ({ title, onClick, ...rest }) => {
 
-  const { themeColors: { neon, textColor } } = useSelector(({ themeReducer: { themeColors } }) => ({
+  const { themeColors: { neon, onSurface } } = useSelector(({ themeReducer: { themeColors } }) => ({
     themeColors,
   }));
 
@@ -14,7 +14,7 @@ const AuthButton = ({ title, onClick, ...rest }) => {
       className="auth-btn"
       onClick={onClick}
       background={neon}
-      color={textColor}
+      color={onSurface}
       {...rest}
     >
       <span></span>

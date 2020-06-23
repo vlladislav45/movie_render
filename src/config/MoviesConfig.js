@@ -1,2 +1,1 @@
-export const MOVIES_PER_PAGE = 1;
-export const SINGLE_MOVIE_HEIGHT = 300;
+export const DEFAULT_MOVIES_PER_PAGE = 9;

@@ -1,36 +1,42 @@
 import React, { useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorText, HelperText, OuterContainer } from './styles.js';
-import { InputLabel, RippleElem, StyledFilledInput, StyledFilledInputContainer, } from './styles';
+import {
+  InputLabel,
+  RippleElem,
+  StyledFilledInput,
+  StyledFilledInputContainer,
+} from './styles';
 
 const Input = props => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
     type, label, helperText, errorText,
-    text, placeholder, ...rest
+    text, placeholder, id, onPrimary = false, ...rest
   } = props;
 
-  const id = useMemo(() => Input.nextId(), []);
+  const inputId = useMemo(() => id || Input.nextId(), []);
   const inputRef = useRef();
 
-  const [ value, setValue ] = useState(preFilledText);
-  const [ isFocused, setIsFocused ] = useState(false);
+  const [value, setValue] = useState(preFilledText);
+  const [isFocused, setIsFocused] = useState(false);
 
-  function renderBelowInput() {
-    if ( errorText )
+  function renderBelowInput () {
+    if (errorText)
       return (
         <ErrorText>
           {errorText}
         </ErrorText>);
-    else
+    else if (helperText)
       return (
         <HelperText>
           {helperText}
         </HelperText>);
+    else return null;
   }
 
-  function focusInput() {
-    if ( isFocused )
+  function focusInput () {
+    if (isFocused)
       return;
     setIsFocused(true);
     inputRef.current.focus();
@@ -42,22 +48,29 @@ const Input = props => {
   const shouldShowPlaceholder = isFocused || !label;
   return (
     <OuterContainer
-      id={id}
-      onClick={focusInput}
+      id={inputId}
       {...rest}
     >
       <StyledFilledInputContainer
+        onClick={focusInput}
         error={hasError}
         focused={isFocused}
         withLeadingIcon={withLeadingIcon}
+        isOnPrimary={onPrimary}
       >
-        <RippleElem hasError={hasError} className={rippleClass}/>
+        <RippleElem
+          hasError={hasError}
+          className={rippleClass}
+          isOnPrimary={onPrimary}
+        />
         {LeadingIcon && <LeadingIcon/>}
         {label && <InputLabel
-          htmlFor={id}
+          htmlFor={inputId}
           elevated={isFocused || !!value}
+          isFocused={isFocused}
           withLeadingIcon={withLeadingIcon}
           hasError={hasError}
+          isOnPrimary={onPrimary}
         >
           {label}
         </InputLabel>}
@@ -67,6 +80,7 @@ const Input = props => {
           focused={isFocused}
           value={value}
           onBlur={() => setIsFocused(false)}
+          onFocus={() => setIsFocused(true)}
           onChange={e => setValue(e.target.value)}
           withLeadingIcon={withLeadingIcon}
           placeholder={shouldShowPlaceholder ? placeholder : ''}
@@ -79,12 +93,13 @@ const Input = props => {
 };
 
 Input.propTypes = {
-  type: PropTypes.oneOf([ 'filled', 'textarea', 'outline' ]),
+  type: PropTypes.oneOf(['filled', 'textarea', 'outline']),
   label: PropTypes.string,
   helperText: PropTypes.string,
   errorText: PropTypes.string,
   text: PropTypes.string,
-  leadingIcon: PropTypes.oneOfType([ PropTypes.element, PropTypes.object ]),
+  leadingIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.object]),
+  onPrimary: PropTypes.bool, // Flag to use secondary for accent instead of primary
 };
 
 Input.defaultProps = {

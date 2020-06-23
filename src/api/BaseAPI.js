@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 
-const API_SERVER = 'http://192.168.1.13';
+const API_SERVER = 'http://localhost';
+// const API_SERVER = 'http://192.168.1.17';
 const API_PORT = '8090';
-const API_URL = `${API_SERVER}:${API_PORT}/`;
+export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
 class BaseAPI {
 

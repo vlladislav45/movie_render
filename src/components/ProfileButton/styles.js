@@ -7,6 +7,7 @@ export const StyledProfileButton = styled(ThemedComponent)`
   align-items: center;
   cursor: pointer;
   padding: 10px;
+  // background: ${props => props.theme.secondary};
 `;
 
 export const Username = styled.span`
@@ -25,6 +26,6 @@ export const ArrowIconContainer = styled.span`
   & > svg {
     width: 2.2rem;
     height: 2.2rem;
-    fill: ${props => props.theme.accent};
+    fill: ${props => props.theme.secondary};
   }
 `;

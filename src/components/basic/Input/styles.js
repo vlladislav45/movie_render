@@ -9,29 +9,27 @@ const BaseInput = styled.input`
 `;
 
 export const OuterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
   position: relative;
   
   // Helper and error text
   & > p {
-    color: ${props => props.theme.isDark ? 'rgba(255,255,255,.6);' : 'rgba(0,0,0,.6);'};
+    font-family: 'Roboto', sans-serif; 
     padding-left: 16px;
     height: 16px;
     align-self: bottom;
-    font-size: 0.65rem;
-    letter-spacing: 0.03em;
+    font-size: 0.75rem;
+    letter-spacing: 0.03rem;
     margin: 2px 0;
   }
 `;
 
 export const StyledFilledInputContainer = styled.div`${props => {
-  const { theme, focused, error } = props;
-  const { error: errorColor, primary, textColor, disabled, accent, isDark } = theme;
+  const { theme, focused, error, isOnPrimary } = props;
+  const { error: errorColor, primary, onSurface, disabled, secondary, isDark } = theme;
   const background = isDark ? '#252525' : '#F5F5F5';
   const hoverBg = isDark ? '#2e2e2e' : '#ECECEC';
   const hoverBorderColor = isDark ? '#FFFFFF88' : '#00000088';
+  const accentColor = isOnPrimary ? secondary : primary;
   return `
     transition: all .3s;
     display: flex;
@@ -45,7 +43,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
     font-size: 1rem;
     
     ${focused && `
-      border-bottom-color: ${accent};
+      border-bottom-color: ${accentColor};
     `};
     
     ${error && `
@@ -68,7 +66,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
       width: 24px;
       height 24px;
       align-self: center;
-      fill: ${textColor};
+      fill: ${onSurface};
     }
     
     ${focused && `
@@ -78,7 +76,9 @@ export const StyledFilledInputContainer = styled.div`${props => {
         width: 100%;
         height: 100%;
         border-radius: 80%;
-        background-color: ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0, 0, 0, 0.1)'};
+        background-color: ${isDark
+    ? 'rgba(255,255,255,0.1)'
+    : 'rgba(0, 0, 0, 0.1)'};
         animation-name: ripple-bg;
         animation-duration: .3s;
         animation-fill-mode: forwards;
@@ -88,9 +88,10 @@ export const StyledFilledInputContainer = styled.div`${props => {
 }}`;
 
 export const InputLabel = styled.label`${props => {
-  const { accent, error, isDark } = props.theme;
-  const { elevated, withLeadingIcon, hasError } = props;
+  const { primary, error, secondary, isDark } = props.theme;
+  const { elevated, withLeadingIcon, hasError, isFocused, isOnPrimary } = props;
   const color = isDark ? '#CCCCCC' : '#585858';
+  const accentColor = isOnPrimary ? secondary : primary;
   return `
     position: absolute;
     
@@ -100,7 +101,7 @@ export const InputLabel = styled.label`${props => {
     user-select: none;
 
     will-change: transform;
-    transition: transform .3s ease, color .3s ease;
+    transition: transform .1s ease, color .1s ease;
     transform-origin: left top;
    
     left: 16px;
@@ -109,8 +110,9 @@ export const InputLabel = styled.label`${props => {
     pointer-events: none;
     
     ${elevated && `
+      transition: transform .3s ease, color .3s ease;
       transform: translateY(-90%) scale(0.75);
-      color: ${accent};
+      ${isFocused && `color: ${accentColor}`};
     `};
     
     ${hasError && `
@@ -125,16 +127,17 @@ export const InputLabel = styled.label`${props => {
 }}`;
 
 export const StyledFilledInput = styled(BaseInput)`${props => {
-  const { theme, focused, withLeadingIcon, hasError } = props;
-  const { accent, error, textColor, isDark } = theme;
+  const { theme, focused, withLeadingIcon, hasError, isOnPrimary } = props;
+  const { primary, error, disabled, onSurface, isDark, secondary } = theme;
   const color = isDark ? '#CCCCCC' : '#585858';
+  const accentColor = isOnPrimary ? secondary : primary;
   return `
     align-self: flex-end;
     background: none;
     padding: 20px 16px 6px;
-    caret-color: ${accent};
+    caret-color: ${accentColor};
     z-index: 10;
-    color: ${textColor};
+    color: ${onSurface};
     
     cursor: ${focused ? 'text' : 'pointer'};
     
@@ -147,7 +150,7 @@ export const StyledFilledInput = styled(BaseInput)`${props => {
     `};
     
     &::selection {
-      background: ${accent}33;
+      background: ${secondary}44;
     }
     
     &::placeholder {
@@ -157,7 +160,8 @@ export const StyledFilledInput = styled(BaseInput)`${props => {
 }}`;
 
 export const HelperText = styled.p`
-  color: ${props => props.theme.textColor};
+  color: ${props => props.theme.onSurface};
+  // color: #00454D;
 `;
 
 export const ErrorText = styled.p`
@@ -170,13 +174,15 @@ export const RippleElem = styled.span`
   left: 50%;
   height: 100%;
   
-  border-bottom: 2px solid ${({ theme, hasError }) => hasError
-  ? theme.error
-  : theme.accent};
+  ${({ theme, hasError, isOnPrimary }) => {
+  const accentColor = isOnPrimary ? theme.secondary : theme.primary;
+  const color = hasError ? theme.error : accentColor;
+  return `border-bottom: 2px solid ${color}`;
+}};
   
   &.activate {
     animation-name: ripple;
-    animation-duration: .3s;
+    animation-duration: .1s;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
   }

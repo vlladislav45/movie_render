@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
-import { XS_SM, L, XL, M, SM } from 'utils/mediaUtils';
+import { L, M, SM, XL, XS_SM } from 'utils/mediaUtils';
 import { PageItem, StyledPagination } from './styles';
 
+// Fallback
 const DEFAULT_ITEMS_PER_PAGE = 3;
 
 // ONLY ODD NUMBERS
-function getMaxPages (device) {
+function getMaxPages(device) {
   switch (device) {
     case XS_SM:
       return 3;
@@ -24,17 +25,28 @@ function getMaxPages (device) {
   }
 }
 
-const Pagination = ({ itemsCount, onPageChange, currentPage = 0, itemsPerPage = DEFAULT_ITEMS_PER_PAGE, ...rest }) => {
+const Pagination = ({ itemsCount, onPageChange, currentPage = 0,
+                      itemsPerPage = DEFAULT_ITEMS_PER_PAGE, ...rest }) => {
   const { device } = useDeviceDimensions();
   const maxPages = getMaxPages(device);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(maxPages);
   const [selectedPage, changeSelectedPage] = useState(currentPage);
+
+  useEffect(() => {
+    if (currentPage >= totalPages) {
+      selectPage(totalPages - 1);
+    } else if (currentPage < 0) {
+      selectPage(0);
+    } else {
+      selectPage(currentPage);
+    }
+  }, [currentPage, totalPages]);
 
   useEffect(() => {
     setTotalPages(Math.ceil(itemsCount / itemsPerPage));
   }, [itemsCount, itemsPerPage]);
 
-  function selectPage (page) {
+  function selectPage(page) {
     if (page < 0 || page >= totalPages || page === selectedPage)
       return;
 
@@ -73,6 +85,7 @@ const Pagination = ({ itemsCount, onPageChange, currentPage = 0, itemsPerPage = 
       return (
         <PageItem
           key={pageNumber}
+          className='page-number'
           isActive={selectedPage === pageNumber}
           onClick={() => selectPage(pageNumber)}
         >
@@ -85,16 +98,16 @@ const Pagination = ({ itemsCount, onPageChange, currentPage = 0, itemsPerPage = 
 
   function goPrevOrFirst() {
     if (!isOverFlow)
-      changeSelectedPage(selectedPage - 1);
+      selectPage(selectedPage - 1);
     else
-      changeSelectedPage(0);
+      selectPage(0);
   }
 
   function goNextOrLast() {
     if (!isOverFlow)
-      changeSelectedPage(selectedPage + 1);
+      selectPage(selectedPage + 1);
     else
-      changeSelectedPage(totalPages - 1);
+      selectPage(totalPages - 1);
   }
 
   return (

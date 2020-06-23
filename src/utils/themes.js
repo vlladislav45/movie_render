@@ -1,32 +1,35 @@
 export const BASE_THEME = 'BASE_THEME';
 export const DARK_THEME = 'DARK_THEME';
 
-
+// Primary is little changed cyan 600
+// Primary from dark theme is cyan 200
+// Secondary is the triadic of primary
+// Secondary for dark theme is the 200 version
 export default {
   [BASE_THEME]: {
-    primary: '#dc8e8e',
-    primaryDark: '#00796B',
-    primaryLight: '#80CBC4',
-    secondary: '#000000',
-    surface: '#EFEEFF',
-    neon: '#8edcdc',
-    textColor: '#000000DD',
-    disabled: '#00000037',
+    primary: '#00ACC1', // was #dc8e8e
+    primaryDark: '#00838F',
+    secondary: '#6d2cdf',
+    surface: '#FFFFFF',
+    onSurface: '#222222', //87% black
+    onSurfaceMD: '#666666', // 60% black medium emphasis
+    onPrimary: '#DDF4F7',
+    disabled: '#9F9F9F', // 38% black
     error: '#B00020',
-    accent: '#6200ee',
+    neon: '#8edcdc',
     isDark: false,
   },
   [DARK_THEME]: {
-    primary: '#BB86FC',
-    primaryDark: '#3700B3',
-    primaryLight: '#80CBC4',
-    secondary: '#03DAC6',
+    primary: '#80ddea', // was #BB86FC
+    primaryDark: '#00838F',
+    secondary: '#ba9bef',
     surface: '#121212',
-    neon: '#E040FB', // was #00909e
-    textColor: '#FFFFFFDD',
-    disabled: '#FFFFFF67',
+    onSurface: '#DDDDDD', // 87% white
+    onSurfaceMD: '#999999', // 60% white medium emphasis
+    onPrimary: '#FFFFF0DD',
+    disabled: '#606060', // 38% white
     error: '#CF6679',
-    accent: '#BB86FC',
+    neon: '#9d71ea', // was #00909e
     isDark: true,
   }
 };

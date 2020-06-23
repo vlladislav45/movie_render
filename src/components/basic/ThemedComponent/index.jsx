@@ -7,7 +7,7 @@ import { createRipple } from './ripple';
 
 /**
  * TODO: Maybe rename to MaterialComponent
- * Basic material component handling ripple, elevation adn themeing
+ * Basic material component handling ripple, elevation adn theming
  */
 const ThemedComponent = React.forwardRef(
   (
@@ -30,7 +30,8 @@ const ThemedComponent = React.forwardRef(
     if (withRipple) classes += ' ripple';
 
     function ripple (e) {
-      createRipple(e, themeName === DARK_THEME, themeColors[rippleColor]);
+      if (withRipple)
+        createRipple(e, themeName === DARK_THEME, themeColors[rippleColor]);
       onClick && onClick(e);
       e.stopPropagation();
     }
@@ -57,7 +58,7 @@ ThemedComponent.propTypes = {
   shouldElevateWhenHover: PropTypes.bool,
   withRipple: PropTypes.bool,
   rippleColor: PropTypes.oneOf(availableColors),
-  size: PropTypes.oneOf([ 's', 'm', 'l' ])
+  size: PropTypes.oneOf(['s', 'm', 'l']),
 };
 
 export default ThemedComponent;

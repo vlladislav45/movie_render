@@ -13,8 +13,8 @@ export const setBaseTheme = {
 };
 
 const initialState = {
-  themeName: DARK_THEME,
-  themeColors: { ...themes[DARK_THEME] },
+  themeName: BASE_THEME,
+  themeColors: { ...themes[BASE_THEME] },
 };
 
 export default (state = initialState, action) => {

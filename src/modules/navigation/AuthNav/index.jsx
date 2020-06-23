@@ -6,7 +6,7 @@ import { ProfileButton } from 'components';
 import { SearchBar } from '../index';
 import { AuthNavContainer, SearchBarContainer } from './styles';
 
-const AuthNav = () => {
+const AuthNav = props => {
   const dispatch = useDispatch();
 
   const { isLoggedIn } = useSelector(({ auth }) => ({
@@ -42,14 +42,11 @@ const AuthNav = () => {
   }
 
   return (
-    <AuthNavContainer>
+    <AuthNavContainer {...props}>
       {isLoggedIn
         ? renderLoggedInNav()
         : renderAnonymousNav()
       }
-      <SearchBarContainer>
-        <SearchBar/>
-      </SearchBarContainer>
     </AuthNavContainer>
   );
 };

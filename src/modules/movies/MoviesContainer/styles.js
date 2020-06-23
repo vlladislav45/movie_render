@@ -1,38 +1,38 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
-import {
-  MOVIES_PER_PAGE,
-  SINGLE_MOVIE_HEIGHT,
-} from 'config/MoviesConfig';
 
-const COLUMNS = 3;
-const ROWS = Math.ceil(MOVIES_PER_PAGE / COLUMNS);
-const height = ROWS * SINGLE_MOVIE_HEIGHT;
-export const StyledMoviesContainer = styled.div`
-  width: 80%;
-  height: ${height}px;
-  margin: 30px auto;
-  
-  display: grid;
-  grid-template-columns: repeat(${COLUMNS}, 1fr);
-  grid-template-rows: min-content repeat(${ROWS}, auto);
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-  
-  // Pagination
-  & > :nth-child(1) {
-    grid-column: span ${COLUMNS};
-    grid-row: auto;
-  }
-  
-  & > .loading-container {
-    grid-column: span ${COLUMNS};
-    grid-row: span ${ROWS};
-  }
-`;
+export const StyledMoviesContainer = styled.div`${props => {
+  const { moviesPerPage } = props;
+  const COLUMNS = 3;
+  const ROWS = Math.ceil(moviesPerPage / COLUMNS);
+  return `
+    width: 80%;
+    margin: 30px auto;
+    
+    display: grid;
+    grid-template-columns: repeat(${COLUMNS}, 1fr);
+    grid-template-rows: repeat(${ROWS}, min-content);
+    grid-column-gap: 30px;
+    grid-row-gap: 10px;
+    
+    // Pagination
+    & > :nth-child(1) {
+      grid-column: span ${COLUMNS};
+      grid-row: auto;
+    }
+    
+    & > .loading-container {
+      grid-column: span ${COLUMNS};
+      grid-row: span ${ROWS};
+    }`;
+}}`;
 
-export const SingleMovie = styled(ThemedComponent)`
-  
+export const SingleMovieLink = styled(ThemedComponent)`
+// Margin between all the children
+  & > * {
+    margin: 10px 0;
+    font-family: 'Lato', sans-serif;
+  }
 `;
 
 export const PosterContainer = styled.div`
@@ -55,23 +55,22 @@ export const MoviePoster = styled.img`
 `;
 
 export const MovieNameText = styled.p`
-  font-size: 1.3rem;
-  letter-spacing: 0.04rem;
-  font-family: 'Marck script', cursive;
+  font-size: 1.2rem;
   text-align: center;
-  padding: 5px 10px;
+  color: ${props => props.theme.onSurface};
 `;
 
-export const MetaData = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 12px 16px;
+// TODO: Maybe remove
+export const Year = styled.p`
+  text-align: center;
+  color: ${props => props.theme.onSurface};
+  font-size: 1rem;
 `;
 
-export const MetaDataValue = styled.p`
-  font-size: 0.9rem;
-`;
-
-export const MetaDataKey = styled.p`
-  font-size: 0.9rem;
+export const Views = styled.p`
+  margin-top: -10px;
+  font-weight: bold;
+  text-align: center;
+  color: ${props => props.theme.secondary};
+  font-size: .8rem;
 `;

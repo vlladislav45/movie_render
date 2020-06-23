@@ -41,10 +41,10 @@ export function hexToRgb (hex) {
 // https://material.io/design/color/dark-theme.html#properties
 const elevationOverlays = {
   0: 0,
-  1: 0.5,
-  2:  0.7 ,
-  3:  0.8 ,
-  4:  0.9 ,
+  1: 0.05,
+  2:  0.07 ,
+  3:  0.08 ,
+  4:  0.09 ,
   5:  0.1 ,
   6:  0.11 ,
   7:  0.11 ,
