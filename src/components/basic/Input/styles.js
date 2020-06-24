@@ -128,7 +128,7 @@ export const InputLabel = styled.label`${props => {
 
 export const StyledFilledInput = styled(BaseInput)`${props => {
   const { theme, focused, withLeadingIcon, hasError, isOnPrimary } = props;
-  const { primary, error, disabled, onSurface, isDark, secondary } = theme;
+  const { primary, error, onSurface, isDark, secondary } = theme;
   const color = isDark ? '#CCCCCC' : '#585858';
   const accentColor = isOnPrimary ? secondary : primary;
   return `

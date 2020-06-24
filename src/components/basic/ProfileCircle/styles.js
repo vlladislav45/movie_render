@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { ThemedComponent } from 'components/basic';
 
 export const StyledContainer = styled.div`
     border-radius:50%;

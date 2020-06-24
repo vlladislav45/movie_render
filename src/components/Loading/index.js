@@ -1,18 +1,18 @@
 import React from 'react';
-import './styles.css';
+import { CogWheel, LoadingInner, LoadingOuter } from './styles';
 
 const Loading = ({ isLoading = true }) => {
 
-  function renderLoading() {
+  function renderLoading () {
     return (
       isLoading && (
-        <div className="loading-container">
-          <div className="loading">
-            <div className="circle circle-one"/>
-            <div className="circle circle-two"/>
-            <div className="circle circle-three"/>
-          </div>
-        </div>
+        <LoadingOuter className='loading'>
+          <LoadingInner>
+            <CogWheel className="first"/>
+            <CogWheel className="second"/>
+            <CogWheel className="third"/>
+          </LoadingInner>
+        </LoadingOuter>
       )
     );
   }

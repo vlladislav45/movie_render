@@ -7,10 +7,11 @@ export const StyledMoviesContainer = styled.div`${props => {
   const ROWS = Math.ceil(moviesPerPage / COLUMNS);
   return `
     width: 80%;
+    min-height: ${ROWS * 10}vh;
     margin: 30px auto;
     
     display: grid;
-    grid-template-columns: repeat(${COLUMNS}, 1fr);
+    grid-template-columns: repeat(${COLUMNS}, minmax(100px, 1fr));
     grid-template-rows: repeat(${ROWS}, min-content);
     grid-column-gap: 30px;
     grid-row-gap: 10px;
@@ -21,7 +22,7 @@ export const StyledMoviesContainer = styled.div`${props => {
       grid-row: auto;
     }
     
-    & > .loading-container {
+    & > .loading {
       grid-column: span ${COLUMNS};
       grid-row: span ${ROWS};
     }`;
@@ -47,6 +48,8 @@ export const PosterContainer = styled.div`
 `;
 
 export const MoviePoster = styled.img`
+    opacity: 0;
+    transition: opacity .3s ease;
     position: absolute;
     left: 0;
     top: 0;
@@ -55,9 +58,18 @@ export const MoviePoster = styled.img`
 `;
 
 export const MovieNameText = styled.p`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  
   font-size: 1.2rem;
   text-align: center;
   color: ${props => props.theme.onSurface};
+  
+  @media only screen and (max-width: 600px) {
+    font-size: 1rem;
+  }
 `;
 
 // TODO: Maybe remove

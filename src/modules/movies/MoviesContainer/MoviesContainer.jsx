@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
-import { withRouter } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
-import { Loading, Rating } from 'components';
 import { API_URL } from 'api/BaseAPI';
-import Input from '../../../components/basic/Input';
+import { Loading, Rating } from 'components';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router';
+import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
 import MoviesPagination from '../MoviesPagination';
 import {
   MovieNameText,
@@ -12,9 +11,10 @@ import {
   PosterContainer,
   SingleMovieLink,
   StyledMoviesContainer,
-  Views, Year,
+  Views,
 } from './styles';
 
+//TODO: Responsive
 const MoviesContainer = ({ history }) => {
   const dispatch = useDispatch();
 
@@ -33,7 +33,7 @@ const MoviesContainer = ({ history }) => {
   }, [moviesPerPage]);
 
   function imageLoaded (e) {
-    // TODO:
+    e.target.style.opacity = '1';
   }
 
   function renderMovies () {
@@ -42,10 +42,10 @@ const MoviesContainer = ({ history }) => {
           // key={Math.random()}
           key={movie.id}
           elevation={8}
-          // onClick={() => history.push('/movie/' + movie.id)}
+          onClick={() => history.push('/movie/' + movie.id)}
           shouldElevateWhenHover
         >
-          <MovieNameText>{movie.movieName}</MovieNameText>
+          <MovieNameText title={movie.movieName}>{movie.movieName}</MovieNameText>
           <PosterContainer>
             <MoviePoster
               // src={'https://placeimg.com/100/100/any&rnd=' + Math.random()}
@@ -54,7 +54,7 @@ const MoviesContainer = ({ history }) => {
             />
           </PosterContainer>
           {/*<Rating rating={movie.movieRating} maxStars={5}/>*/}
-          <Rating rating={(Math.random() * (0.0 - 5.0) + 5.0).toFixed(2)} maxStars={5}/>
+          <Rating rating={parseFloat((Math.random() * (0.0 - 5.0) + 5.0).toFixed(2))} maxStars={5}/>
           <Views><small>Views:</small> {movie.movieViews}</Views>
         </SingleMovieLink>
       ),

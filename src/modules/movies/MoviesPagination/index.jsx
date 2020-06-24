@@ -25,6 +25,7 @@ const MoviesPagination = ({ history }) => {
     if (query.page && !isNaN(Number(query.page))) {
       setCurrentPage(Number(query.page) - 1)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
 

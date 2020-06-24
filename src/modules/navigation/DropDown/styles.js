@@ -9,7 +9,7 @@ export const StyledDropDown = styled(ThemedComponent)`
   min-width: 300px;
   transition: top .5s;
   transition-timing-function: cubic-bezier(.86,.1,.43,1.21);
-  z-index: 99;
+  z-index: 1000;
   
   ${props => props.isOpen && `top: ${props.topOffset}px;`}
 `;

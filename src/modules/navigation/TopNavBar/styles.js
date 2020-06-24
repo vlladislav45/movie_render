@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { ThemedComponent } from 'components/basic';
-import { FULL_HD, XL, L, M, SM, XS_SM } from 'utils/mediaUtils';
 import { applyShadow } from 'utils/colorUtils';
+import { FULL_HD, L, M, SM, XL, XS_SM } from 'utils/mediaUtils';
 
 export const StyledTopNav = styled.div`
     ${({ theme: { primary, onPrimary, secondary, isDark }, device }) => {
@@ -17,7 +16,7 @@ export const StyledTopNav = styled.div`
             background:  ${isDark ? darkSurfaceWithPrimary : primary};
             box-shadow: ${applyShadow(16)};
             color: ${onPrimary};
-            z-index: 999;
+            z-index: 1001;
             
              & ::selection {
                background: ${secondary}66;

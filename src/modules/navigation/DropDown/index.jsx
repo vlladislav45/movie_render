@@ -21,6 +21,7 @@ export const DropDown = ({ topOffset, items = {} }) => {
     if (isOpen)
       document.addEventListener('click', checkIfClickOutside);
     return () => document.removeEventListener('click', checkIfClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   function checkIfClickOutside (e) {

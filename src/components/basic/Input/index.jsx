@@ -15,7 +15,7 @@ const Input = props => {
     text, placeholder, id, onPrimary = false, ...rest
   } = props;
 
-  const inputId = useMemo(() => id || Input.nextId(), []);
+  const inputId = useMemo(() => id || Input.nextId(), [id]);
   const inputRef = useRef();
 
   const [value, setValue] = useState(preFilledText);

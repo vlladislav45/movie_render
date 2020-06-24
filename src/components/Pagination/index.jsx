@@ -40,10 +40,12 @@ const Pagination = ({ itemsCount, onPageChange, currentPage = 0,
     } else {
       selectPage(currentPage);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, totalPages]);
 
   useEffect(() => {
     setTotalPages(Math.ceil(itemsCount / itemsPerPage));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsCount, itemsPerPage]);
 
   function selectPage(page) {

@@ -18,6 +18,7 @@ const SingleMovie = ({ match: { params } }) => {
 
   useEffect(() => {
     dispatch(fetchSingleMovie(movieId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function renderMovieInfo() {
