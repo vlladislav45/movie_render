@@ -17,6 +17,8 @@ export const StyledTopNav = styled.div`
             box-shadow: ${applyShadow(16)};
             color: ${onPrimary};
             z-index: 1001;
+            // We dont need anything positioned right below it
+            margin-bottom: 30px;
             
              & ::selection {
                background: ${secondary}66;

@@ -46,8 +46,9 @@ class InitializationLayer extends React.Component {
               <React.Suspense fallback={<Loading/>}>
                 <Route path='/profile' component={ProfilePage}/>
                 <Route path='/movie/:movieId' component={SingleMoviePage}/>
-                <Route exact path='/home' component={MainPage}/>
-                <Redirect to={{ pathname: '/home', search: browserHistory.location.search}} />
+                <Route exact path='/' component={MainPage}/>
+                {/*TODO: Redirect not working properly*/}
+                {/*<Redirect to={{ pathname: '/', search: browserHistory.location.search}} />*/}
               </React.Suspense>
             </Switch>
           </Router>

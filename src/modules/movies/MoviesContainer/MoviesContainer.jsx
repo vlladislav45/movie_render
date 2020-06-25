@@ -11,26 +11,25 @@ import {
   PosterContainer,
   SingleMovieLink,
   StyledMoviesContainer,
-  Views,
+  Views, Year,
 } from './styles';
 
 //TODO: Responsive
 const MoviesContainer = ({ history }) => {
   const dispatch = useDispatch();
 
-  const { movies, moviesPerPage, isLoading, isDark } = useSelector(
-    ({ moviesReducer, themeReducer }) => ({
+  const { movies, moviesPerPage, selectedPage, isLoading } = useSelector(
+    ({ moviesReducer }) => ({
       movies: moviesReducer.movies,
       selectedPage: moviesReducer.selectedPage,
       moviesPerPage: moviesReducer.moviesPerPage,
       isLoading: moviesReducer.isLoading,
-      isDark: themeReducer.themeColors.isDark,
     }));
 
   useEffect(() => {
-    dispatch(fetchMovies(0, moviesPerPage));
+    dispatch(fetchMovies(selectedPage, moviesPerPage));
     dispatch(getMoviesCount());
-  }, [moviesPerPage]);
+  }, [selectedPage, moviesPerPage]);
 
   function imageLoaded (e) {
     e.target.style.opacity = '1';
@@ -46,6 +45,7 @@ const MoviesContainer = ({ history }) => {
           shouldElevateWhenHover
         >
           <MovieNameText title={movie.movieName}>{movie.movieName}</MovieNameText>
+          <Year>{movie.year}</Year>
           <PosterContainer>
             <MoviePoster
               // src={'https://placeimg.com/100/100/any&rnd=' + Math.random()}

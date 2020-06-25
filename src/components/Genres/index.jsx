@@ -1,13 +1,32 @@
-import React, { createRef, useEffect, useRef, useState, useLayoutEffect } from 'react';
+import React, {
+  createRef,
+  useEffect,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
-import { Arrow, Carousel, GenresContainer, GenresList, SingleGenre, SLIDE_DURATION, } from './styles';
+import { updateFilter } from 'reducers/moviesReducer';
+import {
+  Arrow,
+  Carousel,
+  GenresContainer,
+  GenresList,
+  SingleGenre,
+  SLIDE_DURATION,
+} from './styles';
 
 // If the carousel is sliding, user should not be able to initiate another slide
 // because offset will be calculated wrong
 let isSliding = false;
 
 const Genres = props => {
+  const dispatch = useDispatch();
+  const { selectedGenres = [] } = useSelector(({ moviesReducer: { filters } }) => ({
+    selectedGenres: filters.genres,
+  }));
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
 
@@ -38,7 +57,7 @@ const Genres = props => {
 
   useLayoutEffect(checkIfOverflows, [genresRef, screenWidth]);
 
-  function checkIfOverflows() {
+  function checkIfOverflows () {
     const first = Object.values(genresRef)[0]?.current;
     const last = Object.values(genresRef).reverse()[0]?.current;
 
@@ -52,12 +71,11 @@ const Genres = props => {
 
     if (!isVisible(first, 'left') || !isVisible(last, 'right')) {
       setIsOverflow(true);
-    }
-    else
+    } else
       setIsOverflow(false);
   }
 
-  function slideLeft() {
+  function slideLeft () {
     // Do nothing if we are at the left end or sliding
     if (leftEnd || isSliding) return;
 
@@ -66,7 +84,7 @@ const Genres = props => {
     setTimeout(() => isSliding = false, SLIDE_DURATION);
   }
 
-  function slideRight() {
+  function slideRight () {
     // Do nothing if we are at the right end or sliding
     if (rightEnd || isSliding) return;
 
@@ -106,11 +124,24 @@ const Genres = props => {
     setOffset(newOffset);
   };
 
-  function renderGenres() {
+  function genreClicked (genre) {
+    let newGenres;
+    if (selectedGenres.includes(genre))
+      newGenres = selectedGenres.filter(g => g !== genre);
+    else
+      newGenres = selectedGenres.concat(genre);
+
+    dispatch(updateFilter({ genres: newGenres }));
+  }
+
+  // TODO: Render selected genres as chips
+  function renderGenres () {
     return genres.map((genre, index) =>
       <SingleGenre
         key={index}
         ref={genresRef[genre]}
+        isActive={selectedGenres.includes(genre)}
+        onClick={() => genreClicked(genre)}
       >
         {genre}
       </SingleGenre>);
@@ -119,12 +150,12 @@ const Genres = props => {
   return (
     <GenresContainer {...props} isOverflow={isOverflow}>
       {isOverflow &&
-        <Arrow
-          flipped={'true'}
-          ref={leftArrowRef}
-          disabled={leftEnd}
-          onClick={slideLeft}
-        />
+      <Arrow
+        flipped={'true'}
+        ref={leftArrowRef}
+        disabled={leftEnd}
+        onClick={slideLeft}
+      />
       }
       <Carousel>
         <GenresList
@@ -134,11 +165,11 @@ const Genres = props => {
         </GenresList>
       </Carousel>
       {isOverflow &&
-        <Arrow
-          ref={rightArrowRef}
-          disabled={rightEnd}
-          onClickCapture={slideRight}
-        />
+      <Arrow
+        ref={rightArrowRef}
+        disabled={rightEnd}
+        onClickCapture={slideRight}
+      />
       }
     </GenresContainer>
   );

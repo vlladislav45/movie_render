@@ -1,17 +1,19 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
 
+// TODO: Responsive
 export const StyledMoviesContainer = styled.div`${props => {
   const { moviesPerPage } = props;
   const COLUMNS = 3;
   const ROWS = Math.ceil(moviesPerPage / COLUMNS);
   return `
     width: 80%;
+    max-width: 80%;
     min-height: ${ROWS * 10}vh;
     margin: 30px auto;
     
     display: grid;
-    grid-template-columns: repeat(${COLUMNS}, minmax(100px, 1fr));
+    grid-template-columns: repeat(${COLUMNS}, minmax(10px, 1fr));
     grid-template-rows: repeat(${ROWS}, min-content);
     grid-column-gap: 30px;
     grid-row-gap: 10px;
@@ -72,11 +74,10 @@ export const MovieNameText = styled.p`
   }
 `;
 
-// TODO: Maybe remove
 export const Year = styled.p`
   text-align: center;
   color: ${props => props.theme.onSurface};
-  font-size: 1rem;
+  font-size: .8rem;
 `;
 
 export const Views = styled.p`
