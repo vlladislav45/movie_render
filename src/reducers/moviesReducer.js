@@ -1,6 +1,9 @@
 import MovieAPI from 'api/MovieAPI';
 import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
 
+//Genres
+const FETCH_GENRES = 'FETCH_GENRES';
+
 const CHANGE_SELECTED_PAGE = 'CHANGE_SELECTED_PAGE';
 const CHANGE_MOVIES_PER_PAGE = 'CHANGE_MOVIES_PER_PAGE';
 
@@ -13,6 +16,17 @@ const START_LOADING_SINGLE = 'START_LOADING_SINGLE';
 // FILTERS
 const UPDATE_FILTER = 'UPDATE_FILTER';
 const RESET_FILTER = 'RESET_FILTER';
+
+export const fetchGenres = () => dispatch => {
+  MovieAPI.getGenres().then(res => {
+    const { data } = res;
+
+    dispatch({
+      type: FETCH_GENRES,
+      payload: data,
+    });
+  });
+};
 
 // Only for testing purposes
 // let timeout;
@@ -91,6 +105,7 @@ export const resetFilter = () => ({
 });
 
 const initialState = {
+  genres: [],
   movies: [],
   count: 0,
   selectedPage: 0,
@@ -107,6 +122,11 @@ export default (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case FETCH_GENRES:
+      return {
+        ...state,
+        genres: payload,
+      };
     case FETCH_ALL_MOVIES:
       return {
         ...state,

@@ -5,9 +5,10 @@ import { API_URL } from 'api/BaseAPI';
 import { fetchSingleMovie } from 'reducers/moviesReducer';
 import { Loading } from 'components';
 import { ReactComponent as BackArrow } from 'assets/icons/arrow_back.svg';
+import MoreInfo from './MoreInfo';
+import MovieSummary from './MovieSummary';
 import {
   BackArrowWrapper,
-  MovieSummary,
   MovieTitle,
   MovieVideo,
   SingleMovieWrapper,
@@ -35,17 +36,16 @@ const SingleMovie = ({ match: { params }, history }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isLoading)
+  if (isLoading || !posterName)
     return <Loading/>;
   return (
     <SingleMovieWrapper>
       <BackArrowWrapper
+        color='primary'
         onClick={() => history.goBack()}
-        elevation={5}
-        shouldElevateWhenHover
-        withRipple
+        Icon={BackArrow}
       >
-        <BackArrow/>
+        {/*<BackArrow/>*/}
         BACK
       </BackArrowWrapper>
       <MovieVideo
@@ -58,11 +58,10 @@ const SingleMovie = ({ match: { params }, history }) => {
         <source src={`${API_URL}stream/mp4/Kenpachi`} type="video/mp4"/>
       </MovieVideo>
       <MovieTitle>
-        {movieName}
+        <p>{movieName}</p>
       </MovieTitle>
-      <MovieSummary>
-        {movieSummary}
-      </MovieSummary>
+      <MovieSummary summary={movieSummary} />
+      <MoreInfo className='more-info' />
       {/*{renderMovieInfo()}*/}
     </SingleMovieWrapper>
   );

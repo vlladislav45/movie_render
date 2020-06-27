@@ -8,7 +8,7 @@ import React, {
 import { useDispatch, useSelector } from 'react-redux';
 import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
-import { updateFilter } from 'reducers/moviesReducer';
+import { fetchGenres, updateFilter } from 'reducers/moviesReducer';
 import {
   Arrow,
   Carousel,
@@ -24,9 +24,11 @@ let isSliding = false;
 
 const Genres = props => {
   const dispatch = useDispatch();
-  const { selectedGenres = [] } = useSelector(({ moviesReducer: { filters } }) => ({
-    selectedGenres: filters.genres,
-  }));
+  const { genres = [], selectedGenres = [] } = useSelector(
+    ({ moviesReducer: { filters, genres } }) => ({
+      selectedGenres: filters.genres,
+      genres,
+    }));
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
 
@@ -34,7 +36,7 @@ const Genres = props => {
   const [genresRef, setGenresRef] = useState({});
   const [isOverflow, setIsOverflow] = useState(false);
 
-  const [genres, setGenres] = useState([]);
+  // const [genres, setGenres] = useState([]);
   const [offset, setOffset] = useState(0);
   const [leftEnd, setLeftEnd] = useState(true);
   const [rightEnd, setRightEnd] = useState(false);
@@ -42,12 +44,14 @@ const Genres = props => {
   const { width: screenWidth } = useDeviceDimensions();
 
   useEffect(() => {
-    const genresFromBackend = require('./stub.json').genres;
-    const refs = {};
-    genresFromBackend.forEach(genre => refs[genre] = createRef());
-    setGenres(genresFromBackend);
-    setGenresRef(refs);
+    dispatch(fetchGenres());
   }, []);
+
+  useEffect(() => {
+    const refs = {};
+    genres.forEach(genre => refs[genre['movieGenreName']] = createRef());
+    setGenresRef(refs);
+  }, [genres]);
 
   useEffect(() => {
     setOffset(0);
@@ -57,6 +61,8 @@ const Genres = props => {
 
   useLayoutEffect(checkIfOverflows, [genresRef, screenWidth]);
 
+  //TODO: when scrolled, and resize does not remove arrows,
+  // maybe do some recalculations
   function checkIfOverflows () {
     const first = Object.values(genresRef)[0]?.current;
     const last = Object.values(genresRef).reverse()[0]?.current;
@@ -136,15 +142,19 @@ const Genres = props => {
 
   // TODO: Render selected genres as chips
   function renderGenres () {
-    return genres.map((genre, index) =>
-      <SingleGenre
-        key={index}
-        ref={genresRef[genre]}
-        isActive={selectedGenres.includes(genre)}
-        onClick={() => genreClicked(genre)}
-      >
-        {genre}
-      </SingleGenre>);
+    return genres.map(genre => {
+      const { genreId: id, movieGenreName: name } = genre;
+      return (
+        <SingleGenre
+          id={id}
+          key={id}
+          ref={genresRef[name]}
+          isActive={selectedGenres.includes(genre)}
+          onClick={() => genreClicked(genre)}
+        >
+          {name}
+        </SingleGenre>);
+    });
   }
 
   return (

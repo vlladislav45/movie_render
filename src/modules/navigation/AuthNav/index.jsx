@@ -1,10 +1,10 @@
+import { ProfileButton } from 'components';
+import { AuthButton } from 'components/basic';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { attemptLogin } from 'reducers/auth';
-import { AuthButton } from 'components/basic';
-import { ProfileButton } from 'components';
-import { SearchBar } from '../index';
-import { AuthNavContainer, SearchBarContainer } from './styles';
+import browserHistory from 'utils/browserHistory';
+import { AuthNavContainer } from './styles';
 
 const AuthNav = props => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const AuthNav = props => {
     dispatch(attemptLogin('stefan', 'stefan123'));
   };
 
-  function renderLoggedInNav() {
+  function renderLoggedInNav () {
     return (
       <div className='logged-in auth'>
         <ProfileButton/>
@@ -26,7 +26,7 @@ const AuthNav = props => {
     );
   }
 
-  function renderAnonymousNav() {
+  function renderAnonymousNav () {
     return (
       <div className='auth'>
         <AuthButton
@@ -35,7 +35,7 @@ const AuthNav = props => {
         />
         <AuthButton
           title='register'
-          onClick={login}
+          onClick={() => browserHistory.push('/register')}
         />
       </div>
     );

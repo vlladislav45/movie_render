@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
+import { getOverlay, hexToRgb } from '../../../utils/colorUtils';
 import MoviesPagination from '../MoviesPagination';
 import {
   MovieNameText,
@@ -71,19 +72,6 @@ const MoviesContainer = ({ history }) => {
       {/*  <Input label='With error' errorText='error text' />*/}
       {/*  <Input placeholder='no label' />*/}
       {/*  <Input placeholder='no label' text='Prefilled' />*/}
-      {/*</div>*/}
-      {/*<div style={{*/}
-      {/*  width: '300px',*/}
-      {/*  height: '300px',*/}
-      {/*  background: '#000000'*/}
-      {/*}}>*/}
-      {/*  <div style={{*/}
-      {/*    width: '300px',*/}
-      {/*    height: '300px',*/}
-      {/*    background: '#FFFFFF',*/}
-      {/*    opacity: '0.38'*/}
-      {/*  }}>*/}
-      {/*  </div>*/}
       {/*</div>*/}
       <MoviesPagination/>
       {isLoading ? <Loading/> : renderMovies()}

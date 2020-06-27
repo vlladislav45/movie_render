@@ -5,11 +5,11 @@ import {
 } from 'utils/colorUtils';
 
 export const StyledThemedComponent = styled.div`${
-  ({ theme: { onSurface, surface, isDark }, elevation, shouldElevateWhenHover, size }) => {
+  ({ theme: { onSurface, surface, isDark }, elevation, shouldElevateWhenHover, size, coord }) => {
     const borderRadius = (size === 'm' || size === 's')
       ? 4
       : 0;
-    
+    // const { x, y } = coord;
     return `
             background: ${surface};
             color: ${onSurface};
@@ -36,6 +36,30 @@ export const StyledThemedComponent = styled.div`${
                   `};
                `}
             }
+            
+            
+          
         `;
   }
 }`;
+/*
+*   &:after {
+               position: absolute;
+               content: "";
+               width: 5px;
+               height: 5px;
+               left: ${x}px;
+               top: ${y}px;
+               border-radius: 50%;
+               opacity: 0;
+               ${isActive && `
+                 animation: doRipple .2s linear forwards;
+                 opacity: 1;
+               `}
+           }
+
+           @keyframes doRipple {
+             100% {
+               transform: scale(80);
+             }
+           }*/

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 
-const API_SERVER = 'http://localhost';
-// const API_SERVER = 'http://192.168.1.17';
+// const API_SERVER = 'http://localhost';
+const API_SERVER = 'http://192.168.1.115';
 const API_PORT = '8090';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
@@ -17,9 +17,13 @@ class BaseAPI {
       baseURL: API_URL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
+      // headers: {
+      //   'Content-Type': 'multipart/form-data',
+      //   'Access-Control-Allow-Origin': '*',
+      // },
     });
   };
 

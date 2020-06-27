@@ -13,7 +13,7 @@ import { checkMedia } from './utils/mediaUtils';
 const MainPage = React.lazy(() => import('pages/MainPage'));
 const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
 const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));
-
+const Register = React.lazy(() => import('modules/authentication/Register'));
 
 
 class InitializationLayer extends React.Component {
@@ -47,6 +47,7 @@ class InitializationLayer extends React.Component {
                 <Route path='/profile' component={ProfilePage}/>
                 <Route path='/movie/:movieId' component={SingleMoviePage}/>
                 <Route exact path='/' component={MainPage}/>
+                <Route path='/register' component={Register} />
                 {/*TODO: Redirect not working properly*/}
                 {/*<Redirect to={{ pathname: '/', search: browserHistory.location.search}} />*/}
               </React.Suspense>

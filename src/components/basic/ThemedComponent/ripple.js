@@ -13,6 +13,7 @@ export function createRipple(evt, isDark, customColor) {
     // Get the first parent with ripple enabled
     while (isSvg(elem) ||
     elem !== document.body ) {
+
       if (typeof classes === 'string' && classes.includes('ripple')) {
         break;
       }
