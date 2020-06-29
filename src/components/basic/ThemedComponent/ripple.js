@@ -2,6 +2,7 @@ import { hexToRgb } from 'utils/colorUtils'
 
 const RIPPLE_DURATION = 600;
 
+// TODO: Remove if not used
 export function createRipple(evt, isDark, customColor) {
   let elem = evt.target;
 

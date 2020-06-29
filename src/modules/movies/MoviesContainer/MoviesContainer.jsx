@@ -40,6 +40,7 @@ const MoviesContainer = ({ history }) => {
     return movies.map(movie => (
         <SingleMovieLink
           // key={Math.random()}
+          size='m'
           key={movie.id}
           elevation={8}
           onClick={() => history.push('/movie/' + movie.id)}

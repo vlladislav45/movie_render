@@ -83,7 +83,7 @@ const BaseButton = styled.button`${props => {
 
 export const ContainedButton = styled(BaseButton)`${props => {
   const { theme, color, disabled, isActive } = props;
-
+  
   // High emphasis text based on the color of button
   const textColor = getOverlay(theme[color], theme.overlay, 0.87);
   return `
@@ -104,8 +104,8 @@ export const ContainedButton = styled(BaseButton)`${props => {
     
     ${disabled && `
         box-shadow: none;
-        background: ${getOverlay(theme[color], '#FFFFFF', 0.38)};
-        color: ${getOverlay(textColor, '#FFFFFF', 0.38)};
+        background: ${theme.disabled};
+        // color: ${theme.onDisabled};
         cursor: default;
     `};
     

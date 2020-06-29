@@ -1,53 +1,70 @@
 import { ProfileButton } from 'components';
-import { AuthButton } from 'components/basic';
-import React from 'react';
+import { Modal, Button } from 'components/basic';
+import RegisterForm from 'modules/authentication/RegisterForm';
+import LoginForm from 'modules/authentication/LoginForm';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { attemptLogin } from 'reducers/auth';
-import browserHistory from 'utils/browserHistory';
-import { AuthNavContainer } from './styles';
+import { LoggedInNav, AnonymousNav } from './styles';
 
 const AuthNav = props => {
   const dispatch = useDispatch();
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const { isLoggedIn } = useSelector(({ auth }) => ({
     isLoggedIn: auth.isLoggedIn,
   }));
 
-  const login = () => {
-    // TODO: take credentials from input
-    dispatch(attemptLogin('stefan', 'stefan123'));
-  };
+
 
   function renderLoggedInNav () {
     return (
-      <div className='logged-in auth'>
+      <LoggedInNav {...props}>
         <ProfileButton/>
-      </div>
+      </LoggedInNav>
     );
   }
 
   function renderAnonymousNav () {
     return (
-      <div className='auth'>
-        <AuthButton
-          title='login'
-          onClick={login}
+      <AnonymousNav {...props}>
+        <Button
+          text='login'
+          color='secondary'
+          onClick={() => setLoginModalOpen(!loginModalOpen)}
+          // onClick={login}
         />
-        <AuthButton
-          title='register'
-          onClick={() => browserHistory.push('/register')}
+        <Button
+          text='register'
+          color='secondary'
+          onClick={() => setRegisterModalOpen(!registerModalOpen)}
         />
-      </div>
+        {ReactDOM.createPortal(
+          <Modal isOpen={registerModalOpen}
+                 stateChanged={newState => setRegisterModalOpen(newState)}>
+            <RegisterForm/>
+          </Modal>,
+          document.getElementById('modal'))}
+        {ReactDOM.createPortal(
+          <Modal isOpen={loginModalOpen}
+                 stateChanged={newState => setLoginModalOpen(newState)}
+          >
+            <LoginForm/>
+          </Modal>,
+          document.getElementById('modal'))}
+      </AnonymousNav>
     );
   }
 
   return (
-    <AuthNavContainer {...props}>
+    <>
       {isLoggedIn
         ? renderLoggedInNav()
         : renderAnonymousNav()
       }
-    </AuthNavContainer>
+    </>
   );
 };
 

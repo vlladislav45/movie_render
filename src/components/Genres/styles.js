@@ -33,6 +33,7 @@ export const SingleGenre = styled.li`
     line-height: 75px;
     font-size: 1rem;
     
+    color: ${props => props.theme.onPrimary};
     color: ${props => props.isActive && 'red'};
     
     &:hover {
@@ -71,8 +72,8 @@ export const Arrow = styled(ArrowSvg)`
       }
       
       ${disabled && `
-        fill: none;
-        stroke: ${theme.disabled}; 
+        fill: ${theme.disabled};
+        stroke: ${theme.secondary}; 
       `}
     `;
 }};
