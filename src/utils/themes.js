@@ -1,3 +1,5 @@
+import { getOverlay } from './colorUtils';
+
 export const BASE_THEME = 'BASE_THEME';
 export const DARK_THEME = 'DARK_THEME';
 
@@ -13,11 +15,13 @@ export default {
     surface: '#FFFFFF',
     onSurface: '#222222', //87% black
     onSurfaceMD: '#666666', // 60% black medium emphasis
-    onPrimary: '#DDF4F7',
+    onPrimary: '#DDF4F7', // TODO: for both 87% black on primary and secondary color
+    onSecondary: '#DDF4F7', //
     disabled: '#9F9F9F', // 38% black
     error: '#B00020',
     neon: '#8edcdc',
     isDark: false,
+    overlay: '#FFFFFF',
   },
   [DARK_THEME]: {
     primary: '#80ddea', // was #BB86FC
@@ -26,10 +30,14 @@ export default {
     surface: '#121212',
     onSurface: '#DDDDDD', // 87% white
     onSurfaceMD: '#999999', // 60% white medium emphasis
-    onPrimary: '#FFFFF0DD',
+    onPrimary: 'rgb(238, 251, 252)', // Calculated by getOverlay func
+    onSecondary: '#00000084',
     disabled: '#606060', // 38% white
     error: '#CF6679',
     neon: '#9d71ea', // was #00909e
     isDark: true,
+    overlay: '#000000',
   }
 };
+
+console.log(getOverlay('#80ddea', '#FFFFFF', 0.87))

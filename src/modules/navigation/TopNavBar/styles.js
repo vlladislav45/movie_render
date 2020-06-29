@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { applyShadow } from 'utils/colorUtils';
 import { FULL_HD, L, M, SM, XL, XS_SM } from 'utils/mediaUtils';
+import { VERY_HIGH_Z_INDEX } from '../../../config/zIndexes';
 
 export const StyledTopNav = styled.div`
     ${({ theme: { primary, onPrimary, secondary, isDark }, device }) => {
@@ -16,7 +17,9 @@ export const StyledTopNav = styled.div`
             background:  ${isDark ? darkSurfaceWithPrimary : primary};
             box-shadow: ${applyShadow(16)};
             color: ${onPrimary};
-            z-index: 1001;
+            z-index: ${VERY_HIGH_Z_INDEX};
+            // We dont need anything positioned right below it
+            margin-bottom: 30px;
             
              & ::selection {
                background: ${secondary}66;
@@ -111,6 +114,8 @@ export const StyledTopNav = styled.div`
             }
             & > #auth-nav {
               grid-area: auth;
+              justify-self: flex-end;
+              align-self: center;
             }
             & > #genres {
               grid-area: genres;

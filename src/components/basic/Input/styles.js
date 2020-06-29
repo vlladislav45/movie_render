@@ -1,3 +1,4 @@
+import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import styled from 'styled-components';
 
 const BaseInput = styled.input`
@@ -136,7 +137,8 @@ export const StyledFilledInput = styled(BaseInput)`${props => {
     background: none;
     padding: 20px 16px 6px;
     caret-color: ${accentColor};
-    z-index: 10;
+    // TODO: Why did i put this
+    z-index: ${NORMAL_Z_INDEX};
     color: ${onSurface};
     
     cursor: ${focused ? 'text' : 'pointer'};

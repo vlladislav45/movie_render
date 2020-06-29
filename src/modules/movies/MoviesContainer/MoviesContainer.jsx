@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
+import { getOverlay, hexToRgb } from '../../../utils/colorUtils';
 import MoviesPagination from '../MoviesPagination';
 import {
   MovieNameText,
@@ -11,26 +12,25 @@ import {
   PosterContainer,
   SingleMovieLink,
   StyledMoviesContainer,
-  Views,
+  Views, Year,
 } from './styles';
 
 //TODO: Responsive
 const MoviesContainer = ({ history }) => {
   const dispatch = useDispatch();
 
-  const { movies, moviesPerPage, isLoading, isDark } = useSelector(
-    ({ moviesReducer, themeReducer }) => ({
+  const { movies, moviesPerPage, selectedPage, isLoading } = useSelector(
+    ({ moviesReducer }) => ({
       movies: moviesReducer.movies,
       selectedPage: moviesReducer.selectedPage,
       moviesPerPage: moviesReducer.moviesPerPage,
       isLoading: moviesReducer.isLoading,
-      isDark: themeReducer.themeColors.isDark,
     }));
 
   useEffect(() => {
-    dispatch(fetchMovies(0, moviesPerPage));
+    dispatch(fetchMovies(selectedPage, moviesPerPage));
     dispatch(getMoviesCount());
-  }, [moviesPerPage]);
+  }, [selectedPage, moviesPerPage]);
 
   function imageLoaded (e) {
     e.target.style.opacity = '1';
@@ -40,12 +40,14 @@ const MoviesContainer = ({ history }) => {
     return movies.map(movie => (
         <SingleMovieLink
           // key={Math.random()}
+          size='m'
           key={movie.id}
           elevation={8}
           onClick={() => history.push('/movie/' + movie.id)}
           shouldElevateWhenHover
         >
           <MovieNameText title={movie.movieName}>{movie.movieName}</MovieNameText>
+          <Year>{movie.year}</Year>
           <PosterContainer>
             <MoviePoster
               // src={'https://placeimg.com/100/100/any&rnd=' + Math.random()}
@@ -71,19 +73,6 @@ const MoviesContainer = ({ history }) => {
       {/*  <Input label='With error' errorText='error text' />*/}
       {/*  <Input placeholder='no label' />*/}
       {/*  <Input placeholder='no label' text='Prefilled' />*/}
-      {/*</div>*/}
-      {/*<div style={{*/}
-      {/*  width: '300px',*/}
-      {/*  height: '300px',*/}
-      {/*  background: '#000000'*/}
-      {/*}}>*/}
-      {/*  <div style={{*/}
-      {/*    width: '300px',*/}
-      {/*    height: '300px',*/}
-      {/*    background: '#FFFFFF',*/}
-      {/*    opacity: '0.38'*/}
-      {/*  }}>*/}
-      {/*  </div>*/}
       {/*</div>*/}
       <MoviesPagination/>
       {isLoading ? <Loading/> : renderMovies()}

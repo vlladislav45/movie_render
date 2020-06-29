@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { ThemedComponent } from 'components/basic';
+import { VERY_HIGH_Z_INDEX } from 'config/zIndexes';
+import { applyShadow } from 'utils/colorUtils';
 
-export const StyledDropDown = styled(ThemedComponent)`
+export const StyledDropDown = styled.div`
   position: absolute;
   top: -5%;
   right: 0;
@@ -9,7 +11,10 @@ export const StyledDropDown = styled(ThemedComponent)`
   min-width: 300px;
   transition: top .5s;
   transition-timing-function: cubic-bezier(.86,.1,.43,1.21);
-  z-index: 1000;
+  box-shadow: ${applyShadow(16)};
+  background: ${props => props.theme.surface};
+  // 1 less than TopNavBar
+  z-index: ${VERY_HIGH_Z_INDEX - 1};
   
   ${props => props.isOpen && `top: ${props.topOffset}px;`}
 `;

@@ -1,19 +1,39 @@
 import MovieAPI from 'api/MovieAPI';
 import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
 
-export const CHANGE_SELECTED_PAGE = 'CHANGE_SELECTED_PAGE';
-export const FETCH_ALL_MOVIES = 'FETCH_ALL_MOVIES';
-const FETCH_SINGLE_MOVIE = 'FETCH_SINGLE_MOVIE';
-const MOVIES_COUNT = 'MOVIES_COUNT';
-const START_LOADING = 'START_LOADING';
+//Genres
+const FETCH_GENRES = 'FETCH_GENRES';
+
+const CHANGE_SELECTED_PAGE = 'CHANGE_SELECTED_PAGE';
 const CHANGE_MOVIES_PER_PAGE = 'CHANGE_MOVIES_PER_PAGE';
+
+const FETCH_ALL_MOVIES = 'FETCH_ALL_MOVIES';
+const START_LOADING_ALL = 'START_LOADING_ALL';
+const MOVIES_COUNT = 'MOVIES_COUNT';
+
+const FETCH_SINGLE_MOVIE = 'FETCH_SINGLE_MOVIE';
+const START_LOADING_SINGLE = 'START_LOADING_SINGLE';
+// FILTERS
+const UPDATE_FILTER = 'UPDATE_FILTER';
+const RESET_FILTER = 'RESET_FILTER';
+
+export const fetchGenres = () => dispatch => {
+  MovieAPI.getGenres().then(res => {
+    const { data } = res;
+
+    dispatch({
+      type: FETCH_GENRES,
+      payload: data,
+    });
+  });
+};
 
 // Only for testing purposes
 // let timeout;
 export const fetchMovies = (page, size) => dispatch => {
   // clearTimeout(timeout);
   dispatch({
-    type: START_LOADING,
+    type: START_LOADING_ALL,
   });
 
   // timeout = setTimeout(() => {
@@ -51,9 +71,12 @@ export const getMoviesCount = () => dispatch => {
 };
 
 export const fetchSingleMovie = movieId => dispatch => {
+  dispatch({
+    type: START_LOADING_SINGLE,
+  });
+
   MovieAPI.getSingleMovie(movieId).then(res => {
     const { data } = res;
-
     dispatch({
       type: FETCH_SINGLE_MOVIE,
       payload: data,
@@ -71,23 +94,39 @@ export const changeMoviesPerPage = moviesPerPage => ({
   payload: moviesPerPage || DEFAULT_MOVIES_PER_PAGE,
 });
 
+// FILTER
+export const updateFilter = filter => ({
+  type: UPDATE_FILTER,
+  payload: filter,
+});
+
+export const resetFilter = () => ({
+  type: RESET_FILTER,
+});
+
 const initialState = {
+  genres: [],
   movies: [],
   count: 0,
   selectedPage: 0,
   moviesPerPage: DEFAULT_MOVIES_PER_PAGE,
   isLoading: false,
   selectedMovie: {
-    movieId: null,
     movieInfo: {},
     isLoading: false,
-  }
+  },
+  filters: {},
 };
 
 export default (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case FETCH_GENRES:
+      return {
+        ...state,
+        genres: payload,
+      };
     case FETCH_ALL_MOVIES:
       return {
         ...state,
@@ -109,18 +148,40 @@ export default (state = initialState, action) => {
         ...state,
         moviesPerPage: payload,
       };
-    case START_LOADING:
+    case START_LOADING_ALL:
       return {
         ...state,
         isLoading: true,
+      };
+    case START_LOADING_SINGLE:
+      return {
+        ...state,
+        selectedMovie: {
+          ...state.selectedMovie,
+          isLoading: true,
+        },
       };
     case FETCH_SINGLE_MOVIE:
       return {
         ...state,
         selectedMovie: {
           ...state.selectedMovie,
-          movieInfo:  payload,
-        }
+          movieInfo: payload,
+          isLoading: false,
+        },
+      };
+    case RESET_FILTER:
+      return {
+        ...state,
+        filters: {},
+      };
+    case UPDATE_FILTER:
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          ...payload,
+        },
       };
     default:
       return state;
