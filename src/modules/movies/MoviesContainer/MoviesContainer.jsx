@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { API_URL } from 'api/BaseAPI';
 import { Loading, Rating, Tabs } from 'components';
 import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
+import { getOverlay, hexToRgb } from '../../../utils/colorUtils';
 import MoviesPagination from '../MoviesPagination';
 import {
   MovieNameText,

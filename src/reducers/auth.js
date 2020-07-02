@@ -8,7 +8,6 @@ const REGISTER_FAILED = 'REGISTER_FAILED';
 const LOGOUT = 'LOGOUT';
 const FINISH_REDIRECT = 'FINISH_REDIRECT';
 
-
 export const attemptLogin = (account, password) => dispatch => {
   // dispatch({
   //   type: LOGIN_SUCCESS,
@@ -16,6 +15,10 @@ export const attemptLogin = (account, password) => dispatch => {
   //     username: 'vlad',
   //   },
   // });
+  dispatch({
+    type: START_LOADING,
+  });
+
   dispatch({
     type: START_LOADING,
   });

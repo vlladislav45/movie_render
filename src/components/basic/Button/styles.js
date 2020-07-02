@@ -28,6 +28,7 @@ export const ButtonWrapper = styled.div`
 export const BaseButton = styled.button`${props => {
   const { isActive, withIcon, coordinates = {} } = props;
   const { x, y } = coordinates;
+
   return `
     display: flex;
     align-items: center;
@@ -60,6 +61,7 @@ export const BaseButton = styled.button`${props => {
      top: ${y}px;
      border-radius: 50%;
      opacity: 0;
+
      pointer-events: none;
      ${isActive && `
        animation: doRipple ${RIPPLE_DURATION + 20}ms linear forwards;
@@ -134,6 +136,7 @@ export const TextButton = styled(BaseButton)`${props => {
   const hoverColor = `rgba(${rO}, ${gO}, ${bO}, 0.04)`;
   const rippleColor = `rgba(${r}, ${g}, ${b}, 0.12)`;
   const textColor = theme[color];
+
   return `
     color: ${textColor};
     

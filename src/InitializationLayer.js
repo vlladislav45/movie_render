@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
 import { Wrapper } from './baseStyles';
 import { ConnectionHandler, Loading } from './components';
+import browserHistory from 'utils/browserHistory';
 import { SnackBar } from './components/basic';
 import { TopNavBar } from './modules/navigation';
 import { changeWindowDimensions } from './reducers/uiReducer';
@@ -14,6 +15,7 @@ import { checkMedia } from './utils/mediaUtils';
 const MainPage = React.lazy(() => import('pages/MainPage'));
 const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
 const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));
+
 const Register = React.lazy(
   () => import('modules/authentication/RegisterForm'));
 
@@ -43,7 +45,7 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <ConnectionHandler/>
-        <SnackBar/>
+        <SnackBar />
         <TopNavBar/>
         <Wrapper>
           <Router history={browserHistory}>
