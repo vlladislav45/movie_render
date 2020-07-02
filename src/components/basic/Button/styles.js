@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import { applyShadow, getOverlay, hexToRgb } from 'utils/colorUtils';
+import { rippleConstants } from 'config/constants';
+
+
+const { RIPPLE_DURATION } = rippleConstants;
 
 export const LeadingIcon = styled.span`
   width: 1.2rem;
@@ -21,14 +25,9 @@ export const ButtonWrapper = styled.div`
   align-items: center;
 `;
 
-let canEnd = true;
-const BaseButton = styled.button`${props => {
+export const BaseButton = styled.button`${props => {
   const { isActive, withIcon, coordinates = {} } = props;
   const { x, y } = coordinates;
-  if (isActive) {
-    canEnd = false;
-    setTimeout(() => canEnd = true, 400);
-  }
   return `
     display: flex;
     align-items: center;
@@ -47,10 +46,6 @@ const BaseButton = styled.button`${props => {
     letter-spacing: 1.25px;
     white-space: nowrap;
     background: none; 
-        
-    &:active {
-      outline: none;
-    }
     
     position: relative;
     overflow: hidden;
@@ -65,15 +60,19 @@ const BaseButton = styled.button`${props => {
      top: ${y}px;
      border-radius: 50%;
      opacity: 0;
+     pointer-events: none;
      ${isActive && `
-       animation: doRipple .2s linear forwards;
+       animation: doRipple ${RIPPLE_DURATION + 20}ms linear forwards;
        opacity: 1;
-     `}
+     `};
    }
    
    @keyframes doRipple {
-     100% {
-       transform: scale(80);
+     from {
+      transform: scale(0);
+     }
+     to {
+       transform: scale(60);
      }
    }
 
@@ -125,7 +124,7 @@ export const ContainedButton = styled(BaseButton)`${props => {
 }}`;
 
 export const TextButton = styled(BaseButton)`${props => {
-  const { color, theme, disabled } = props;
+  const { color = 'primary', theme, disabled } = props;
   const { r, g, b } = hexToRgb(theme[color]);
   const { r: rO, g: gO, b:bO} = hexToRgb(!theme.isDark ? '#000000' : '#FFFFFF');
   // material guidelines suggest 0.12, however 0.22 looks clearer on dark theme
@@ -134,7 +133,7 @@ export const TextButton = styled(BaseButton)`${props => {
   const activatedColor = `rgba(${r},${g},${b}, ${activatedAlpha})`;
   const hoverColor = `rgba(${rO}, ${gO}, ${bO}, 0.04)`;
   const rippleColor = `rgba(${r}, ${g}, ${b}, 0.12)`;
-  const textColor = theme.onSurface;
+  const textColor = theme[color];
   return `
     color: ${textColor};
     

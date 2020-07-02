@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { ButtonWrapper, ContainedButton, TextButton, LeadingIcon } from './styles';
+import { rippleConstants } from 'config/constants';
+import {
+  ButtonWrapper,
+  ContainedButton,
+  TextButton,
+  LeadingIcon,
+} from './styles';
 
-const RIPPLE_DURATION = 300;
 let time = 0;
 let timeout;
+const { RIPPLE_DURATION } = rippleConstants;
 const Button = React.forwardRef((props, ref) => {
   const {
     type = 'contained', color = 'primary', disabled = false,
-    Icon, text, children, ...rest
+    Icon, text, children, onClick, onClickCapture, ...rest
   } = props;
 
   const [isPressed, setIsPressed] = useState(false);
@@ -22,7 +28,7 @@ const Button = React.forwardRef((props, ref) => {
       time = Date.now();
   }, [isPressed]);
 
-  function buttonClicked (evt) {
+  function mouseDown (evt) {
     const x = evt.clientX - evt.target.getBoundingClientRect().left;
     const y = evt.clientY - evt.target.getBoundingClientRect().top;
     // noinspection JSCheckFunctionSignatures
@@ -30,7 +36,28 @@ const Button = React.forwardRef((props, ref) => {
     setIsPressed(true);
   }
 
-  function buttonNotPressed () {
+  function mouseUp (e) {
+    if (!isPressed) return;
+    cancelRipple();
+  }
+
+  function hoverOut () {
+    if (!isPressed) return;
+    cancelRipple();
+  }
+
+  function buttonClicked (e) {
+    cancelRipple();
+
+    if (onClick)
+      onClick(e);
+    if (onClickCapture)
+      onClickCapture(e);
+
+    e.stopPropagation();
+  }
+
+  function cancelRipple () {
     const timeLeft = Date.now() - time;
     // Workaround to ensure ripple animation will end
     if (timeLeft > 0 && timeLeft < RIPPLE_DURATION)
@@ -45,9 +72,10 @@ const Button = React.forwardRef((props, ref) => {
   const buttonProps = {
     isActive: isPressed,
     coordinates: coordinates,
-    onMouseDown: buttonClicked,
-    onMouseUp: buttonNotPressed,
-    onMouseOut: buttonNotPressed,
+    onMouseDownCapture: mouseDown,
+    onMouseUpCapture: mouseUp,
+    onMouseOut: hoverOut,
+    onClickCapture: buttonClicked,
     disabled: disabled,
     color: color,
     withIcon: !!Icon,
@@ -60,29 +88,29 @@ const Button = React.forwardRef((props, ref) => {
     >
 
       {type === 'contained' &&
-        <ContainedButton
-          {...buttonProps}
-        >
-          {Icon &&
-          <LeadingIcon>
-            <Icon />
-          </LeadingIcon>}
-          {text || children}
-        </ContainedButton>
+      <ContainedButton
+        {...buttonProps}
+      >
+        {Icon &&
+        <LeadingIcon>
+          <Icon/>
+        </LeadingIcon>}
+        {text || children}
+      </ContainedButton>
       }
       {type === 'text' &&
-        <TextButton
-          {...buttonProps}
-        >
-          {text || children}
-        </TextButton>
+      <TextButton
+        {...buttonProps}
+      >
+        {text || children}
+      </TextButton>
       }
     </ButtonWrapper>
   );
 });
 
 Button.propTypes = {
-  type: PropTypes.oneOf(['contained, outlined, text']),
+  type: PropTypes.oneOf(['contained', 'outlined', 'text']),
   color: PropTypes.oneOf(['primary', 'secondary']),
   emphasis: PropTypes.oneOf(['high', 'medium', 'low']),
   disabled: PropTypes.bool,

@@ -42,7 +42,7 @@ const SingleMovie = ({ match: { params }, history }) => {
     <SingleMovieWrapper>
       <BackArrowWrapper
         color='primary'
-        onClick={() => history.goBack()}
+        onClickCapture={() => history.goBack()}
         Icon={BackArrow}
       >
         {/*<BackArrow/>*/}

@@ -51,7 +51,10 @@ export const fetchMovies = (page, size) => dispatch => {
       type: FETCH_ALL_MOVIES,
       payload: data,
     });
-  });
+  }).catch(err => dispatch({
+    type: FETCH_ALL_MOVIES,
+    payload: []
+  }));
 };
 
 export const getMoviesCount = () => dispatch => {
@@ -67,7 +70,10 @@ export const getMoviesCount = () => dispatch => {
       type: MOVIES_COUNT,
       payload: data,
     });
-  });
+  }).catch(() => dispatch({
+    type: MOVIES_COUNT,
+    payload: 0,
+  }));
 };
 
 export const fetchSingleMovie = movieId => dispatch => {

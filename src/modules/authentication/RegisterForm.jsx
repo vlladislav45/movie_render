@@ -89,12 +89,12 @@ export default () => {
       <LoginContainer>
         <Loading isLoading={isLoading} elevation={18}/>
       </LoginContainer>
-      {registerError &&
-      <ErrorMessage>
-        {registerError}
-      </ErrorMessage>
-      }
       <FormTitle>Register</FormTitle>
+      {registerError &&
+        <ErrorMessage>
+          {registerError}
+        </ErrorMessage>
+      }
       <Input
         className='register-input'
         onChange={e => setUsername(e.target.value)}
@@ -125,7 +125,7 @@ export default () => {
       />
       <Button
         text='Register'
-        onClick={register}
+        onClickCapture={register}
         disabled={!btnEnabled}
       />
     </RegisterForm>

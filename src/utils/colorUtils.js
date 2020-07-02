@@ -37,6 +37,17 @@ export function hexToRgb (hex) {
   } : null;
 }
 
+export function rgbToHex (rgb) {
+  function toHex (decimal) {
+    const hex = Math.round(decimal).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }
+
+  const { r, g, b } = rgb;
+
+  return '#' + toHex(r) + toHex(g) + toHex(b);
+}
+
 // https://material.io/design/color/dark-theme.html#properties
 const elevationOverlays = {
   0: 0,
@@ -74,12 +85,12 @@ export function calcDarkThemeOverlay (elevation = 1) {
  * @param overlayColor overlay color as hex value (without opacity)
  * @param opacity alpha channel between 0 and 1
  */
-export function getOverlay (color, overlayColor, opacity) {
+export function getOverlay (color, overlayColor, opacity, asHex = false) {
   const { r: r1, g: g1, b: b1 } = hexToRgb(color);
   const { r: r2, g: g2, b: b2 } = hexToRgb(overlayColor);
   const r3 = r1 + (r2 - r1) * opacity;
   const g3 = g1 + (g2 - g1) * opacity;
   const b3 = b1 + (b2 - b1) * opacity;
 
-  return `rgb(${r3}, ${g3}, ${b3})`;
+  return asHex ? rgbToHex({ r: r3, g: g3, b: b3 }) : `rgb(${r3}, ${g3}, ${b3})`;
 }
