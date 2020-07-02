@@ -1,8 +1,8 @@
-import { API_URL } from 'api/BaseAPI';
-import { Loading, Rating } from 'components';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
+import { API_URL } from 'api/BaseAPI';
+import { Loading, Rating, Tabs } from 'components';
 import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
 import { getOverlay, hexToRgb } from '../../../utils/colorUtils';
 import MoviesPagination from '../MoviesPagination';
@@ -12,7 +12,8 @@ import {
   PosterContainer,
   SingleMovieLink,
   StyledMoviesContainer,
-  Views, Year,
+  Views,
+  Year,
 } from './styles';
 
 //TODO: Responsive
@@ -56,7 +57,9 @@ const MoviesContainer = ({ history }) => {
             />
           </PosterContainer>
           {/*<Rating rating={movie.movieRating} maxStars={5}/>*/}
-          <Rating rating={parseFloat((Math.random() * (0.0 - 5.0) + 5.0).toFixed(2))} maxStars={5}/>
+          <Rating
+            rating={parseFloat((Math.random() * (0.0 - 5.0) + 5.0).toFixed(2))}
+            maxStars={5}/>
           <Views><small>Views:</small> {movie.movieViews}</Views>
         </SingleMovieLink>
       ),
@@ -67,6 +70,23 @@ const MoviesContainer = ({ history }) => {
     <StyledMoviesContainer
       moviesPerPage={moviesPerPage}
     >
+      {/*<Tabs*/}
+      {/*  tabs={[*/}
+      {/*    {*/}
+      {/*      tabName: 'Tab one',*/}
+      {/*      tabContent: <div>Tab one</div>,*/}
+      {/*      isActive: true*/}
+      {/*    },*/}
+      {/*    {*/}
+      {/*      tabName: 'Tab two',*/}
+      {/*      tabContent: <div>Tab two</div>,*/}
+      {/*    },*/}
+      {/*    {*/}
+      {/*      tabName: 'Tab three',*/}
+      {/*      tabContent: <div>Tab three</div>,*/}
+      {/*    },*/}
+      {/*  ]}*/}
+      {/*/>*/}
       {/*<div style={{ display: 'grid', gridTemplateRows: 'repeat(5, 1fr)', gridRowGap:'30px' }}>*/}
       {/*  <Input label='Simple' />*/}
       {/*  <Input label='With helper' helperText='helper text' />*/}

@@ -5,7 +5,7 @@ import { Input, Button } from 'components/basic';
 import { attemptLogin } from 'reducers/auth';
 import { ErrorMessage, FormTitle, LoginContainer, LoginForm } from './styles';
 
-export default ({ onClose }) => {
+export default () => {
   const dispatch = useDispatch();
   const { isLoading, loginError } = useSelector(({ auth }) => ({
     isLoading: auth.isLoading,
@@ -18,32 +18,24 @@ export default ({ onClose }) => {
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
 
-  useEffect(() => () => {
-    console.log(' UN MOUNT ')
-  },[]);
-
   function login (e) {
     e.preventDefault();
-    dispatch(attemptLogin({
-      username,
-      password,
-    }));
+    dispatch(attemptLogin(username, password));
   }
-
 
   const btnEnabled = (username && !usernameError) &&
     (password && !passwordError);
   return (
     <LoginForm>
       <LoginContainer>
-        <Loading isLoading={isLoading} elevation={18} />
+        <Loading isLoading={isLoading} elevation={18}/>
       </LoginContainer>
-      {loginError &&
-        <ErrorMessage>
-          {loginError}
-        </ErrorMessage>
-      }
       <FormTitle>Login</FormTitle>
+      {loginError &&
+      <ErrorMessage>
+        {loginError}
+      </ErrorMessage>
+      }
       <Input
         onChange={e => setUsername(e.target.value)}
         label='Username'
@@ -56,7 +48,7 @@ export default ({ onClose }) => {
       />
       <Button
         text='Login'
-        onClick={login}
+        onClickCapture={login}
         disabled={!btnEnabled}
       />
     </LoginForm>

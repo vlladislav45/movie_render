@@ -6,6 +6,7 @@ const LOGIN_FAILED = 'LOGIN_FAILED';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAILED = 'REGISTER_FAILED';
 const LOGOUT = 'LOGOUT';
+const FINISH_REDIRECT = 'FINISH_REDIRECT';
 
 export const attemptLogin = (account, password) => dispatch => {
   // dispatch({
@@ -14,6 +15,9 @@ export const attemptLogin = (account, password) => dispatch => {
   //     username: 'vlad',
   //   },
   // });
+  dispatch({
+    type: START_LOADING,
+  });
 
   dispatch({
     type: START_LOADING,
@@ -68,9 +72,13 @@ export const logout = () => ({
   type: LOGOUT,
 });
 
+export const finishRedirect = () => ({
+  type: FINISH_REDIRECT,
+});
+
 const initialState = {
   loginError: null,
-  registerError: 'This email is already taken',
+  registerError: null,
   redirectToLogin: false, // we just registered, redirect to login
   isLoggedIn: false,
   isLoading: false,
@@ -86,6 +94,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: true,
+        registerError: null,
+        loginError: null,
       };
     case LOGIN_SUCCESS:
       return {
@@ -104,7 +114,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        redirectToLogin: true,
       };
+    case FINISH_REDIRECT:
+      return {
+        ...state,
+        redirectToLogin: false,
+      }
     case REGISTER_FAILED:
       return {
         ...state,

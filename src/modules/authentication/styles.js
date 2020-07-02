@@ -56,4 +56,5 @@ export const ErrorMessage = styled.p`
   color: ${props => props.theme.error};
   font-size: 1.1rem;
   font-family: 'Roboto', sans-serif;
+  margin: 12px 0!important;
 `;

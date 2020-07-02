@@ -3,11 +3,17 @@ import Genres from './Genres';
 import ProfileButton from './ProfileButton';
 import Rating from './Rating';
 import Pagination from './Pagination';
+import Timer from './Timer';
+import Tabs from './Tabs';
+import ConnectionHandler from './ConnectionHandler';
 
 export {
   ProfileButton,
   Loading,
   Genres,
   Rating,
-  Pagination
+  Pagination,
+  Timer,
+  Tabs,
+  ConnectionHandler,
 };

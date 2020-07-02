@@ -43,7 +43,7 @@ export default ({ summary = '' }) => {
       </StyledMovieSummary>
       {isOverflow &&
         <ReadMore
-          onClick={toggleSummary}
+          onClickCapture={toggleSummary}
           isExtended={isExtended}
         >
           {isExtended ? 'Hide' : 'Read more'}
