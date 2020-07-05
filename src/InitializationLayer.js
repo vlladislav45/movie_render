@@ -1,21 +1,18 @@
 import { throttle } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Router, Switch } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import { Route, Router, Switch, BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
-import { Wrapper } from './baseStyles';
 import { ConnectionHandler, Loading } from './components';
 import { SnackBar } from './components/basic';
 import { TopNavBar } from './modules/navigation';
 import { changeWindowDimensions } from './reducers/uiReducer';
+import RoutingLayer from './RoutingLayer';
 import { checkMedia } from './utils/mediaUtils';
+import { MainContent } from './baseStyles';
 
-const MainPage = React.lazy(() => import('pages/MainPage'));
-const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
-const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));
-const Register = React.lazy(
-  () => import('modules/authentication/RegisterForm'));
 
 class InitializationLayer extends React.Component {
   constructor (props) {
@@ -33,6 +30,8 @@ class InitializationLayer extends React.Component {
   componentDidMount () {
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
+
+    document.body.style.background = this.props.themeColors.surface;
   }
 
   componentWillUnmount () {
@@ -45,20 +44,18 @@ class InitializationLayer extends React.Component {
         <ConnectionHandler/>
         <SnackBar/>
         <TopNavBar/>
-        <Wrapper>
+        <MainContent>
           <Router history={browserHistory}>
             <Switch>
-              <React.Suspense fallback={<Loading elevation={0}/>}>
-                <Route path='/profile' component={ProfilePage}/>
-                <Route path='/movie/:movieId' component={SingleMoviePage}/>
-                <Route exact path='/' component={MainPage}/>
-                <Route path='/register' component={Register}/>
-                {/*TODO: Redirect not working properly*/}
-                {/*<Redirect to={{ pathname: '/', search: browserHistory.location.search}} />*/}
-              </React.Suspense>
+              {/*<Route exact path='/'>*/}
+              {/*  <Redirect to='/?page=1&items=9' />*/}
+              {/*</Route>*/}
+              <Route path='*'>
+                <RoutingLayer/>
+              </Route>
             </Switch>
           </Router>
-        </Wrapper>
+        </MainContent>
       </ThemeProvider>
     );
   }

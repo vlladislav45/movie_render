@@ -1,22 +1,18 @@
 import styled from 'styled-components';
 import { applyShadow } from 'utils/colorUtils';
 import { FULL_HD, L, M, SM, XL, XS_SM } from 'utils/mediaUtils';
-import { VERY_HIGH_Z_INDEX } from '../../../config/zIndexes';
+import { ThemedComponent } from 'components/basic';
+import { VERY_HIGH_Z_INDEX } from 'config/zIndexes';
 
-export const StyledTopNav = styled.div`
-    ${({ theme: { primary, onPrimary, secondary, isDark }, device }) => {
-  // This is actually with 16% primary overlay (as opposed to 8% recommendation)
-  const darkSurfaceWithPrimary = '#233234';
-  // const darkSurfaceWithPrimary = '#1f1b24';
+export const StyledTopNav = styled(ThemedComponent)`
+    ${({ theme: { primary, onPrimary, secondary, surface, isDark }, device }) => {
+      
   return `
             position: relative;
             width: 100%;
             padding: 48px 24px;
-            // Simulate 16 elevation, without being material component 
-            // (to prevent overlay in dark theme)
-            background:  ${isDark ? darkSurfaceWithPrimary : primary};
-            box-shadow: ${applyShadow(16)};
-            color: ${onPrimary};
+            background:  ${isDark ? '121212' : primary};
+            color: ${isDark ? primary : onPrimary};
             z-index: ${VERY_HIGH_Z_INDEX};
             // We dont need anything positioned right below it
             margin-bottom: 30px;

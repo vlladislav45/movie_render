@@ -1,3 +1,3 @@
 export const rippleConstants = {
-  RIPPLE_DURATION: 200,
+  SMALL_RIPPLE_DURATION: 250,
 };

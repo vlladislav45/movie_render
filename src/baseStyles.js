@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div`${props => {
+export const MainContent = styled.div`${props => {
   const { theme: { surface, secondary } } = props;
   return `
     background: ${surface};
@@ -12,3 +12,8 @@ export const Wrapper = styled.div`${props => {
   `;
 }}  
 `;
+
+export const Inner = styled.div`
+  width: 100%;
+  height: 100%;
+`

@@ -38,11 +38,13 @@ const AuthNav = props => {
     return (
       <AnonymousNav {...props}>
         <Button
+          // type='text'
           text='login'
           color='secondary'
           onClick={() => setLoginModalOpen(!loginModalOpen)}
         />
         <Button
+          // type='text'
           text='register'
           color='secondary'
           onClickCapture={() => setRegisterModalOpen(!registerModalOpen)}

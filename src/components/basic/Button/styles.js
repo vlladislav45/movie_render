@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { applyShadow, getOverlay, hexToRgb } from 'utils/colorUtils';
 import { rippleConstants } from 'config/constants';
 
-
-const { RIPPLE_DURATION } = rippleConstants;
+const { SMALL_RIPPLE_DURATION } = rippleConstants;
 
 export const LeadingIcon = styled.span`
   width: 1.2rem;
@@ -29,6 +28,7 @@ export const BaseButton = styled.button`${props => {
   const { isActive, withIcon, coordinates = {} } = props;
   const { x, y } = coordinates;
   return `
+    transition: all .3s ease;
     display: flex;
     align-items: center;
     width: auto;
@@ -62,7 +62,7 @@ export const BaseButton = styled.button`${props => {
      opacity: 0;
      pointer-events: none;
      ${isActive && `
-       animation: doRipple ${RIPPLE_DURATION + 20}ms linear forwards;
+       animation: doRipple ${SMALL_RIPPLE_DURATION + 20}ms linear forwards;
        opacity: 1;
      `};
    }
@@ -82,29 +82,42 @@ export const BaseButton = styled.button`${props => {
 
 export const ContainedButton = styled(BaseButton)`${props => {
   const { theme, color, disabled, isActive } = props;
-  
-  // High emphasis text based on the color of button
-  const textColor = getOverlay(theme[color], theme.overlay, 0.87);
+  const textColor = theme[`on${color.charAt(0).toUpperCase() +
+  color.slice(1)}`];
+  const backgroundColor = theme[color];
+
   return `
     box-shadow: ${applyShadow(2)};
-    background: ${theme[color]};
+    background: ${backgroundColor};
     color: ${textColor};
     
     &:hover {
       ${!disabled && `
         box-shadow: ${applyShadow(4)};
-        background: ${getOverlay(theme[color], '#FFFFFF', 0.08)};
+        background: ${getOverlay(backgroundColor, theme.overlay, 0.08)};
       `};
     }
     
+    // TODO: remove this IIFE and find a better, more generic way to do this
     &:focus, &:active {
-      background: ${getOverlay(theme[color], '#FFFFFF', 0.24)};
+    ${(() => {
+      const focusBg = getOverlay(backgroundColor, theme.overlay, 0.24, true);
+      const hoverFocusBg = getOverlay(focusBg, theme.overlay, 0.08);
+      return `
+      background: ${focusBg};
+        &:hover {
+          background: ${hoverFocusBg}!important;
+      }`;
+  })()}
     }
     
     ${disabled && `
         box-shadow: none;
         background: ${theme.disabled};
-        // color: ${theme.onDisabled};
+        color: ${getOverlay(textColor, '#FFFFFF', 0.38)};
+        
+        //         background: ${getOverlay(theme.surface, '#FFFFFF', 0.12)};
+        // color: ${theme.disabled};
         cursor: default;
     `};
     
@@ -126,10 +139,11 @@ export const ContainedButton = styled(BaseButton)`${props => {
 export const TextButton = styled(BaseButton)`${props => {
   const { color = 'primary', theme, disabled } = props;
   const { r, g, b } = hexToRgb(theme[color]);
-  const { r: rO, g: gO, b:bO} = hexToRgb(!theme.isDark ? '#000000' : '#FFFFFF');
+  const { r: rO, g: gO, b: bO } = hexToRgb(
+    !theme.isDark ? '#000000' : '#FFFFFF');
   // material guidelines suggest 0.12, however 0.22 looks clearer on dark theme
   // maybe reconsider to put it on light theme also (0.22)
-  const activatedAlpha = theme.isDark ? '0.22' : '0.12'; 
+  const activatedAlpha = theme.isDark ? '0.22' : '0.12';
   const activatedColor = `rgba(${r},${g},${b}, ${activatedAlpha})`;
   const hoverColor = `rgba(${rO}, ${gO}, ${bO}, 0.04)`;
   const rippleColor = `rgba(${r}, ${g}, ${b}, 0.12)`;
@@ -158,6 +172,6 @@ export const TextButton = styled(BaseButton)`${props => {
     & svg {
       fill: ${textColor};
     }
-  `
+  `;
 }}
 `;

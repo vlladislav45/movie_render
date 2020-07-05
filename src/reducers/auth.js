@@ -77,7 +77,7 @@ const initialState = {
   loginError: null,
   registerError: null,
   redirectToLogin: false, // we just registered, redirect to login
-  isLoggedIn: false,
+  isLoggedIn: true,
   isLoading: false,
   loggedInUser: {
     username: 'Stefan',

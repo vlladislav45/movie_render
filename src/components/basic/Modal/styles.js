@@ -8,14 +8,14 @@ export const ModalWrapper = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  background: ${props => props.theme.isDark ? '#FFFFFF' : '#000000'}55;
+  background: ${props => props.theme.isDark ? '#000000' : '#000000'}88;
   z-index: ${MAX_Z_INDEX};
   overflow: auto;
   
   display: flex;
   will-change: visibility;
   visibility:  ${props => props.isOpen ? 'visible' : 'hidden'};
-  transition: visibility .4s;
+  transition: visibility .32s;
   
   align-items: center;
   justify-content: center;
