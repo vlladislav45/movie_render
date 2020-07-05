@@ -12,7 +12,8 @@ const Input = props => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
     type, label, helperText, errorText,
-    text, placeholder, id, onPrimary = false, ...rest
+    text, placeholder, id, onPrimary = false,
+    onChange, onChangeCapture, ...rest
   } = props;
 
   const inputId = useMemo(() => id || Input.nextId(), [id]);
@@ -40,6 +41,16 @@ const Input = props => {
       return;
     setIsFocused(true);
     inputRef.current.focus();
+  }
+
+  function textChanges(e) {
+    setValue(e.target.value);
+    if (onChange)
+      onChange(e);
+    if (onChangeCapture)
+      onChangeCapture(e);
+
+    e.stopPropagation();
   }
 
   const hasError = !!errorText;
@@ -81,7 +92,7 @@ const Input = props => {
           value={value}
           onBlur={() => setIsFocused(false)}
           onFocus={() => setIsFocused(true)}
-          onChange={e => setValue(e.target.value)}
+          onChange={textChanges}
           withLeadingIcon={withLeadingIcon}
           placeholder={shouldShowPlaceholder ? placeholder : ''}
           {...rest}

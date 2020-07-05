@@ -1,53 +1,76 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { attemptLogin } from 'reducers/auth';
-import { AuthButton } from 'components/basic';
 import { ProfileButton } from 'components';
-import { SearchBar } from '../index';
-import { AuthNavContainer, SearchBarContainer } from './styles';
+import { Button, Modal } from 'components/basic';
+import LoginForm from 'modules/authentication/LoginForm';
+import RegisterForm from 'modules/authentication/RegisterForm';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { finishRedirect } from 'reducers/auth';
+import { AnonymousNav, LoggedInNav } from './styles';
 
 const AuthNav = props => {
   const dispatch = useDispatch();
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-  const { isLoggedIn } = useSelector(({ auth }) => ({
+  const { isLoggedIn, redirectToLogin } = useSelector(({ auth }) => ({
     isLoggedIn: auth.isLoggedIn,
+    redirectToLogin: auth.redirectToLogin,
   }));
 
-  const login = () => {
-    // TODO: take credentials from input
-    dispatch(attemptLogin('stefan', 'stefan123'));
-  };
+  useEffect(() => {
+    if (redirectToLogin) {
+      setRegisterModalOpen(false);
+      setLoginModalOpen(true);
+      dispatch(finishRedirect());
+    }
+  }, [redirectToLogin]);
 
-  function renderLoggedInNav() {
+  function renderLoggedInNav () {
     return (
-      <div className='logged-in auth'>
+      <LoggedInNav {...props}>
         <ProfileButton/>
-      </div>
+      </LoggedInNav>
     );
   }
 
-  function renderAnonymousNav() {
+  function renderAnonymousNav () {
     return (
-      <div className='auth'>
-        <AuthButton
-          title='login'
-          onClick={login}
+      <AnonymousNav {...props}>
+        <Button
+          text='login'
+          color='secondary'
+          onClick={() => setLoginModalOpen(!loginModalOpen)}
         />
-        <AuthButton
-          title='register'
-          onClick={login}
+        <Button
+          text='register'
+          color='secondary'
+          onClickCapture={() => setRegisterModalOpen(!registerModalOpen)}
         />
-      </div>
+        {ReactDOM.createPortal(
+          <Modal isOpen={registerModalOpen}
+                 stateChanged={newState => setRegisterModalOpen(newState)}>
+            <RegisterForm/>
+          </Modal>,
+          document.getElementById('modal'))}
+        {ReactDOM.createPortal(
+          <Modal isOpen={loginModalOpen}
+                 stateChanged={newState => setLoginModalOpen(newState)}
+          >
+            <LoginForm/>
+          </Modal>,
+          document.getElementById('modal'))}
+      </AnonymousNav>
     );
   }
 
   return (
-    <AuthNavContainer {...props}>
+    <>
       {isLoggedIn
         ? renderLoggedInNav()
         : renderAnonymousNav()
       }
-    </AuthNavContainer>
+    </>
   );
 };
 

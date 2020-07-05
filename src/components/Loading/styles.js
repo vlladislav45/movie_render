@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { MAX_Z_INDEX } from '../../config/zIndexes';
 
 const cogWheel = require('../../assets/loading/loading-img.png');
 export const LoadingOuter = styled.div`
@@ -10,19 +11,22 @@ export const LoadingOuter = styled.div`
 `;
 
 export const LoadingInner = styled.div`
-    position: absolute;
-    z-index: 999;
-    background: ${props => props.theme.disabled}66;
+    position: relative;
+    // Even above modals
+    z-index: ${props => MAX_Z_INDEX + props.elevation};
+    background: ${props => props.theme.disabled}33;
+    backdrop-filter: blur(2px);
     min-width: 100px;
     min-height: 50px;
     width: 100%;
     height: 100%;
+    display: flex; // make us of Flexbox
+    align-items: center; // does vertically center the desired content
 `;
 
 export const CogWheel = styled.div`
     position: absolute;
     display: inline-block;
-    top: 2px;
     background: url("${cogWheel}") no-repeat;
     background-size: contain;
     

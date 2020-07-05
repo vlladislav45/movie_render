@@ -33,6 +33,9 @@ export const SingleGenre = styled.li`
     line-height: 75px;
     font-size: 1rem;
     
+    color: ${props => props.theme.onPrimary};
+    color: ${props => props.isActive && 'red'};
+    
     &:hover {
       opacity: .7;
     }
@@ -40,7 +43,7 @@ export const SingleGenre = styled.li`
 
 export const Arrow = styled(ArrowSvg)`
   ${({ disabled, flipped, theme }) => {
-    const fillColor = theme.isDark ? theme.primary : theme.secondary;
+    const fillColor = theme.secondary;
   return `
       width: 2rem;
       height: 2rem;
@@ -49,10 +52,10 @@ export const Arrow = styled(ArrowSvg)`
       fill: ${fillColor};
       
       & .outline {
-        stroke: ${theme.onSurface};
+        // stroke: ${theme.onSurface};
       }
       
-      transition: filter .2s, fill 0.3s;
+      transition: all .3s;
       
       ${!disabled && 'cursor: pointer'};
       ${flipped && 'transform: rotate(180deg)'};
@@ -60,16 +63,17 @@ export const Arrow = styled(ArrowSvg)`
       &:hover {
         ${!disabled && `
           fill: ${fillColor}DD;
-          filter: drop-shadow(1px 1px 0px ${theme.onSurface});
+          stroke: ${theme.onSurface};
+          // filter: drop-shadow(1px 1px 0px ${theme.onSurface});
           ${flipped && `
-            filter: drop-shadow(1px -1px 0px ${theme.onSurface});
+            // filter: drop-shadow(1px -1px 0px ${theme.onSurface});
           `};
         `}
       }
       
       ${disabled && `
-        fill: none;
-        stroke: ${theme.disabled}; 
+        fill: ${theme.disabled};
+        stroke: ${theme.secondary}; 
       `}
     `;
 }};

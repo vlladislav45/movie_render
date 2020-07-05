@@ -41,7 +41,6 @@ export const DropDown = ({ topOffset, items = {} }) => {
       ref={ref}
       isOpen={isOpen}
       topOffset={topOffset}
-      elevation={16}
     >
       <DropDownList>
         {items.map((item, index) => (

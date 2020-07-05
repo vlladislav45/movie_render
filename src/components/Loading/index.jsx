@@ -1,13 +1,13 @@
 import React from 'react';
 import { CogWheel, LoadingInner, LoadingOuter } from './styles';
 
-const Loading = ({ isLoading = true }) => {
+const Loading = ({ isLoading = true, elevation = 0 }) => {
 
   function renderLoading () {
     return (
       isLoading && (
-        <LoadingOuter className='loading'>
-          <LoadingInner>
+        <LoadingOuter className='loading' elevation={elevation}>
+          <LoadingInner elevation={elevation}>
             <CogWheel className="first"/>
             <CogWheel className="second"/>
             <CogWheel className="third"/>
