@@ -37,12 +37,13 @@ const SingleMovie = ({ match: { params }, history }) => {
   }, []);
 
   if (isLoading || !posterName)
-    return <Loading/>;
+    return null;
+
   return (
     <SingleMovieWrapper>
       <BackArrowWrapper
         color='primary'
-        onClickCapture={() => history.goBack()}
+        onClick={() => history.goBack()}
         Icon={BackArrow}
       >
         {/*<BackArrow/>*/}

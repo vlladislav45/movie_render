@@ -1,5 +1,7 @@
 import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import styled from 'styled-components';
+import { ReactComponent as ErrorSvg } from 'assets/icons/error.svg';
+import { getOverlay } from 'utils/colorUtils';
 
 const BaseInput = styled.input`
   width: 100%;
@@ -24,13 +26,23 @@ export const OuterContainer = styled.div`
   }
 `;
 
+//TODO: disabled input
 export const StyledFilledInputContainer = styled.div`${props => {
-  const { theme, focused, error, isOnPrimary } = props;
-  const { error: errorColor, primary, onSurface, disabled, secondary, isDark } = theme;
-  const background = isDark ? '#252525' : '#F5F5F5';
-  const hoverBg = isDark ? '#2e2e2e' : '#ECECEC';
-  const hoverBorderColor = isDark ? '#FFFFFF88' : '#00000088';
+  const { theme, focused, error, isOnPrimary, disabled: isDisabled } = props;
+  const { error: errorColor, overlay, contrast, primary, onSurface, disabled, secondary, isDark } = theme;
+
+  let surface = theme.surface;
+  // Colored input
+  // const background = getOverlay(primary, overlay, 0.04, true);
+  // const hoverBg = getOverlay(primary, overlay, 0.08, true);
+  // const hoverBorderColor = getOverlay(primary, overlay, 0.60, true);
   const accentColor = isOnPrimary ? secondary : primary;
+
+  const background = getOverlay(surface, contrast, 0.04, true);
+  const hoverBg = getOverlay(surface, contrast, 0.08, true);
+  const hoverBorderColor = getOverlay(accentColor, contrast, 0.60, true);
+  
+  
   return `
     transition: all .3s;
     display: flex;
@@ -39,7 +51,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
     border-top-left-radius: 4px;
     overflow: hidden;
     background: ${background};
-    border-bottom: 1px solid ${disabled};
+    border-bottom: 1px solid ${getOverlay(accentColor, contrast, 0.38, true)};
     
     font-size: 1rem;
     
@@ -53,15 +65,15 @@ export const StyledFilledInputContainer = styled.div`${props => {
     `};
     
     &:hover {
-      ${!focused && `
+      ${!focused && !isDisabled && `
         background: ${hoverBg};
       `};
-      ${!focused && !error && `
+      ${!focused && !error && !isDisabled && `
         border-bottom-color: ${hoverBorderColor};
       `};
     }
     
-    & > svg {
+    & > svg.leading-icon {
       position: absolute;
       left: 16px;
       width: 24px;
@@ -118,6 +130,22 @@ export const InputLabel = styled.label`${props => {
     
     ${hasError && `
       color: ${error};
+      ${elevated && `
+        animation: shake .3s linear;
+      `};
+      //TODO: Maybe rework the shake anim
+      @keyframes shake {
+        0% {
+          transform: translateY(-90%) scale(0.75) translateX(0);
+        }
+        50% {
+          transform: translateY(-90%) scale(0.75) translateX(-15px);
+        }
+        100% {
+          transform: translateY(-90%) scale(0.75) translateX(15px);
+        }
+      }
+      
     `};
     
     ${withLeadingIcon && `
@@ -211,4 +239,11 @@ export const RippleElem = styled.span`
       transform: scale(1.5);
      }
   }
+`;
+
+export const ErrorIcon = styled(ErrorSvg)`
+  position: absolute;
+  right: 12px;
+  fill: ${props => props.theme.error};
+  align-self: center;
 `;

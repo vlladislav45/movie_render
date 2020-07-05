@@ -12,32 +12,34 @@ export default {
     primary: '#00ACC1', // was #dc8e8e
     primaryDark: '#00838F',
     secondary: '#6d2cdf',
-    surface: '#FFFFFF',
-    onSurface: '#222222', //87% black
+    surface: '#e0f5f8', // WHITE with 12% PRIMARY
+    onSurface: '#1d2020', //87% black on surface
     onSurfaceMD: '#666666', // 60% black medium emphasis
-    onPrimary: '#DDF4F7', // TODO: for both 87% black on primary and secondary color
-    onSecondary: '#DDF4F7', //
+    onPrimary: '#def4f7', // TODO: for both 87% black on primary and secondary color
+    onSecondary: '#ece4fb', //
     disabled: '#9F9F9F', // 38% black
     error: '#B00020',
     neon: '#8edcdc',
     isDark: false,
     overlay: '#FFFFFF',
+    contrast: '#000000',
   },
   [DARK_THEME]: {
     primary: '#80ddea', // was #BB86FC
     primaryDark: '#00838F',
     secondary: '#ba9bef',
-    surface: '#121212',
-    onSurface: '#DDDDDD', // 87% white
-    onSurfaceMD: '#999999', // 60% white medium emphasis
-    onPrimary: 'rgb(238, 251, 252)', // Calculated by getOverlay func
-    onSecondary: '#00000084',
-    disabled: '#606060', // 38% white
+    surface: '#1f2a2c', // 12% primary on surface (#121212)
+    onSurface: '#e2e3e4', // 87% white on surface
+    onSurfaceMD: '#a5aaab', // 60% white on surface
+    onPrimary: '#000000',
+    onSecondary: '#000000',
+    disabled: '#747b7c', // 38% white on surface
     error: '#CF6679',
     neon: '#9d71ea', // was #00909e
     isDark: true,
     overlay: '#000000',
+    contrast: '#FFFFFF',
   }
 };
-
-console.log(getOverlay('#80ddea', '#FFFFFF', 0.87))
+//#465355
+console.log(getOverlay('#ba9bef', '#000000', 0.87, true));

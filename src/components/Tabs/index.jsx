@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { rippleConstants } from 'config/constants';
-import { SingleTab, TabsContainer } from './styles';
+import useDeviceDimensions from '../../hooks/useDeviceDimensions';
+import SingleTab from './SingleTab';
+import { StyledSingleTab, TabsContainer } from './styles';
 
-let time, timeout;
-const { RIPPLE_DURATION } = rippleConstants;
+let isUpdated = false;
+let time = 0, timeout;
+const { SMALL_RIPPLE_DURATION } = rippleConstants;
 const Tabs = props => {
     const {
       tabs: propTabs, color = 'secondary',
@@ -12,57 +15,87 @@ const Tabs = props => {
     } = props;
 
     const [tabs, setTabs] = useState({});
-    const [activeTab, setActiveTab] = useState(propTabs[0].tabName);
-    const [clickCoordinates, setClickCoordinates] = useState({});
-    const [rippleActive, setRippleActive] = useState({});
+    const [activeTab, setActiveTab] = useState(null);
+    // used to force render when changing dimensions
+    const ignored = useDeviceDimensions();
+
+    useEffect(() => {
+      return () => {
+        clearTimeout(timeout);
+      };
+    }, []);
 
     // Map all the tabs from props to state
     useEffect(() => {
       const tabsState = {};
-      const ripples = {};
       propTabs.forEach(tab => {
-        const { tabName, tabContent, isActive } = tab;
-        if (isActive)
-          setActiveTab(tabName);
-
-        //Map with key tab name and value is active
-        ripples[tabName] = false;
+        const { tabName, tabContent, isActive = false } = tab;
 
         tabsState[tabName] = {
           ref: React.createRef(),
           tabName,
           tabContent,
+          ripple: false,
+          rippleOff: false,
+          isActive,
         };
       });
-
-      setRippleActive(ripples);
       setTabs(tabsState);
-
-      return () => clearTimeout(timeout);
     }, [propTabs]);
 
+    // Execute only if there is no active tab
     useEffect(() => {
-      time = Date.now();
-    }, [rippleActive]);
+      if (activeTab) return;
+
+      for (let tabsKey in tabs) {
+        const { isActive, tabName } = tabs[tabsKey];
+
+        // TODO: Check for performance overhead
+        if (isActive && tabs[tabsKey].ref.current !== null) {
+          setActiveTab({ ...tabs[tabsKey].ref, tabName: tabName });
+        }
+      }
+    }, [tabs]);
+
+    function updateTabState (tabName, stateName, stateValue, moreStates) {
+      setTabs({
+        ...tabs,
+        [tabName]: {
+          ...tabs[tabName],
+          [stateName]: stateValue,
+          ...moreStates,
+        },
+      });
+    }
 
     function rippleOn (evt, tabName) {
+      time = Date.now();
       const x = evt.clientX - evt.target.getBoundingClientRect().left;
       const y = evt.clientY - evt.target.getBoundingClientRect().top;
-      // noinspection JSCheckFunctionSignatures
-      setClickCoordinates({ x, y });
-      setRippleActive({ ...rippleActive, [tabName]: true });
+
+      updateTabState(tabName, 'ripple', { x, y }, { rippleOff: false });
     }
 
     function rippleOff (tabName) {
+
+      if (time <= 0) return;
+
       const timeLeft = Date.now() - time;
+      time = 0;
       // Workaround to ensure ripple animation will end
-      if (timeLeft > 0 && timeLeft < RIPPLE_DURATION)
+      if (timeLeft > 0 && timeLeft < SMALL_RIPPLE_DURATION) {
         timeout = setTimeout(() => {
-          setRippleActive({ ...rippleActive, [tabName]: false });
-        }, RIPPLE_DURATION - timeLeft);
-      else {
-        setRippleActive({ ...rippleActive, [tabName]: false });
+          time = 0;
+          updateTabState(tabName, 'ripple', false, { rippleOff: true });
+        }, SMALL_RIPPLE_DURATION - timeLeft);
+      } else {
+        time = 0;
+        updateTabState(tabName, 'ripple', false, { rippleOff: true });
       }
+    }
+
+    function tabClicked (tabName) {
+      setActiveTab({ ...tabs[tabName].ref, tabName });
     }
 
     const renderTabs = () => Object.values(tabs).map(tab => {
@@ -75,65 +108,80 @@ const Tabs = props => {
           tabIndex={0}
           prominent={prominent}
           color={color}
-          isActive={activeTab === tabName}
-          onMouseDown={e => rippleOn(e, tabName)}
-          onMouseUp={() => rippleOff(tabName)}
-          onMouseOut={() => rippleOff(tabName)}
-          onClick={() => setActiveTab(tabName)}
-          // onFocus={() => setTabs(
-          //   { ...tabs, [tabName]: { ...tabs[tabName], isFocused: true } })}
-          // onBlur={() => setTabs(
-          //   { ...tabs, [tabName]: { ...tabs[tabName], isFocused: false } })}
-          rippleStart={clickCoordinates}
-          rippleActive={rippleActive[tabName]}
-        >
-          {tabName}
-        </SingleTab>
+          isActive={activeTab?.tabName === tabName}
+          onMouseDown={rippleOn}
+          onMouseUp={rippleOff}
+          onMouseOut={rippleOff}
+          onClick={tabClicked}
+          ripple={tabs[tabName].ripple}
+          rippleOff={tabs[tabName].rippleOff}
+          tabName={tabName}
+        />
       );
     });
 
+    function cycleTabs (direction) {
+      // Cycle between tabs and switch to first after the last
+      const tabObjects = direction.toUpperCase() === 'R' ?
+        Object.values(tabs) : Object.values(tabs).reverse();
+
+      const hasActiveTab = tabObjects.some((tab, index) => {
+        if (document.activeElement === tab.ref.current) {
+          // Next or first
+          const nextIndex = index === tabObjects.length - 1 ? 0 : index + 1;
+          tabObjects[nextIndex].ref.current.focus();
+
+          return true;
+        }
+      });
+
+      if (!hasActiveTab)
+        tabObjects[0].ref.current.focus();
+    }
+
     function keyPressed (e) {
-      e.preventDefault();
       switch (e.keyCode) {
-        case 9 : {
+        // TAB and Right, same behaviour
+        case 39:
+          e.preventDefault();
+          cycleTabs('r');
+          break;
+        case 37:
+          e.preventDefault();
+          cycleTabs('l');
+          break;
+
+        // Enter
+        case 13: {
+          e.preventDefault();
           const tabNames = Object.keys(tabs);
           for (let i = 0; i < tabNames.length; i++) {
             const currentTabName = tabNames[i];
-            if (tabs[currentTabName].isFocused) {
-              const nextIndex = i === tabNames.length - 1 ? 0 : i + 1;
-              console.log('TAB PRESSED');
-              console.log(i)
-              console.log(nextIndex)
-              tabs[tabNames[nextIndex]].ref.current.focus();
+            const currentTab = tabs[currentTabName];
+            const { current } = currentTab.ref;
+            if (document.activeElement === current) {
+              setActiveTab({...tabs[currentTabName].ref, tabName: currentTabName});
             }
           }
         }
           break;
-        case 13: {
-          Object.keys(tabs).forEach(tabName => {
-            if (tabs[tabName].isFocused)
-              setActiveTab(tabName);
-          });
-        }
       }
-
-      // console.log(e.keyCode);
-    };
+    }
 
     return (
       <>
         <TabsContainer
           tabIndex={0}
-          activeTab={tabs[activeTab]?.ref}
-          // onKeyDown={keyPressed}
+          activeTab={activeTab || {}}
+          onKeyDown={keyPressed}
           prominent={prominent}
           color={color}
         >
           {renderTabs()}
         </TabsContainer>
-        <div style={{ border: '1px solid black' }}>
-          {tabs[activeTab]?.tabContent}
-        </div>
+        {/*<div style={{ border: '1px solid red', color: 'red' }}>*/}
+        {tabs[activeTab?.tabName]?.tabContent}
+        {/*</div>*/}
       </>
     );
   }

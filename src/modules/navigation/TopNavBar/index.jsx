@@ -45,6 +45,8 @@ const TopNavBar = () => {
         ref={navRef}
         className='top-nav'
         device={device}
+        elevation={8} //Original is 16
+        size='l'
       >
         <Logo id='logo'/>
         <Title id='title'/>
@@ -56,7 +58,7 @@ const TopNavBar = () => {
         topOffset={navHeight}
         items={[
           { name: isDark ? 'Base theme' : 'Dark theme', onClick: toggleTheme, icon: PaletteIcon },
-          { name: 'profile', onClick: () => browserHistory.push('profile'), icon: ProfileIcon },
+          { name: 'profile', onClick: () => browserHistory.push('/profile'), icon: ProfileIcon },
           { name: 'logout', onClick: logOut, icon: LogoutIcon },
         ]}
       />

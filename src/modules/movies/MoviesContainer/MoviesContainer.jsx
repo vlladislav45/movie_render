@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { API_URL } from 'api/BaseAPI';
 import { Loading, Rating, Tabs } from 'components';
 import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
-import { getOverlay, hexToRgb } from '../../../utils/colorUtils';
 import MoviesPagination from '../MoviesPagination';
 import {
+  CurrentMovies,
   MovieNameText,
-  MoviePoster,
+  MoviePoster, MoviesContent, NextMovies,
   PosterContainer,
   SingleMovieLink,
   StyledMoviesContainer,
@@ -16,7 +16,7 @@ import {
   Year,
 } from './styles';
 
-//TODO: Responsive
+let timeout;
 const MoviesContainer = ({ history }) => {
   const dispatch = useDispatch();
 
@@ -28,24 +28,50 @@ const MoviesContainer = ({ history }) => {
       isLoading: moviesReducer.isLoading,
     }));
 
+  //TODO: see if its possible to make grow transition between this page and SingleMoviePage
+  const [openedMovie, setOpenedMovie] = useState({});
+  // const [currentMovies, setCurrentMovies] = useState(movies);
+  // const [slideMovies, setSlideMovies] = useState(false);
+
   useEffect(() => {
     dispatch(fetchMovies(selectedPage, moviesPerPage));
     dispatch(getMoviesCount());
   }, [selectedPage, moviesPerPage]);
 
+  // useEffect(() => {
+  //   if (movies.length <= 0)
+  //     return;
+  //
+  //   clearTimeout(timeout);
+  //   setSlideMovies(true);
+  //   setTimeout(() => {
+  //     setCurrentMovies(movies);
+  //     setSlideMovies(false);
+  //   }, 1000);
+  //
+  // }, [movies]);
+
   function imageLoaded (e) {
     e.target.style.opacity = '1';
   }
 
-  function renderMovies () {
-    return movies.map(movie => (
+  function clickedMovie (id, e) {
+    // setOpenedMovie({ id, element: e.target });
+    history.push('/movie/' + id);
+  }
+
+  function renderMovies (moviesToRender) {
+    return moviesToRender.map(movie => (
         <SingleMovieLink
+          // isClicked={openedMovie.id === movie.id}
+          // element={openedMovie.element}
           // key={Math.random()}
           size='m'
           key={movie.id}
-          elevation={8}
-          onClick={() => history.push('/movie/' + movie.id)}
+          elevation={4}
+          onClick={e => clickedMovie(movie.id, e)}
           shouldElevateWhenHover
+          withRipple
         >
           <MovieNameText title={movie.movieName}>{movie.movieName}</MovieNameText>
           <Year>{movie.year}</Year>
@@ -56,47 +82,37 @@ const MoviesContainer = ({ history }) => {
               onLoad={imageLoaded}
             />
           </PosterContainer>
-          {/*<Rating rating={movie.movieRating} maxStars={5}/>*/}
-          <Rating
-            rating={parseFloat((Math.random() * (0.0 - 5.0) + 5.0).toFixed(2))}
-            maxStars={5}/>
+          <Rating rating={movie.movieRating} maxStars={5}/>
+          {/*<Rating*/}
+          {/*  rating={parseFloat((Math.random() * (0.0 - 5.0) + 5.0).toFixed(2))}*/}
+          {/*  maxStars={5}/>*/}
           <Views><small>Views:</small> {movie.movieViews}</Views>
         </SingleMovieLink>
       ),
     );
   }
 
-  return (
+  const render = (moviesToRender, onlyContent = false) => (
     <StyledMoviesContainer
       moviesPerPage={moviesPerPage}
     >
-      {/*<Tabs*/}
-      {/*  tabs={[*/}
-      {/*    {*/}
-      {/*      tabName: 'Tab one',*/}
-      {/*      tabContent: <div>Tab one</div>,*/}
-      {/*      isActive: true*/}
-      {/*    },*/}
-      {/*    {*/}
-      {/*      tabName: 'Tab two',*/}
-      {/*      tabContent: <div>Tab two</div>,*/}
-      {/*    },*/}
-      {/*    {*/}
-      {/*      tabName: 'Tab three',*/}
-      {/*      tabContent: <div>Tab three</div>,*/}
-      {/*    },*/}
-      {/*  ]}*/}
-      {/*/>*/}
-      {/*<div style={{ display: 'grid', gridTemplateRows: 'repeat(5, 1fr)', gridRowGap:'30px' }}>*/}
-      {/*  <Input label='Simple' />*/}
-      {/*  <Input label='With helper' helperText='helper text' />*/}
-      {/*  <Input label='With error' errorText='error text' />*/}
-      {/*  <Input placeholder='no label' />*/}
-      {/*  <Input placeholder='no label' text='Prefilled' />*/}
-      {/*</div>*/}
-      <MoviesPagination/>
-      {isLoading ? <Loading/> : renderMovies()}
+      <MoviesPagination
+        style={{ visibility: onlyContent ? 'hidden' : 'visible' }}/>
+      {renderMovies(moviesToRender)}
     </StyledMoviesContainer>
+  );
+
+  return (
+    <>
+      {/*<CurrentMovies>*/}
+      {/*  {render(currentMovies)}*/}
+      {/*</CurrentMovies>*/}
+      {/*<NextMovies*/}
+      {/*  // slide={slideMovies}*/}
+      {/*>*/}
+        {render(movies)}
+      {/*</NextMovies>*/}
+    </>
   );
 };
 

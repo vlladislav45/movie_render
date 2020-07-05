@@ -7,6 +7,7 @@ export const StyledMoviesContainer = styled.div`${props => {
   const COLUMNS = 3;
   const ROWS = Math.ceil(moviesPerPage / COLUMNS);
   return `
+    position: relative;
     width: 80%;
     max-width: 80%;
     min-height: ${ROWS * 10}vh;
@@ -30,12 +31,16 @@ export const StyledMoviesContainer = styled.div`${props => {
     }`;
 }}`;
 
-export const SingleMovieLink = styled(ThemedComponent)`
-// Margin between all the children
-  & > * {
-    margin: 10px 0;
-    font-family: 'Lato', sans-serif;
-  }
+export const SingleMovieLink = styled(ThemedComponent)`${props => {
+  return `
+    // Margin between all the children
+    & > * {
+      margin: 10px 0;
+      font-family: 'Lato', sans-serif;
+    }
+  `
+}
+}
 `;
 
 export const PosterContainer = styled.div`
@@ -51,7 +56,7 @@ export const PosterContainer = styled.div`
 
 export const MoviePoster = styled.img`
     opacity: 0;
-    transition: opacity .3s ease;
+    transition: opacity .3s linear;
     position: absolute;
     left: 0;
     top: 0;
@@ -86,4 +91,26 @@ export const Views = styled.p`
   text-align: center;
   color: ${props => props.theme.secondary};
   font-size: .8rem;
+`;
+
+export const MoviesContent = styled.div`
+`;
+
+export const CurrentMovies = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`;
+
+export const NextMovies = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translateX(100%);
+  transition: transform 1000ms linear;
+  visibility: hidden;
+  ${props => props.slide && `
+    transform: translateX(0);
+    visibility: visible;
+  `};
 `;

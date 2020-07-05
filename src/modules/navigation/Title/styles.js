@@ -5,6 +5,10 @@ export const TitleContainer = styled.div`
     display: flex;
     flex-direction: column;
     user-select: none;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.87;
+    } 
 `;
 
 export const StyledTitle = styled.h1`

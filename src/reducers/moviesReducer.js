@@ -28,22 +28,10 @@ export const fetchGenres = () => dispatch => {
   });
 };
 
-// Only for testing purposes
-// let timeout;
 export const fetchMovies = (page, size) => dispatch => {
-  // clearTimeout(timeout);
   dispatch({
     type: START_LOADING_ALL,
   });
-
-  // timeout = setTimeout(() => {
-  //   const data = require('../modules/movies/stub.json');
-  //
-  //   dispatch({
-  //     type: FETCH_ALL_MOVIES,
-  //     payload: data.slice(page * size, page * size + size),
-  //   })
-  // }, 350);
 
   MovieAPI.getByPage(page, size).then(res => {
     const { data } = res;
