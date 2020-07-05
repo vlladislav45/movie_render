@@ -10,7 +10,7 @@ import {
 
 let time = 0;
 let timeout;
-const { RIPPLE_DURATION } = rippleConstants;
+const { SMALL_RIPPLE_DURATION } = rippleConstants;
 const Button = React.forwardRef((props, ref) => {
   const {
     type = 'contained', color = 'primary', disabled = false,
@@ -60,10 +60,10 @@ const Button = React.forwardRef((props, ref) => {
   function cancelRipple () {
     const timeLeft = Date.now() - time;
     // Workaround to ensure ripple animation will end
-    if (timeLeft > 0 && timeLeft < RIPPLE_DURATION)
+    if (timeLeft > 0 && timeLeft < SMALL_RIPPLE_DURATION)
       timeout = setTimeout(() => {
         setIsPressed(false);
-      }, RIPPLE_DURATION - timeLeft);
+      }, SMALL_RIPPLE_DURATION - timeLeft);
     else {
       setIsPressed(false);
     }
@@ -111,7 +111,7 @@ const Button = React.forwardRef((props, ref) => {
 
 Button.propTypes = {
   type: PropTypes.oneOf(['contained', 'outlined', 'text']),
-  color: PropTypes.oneOf(['primary', 'secondary']),
+  color: PropTypes.oneOf(['primary', 'secondary', 'surface']), //NOTE: surface should be used for dark theme only
   emphasis: PropTypes.oneOf(['high', 'medium', 'low']),
   disabled: PropTypes.bool,
   text: PropTypes.string,

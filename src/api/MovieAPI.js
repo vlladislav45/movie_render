@@ -8,9 +8,9 @@ class MovieAPI extends BaseAPI {
 
   getSingleMovie = movieId => this.get(`/movies/single/${movieId}`);
 
-  getStream = movieId => this.get('/stream/mp4/Kenpachi');
-
   getGenres = () => this.get('/movies/genres');
+
+  getMoviesByFilter = (page, size, filter) => this.post(`/movies/filter?count=${size}&offset=${page}`, filter)
 }
 
 export default new MovieAPI();

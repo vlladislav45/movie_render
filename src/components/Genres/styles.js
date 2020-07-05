@@ -31,10 +31,10 @@ export const SingleGenre = styled.li`
     cursor: pointer;
     margin: 0 10px;
     line-height: 75px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     
-    color: ${props => props.theme.onPrimary};
-    color: ${props => props.isActive && 'red'};
+    // color: ${props => props.theme.onPrimary};
+    // color: ${props => props.isActive && 'red'};
     
     &:hover {
       opacity: .7;
@@ -63,17 +63,11 @@ export const Arrow = styled(ArrowSvg)`
       &:hover {
         ${!disabled && `
           fill: ${fillColor}DD;
-          stroke: ${theme.onSurface};
-          // filter: drop-shadow(1px 1px 0px ${theme.onSurface});
-          ${flipped && `
-            // filter: drop-shadow(1px -1px 0px ${theme.onSurface});
-          `};
         `}
       }
       
       ${disabled && `
         fill: ${theme.disabled};
-        stroke: ${theme.secondary}; 
       `}
     `;
 }};

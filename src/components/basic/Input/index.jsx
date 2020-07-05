@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorText, HelperText, OuterContainer } from './styles.js';
 import {
+  ErrorIcon,
   InputLabel,
   RippleElem,
   StyledFilledInput,
@@ -11,9 +12,9 @@ import {
 const Input = props => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
-    type, label, helperText, errorText,
-    text, placeholder, id, onPrimary = false,
-    onChange, onChangeCapture, ...rest
+    inputType, label, helperText, errorText,
+    placeholder, id, onPrimary, withIconOnError,
+    onChange, onChangeCapture, disabled, ...rest
   } = props;
 
   const inputId = useMemo(() => id || Input.nextId(), [id]);
@@ -43,7 +44,7 @@ const Input = props => {
     inputRef.current.focus();
   }
 
-  function textChanges(e) {
+  function textChanges (e) {
     setValue(e.target.value);
     if (onChange)
       onChange(e);
@@ -63,6 +64,7 @@ const Input = props => {
       {...rest}
     >
       <StyledFilledInputContainer
+        disabled={disabled}
         onClick={focusInput}
         error={hasError}
         focused={isFocused}
@@ -74,7 +76,7 @@ const Input = props => {
           className={rippleClass}
           isOnPrimary={onPrimary}
         />
-        {LeadingIcon && <LeadingIcon/>}
+        {LeadingIcon && <LeadingIcon className='leading-icon'/>}
         {label && <InputLabel
           htmlFor={inputId}
           elevated={isFocused || !!value}
@@ -97,6 +99,7 @@ const Input = props => {
           placeholder={shouldShowPlaceholder ? placeholder : ''}
           {...rest}
         />
+        {withIconOnError && hasError && <ErrorIcon />}
       </StyledFilledInputContainer>
       {renderBelowInput()}
     </OuterContainer>
@@ -104,17 +107,21 @@ const Input = props => {
 };
 
 Input.propTypes = {
-  type: PropTypes.oneOf(['filled', 'textarea', 'outline']),
+  inputType: PropTypes.oneOf(['filled', 'textarea', 'outline']),
   label: PropTypes.string,
   helperText: PropTypes.string,
   errorText: PropTypes.string,
-  text: PropTypes.string,
+  value: PropTypes.string,
   leadingIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.object]),
   onPrimary: PropTypes.bool, // Flag to use secondary for accent instead of primary
+  disabled: PropTypes.bool,
+  withIconOnError: PropTypes.bool // display icon when there is error
 };
 
 Input.defaultProps = {
-  type: 'filled',
+  inputType: 'filled',
+  withIconOnError: true,
+  onPrimary: false,
 };
 
 Input.nextId = (() => {

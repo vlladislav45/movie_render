@@ -1,11 +1,13 @@
 import React from 'react';
 import MoviesContainer from 'modules/movies/MoviesContainer/MoviesContainer';
+import { MainPageWrapper } from './styles';
+
 
 const MainPage = () => {
 
-  return <div>
+  return <MainPageWrapper>
     <MoviesContainer/>
-  </div>;
+  </MainPageWrapper>
 };
 
 export default MainPage;

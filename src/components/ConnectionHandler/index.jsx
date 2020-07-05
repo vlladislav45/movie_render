@@ -27,7 +27,7 @@ const ConnectionHandler = () => {
   //TODO: Find a way to execute the request's callbacks
   // maybe save the callbacks in a variable
   function resumeRequests() {
-    window.location.reload();
+    // window.location.reload();
     // requestsQueue.forEach(async req => {
     //   await BaseAPI.request(req);
     //   dispatch(finishedRequest(req));

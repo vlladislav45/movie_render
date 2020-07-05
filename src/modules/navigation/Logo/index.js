@@ -2,6 +2,8 @@ import React from 'react';
 
 import './styles.css';
 
+// TODO: Google's lighthouse performance test suggests not using gif
+// Change logo
 const Logo = props => {
   // TODO: Fix this
   // setTimeout(() => {

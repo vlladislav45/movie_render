@@ -21,6 +21,8 @@ export const SingleMovieWrapper = styled.div`
     max-width: 100%;
     // max-height: 100%;
   }
+  
+  animation: appear 1s linear;
 `;
 
 // TODO: change to button
