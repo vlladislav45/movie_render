@@ -11,7 +11,8 @@ const ProfileCircle = ({ size = 50, photoUrl, ...rest }) => {
     >
       <StyledProfileCircle
         size={size}
-        url={url}
+        src={url}
+        alt='Avatar'
       />
     </StyledContainer>
   );

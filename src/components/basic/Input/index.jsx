@@ -51,7 +51,7 @@ const Input = props => {
     if (onChangeCapture)
       onChangeCapture(e);
 
-    e.stopPropagation();
+    e.persist();
   }
 
   const hasError = !!errorText;

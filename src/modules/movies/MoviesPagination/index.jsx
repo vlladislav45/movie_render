@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'query-string';
 import { Pagination } from 'components';
@@ -8,9 +8,9 @@ import {
   changeSelectedPage,
 } from 'reducers/moviesReducer';
 
-const MoviesPagination = ({ history, style, className }) => {
+const MoviesPagination = ({ history, location, style, className }) => {
   const dispatch = useDispatch();
-  const { search, pathname } = useLocation();
+  const { search, pathname } = location;
 
   const { count, selectedPage, moviesPerPage } = useSelector(
     ({ moviesReducer }) => ({
@@ -21,12 +21,13 @@ const MoviesPagination = ({ history, style, className }) => {
 
   const [currentPage, setCurrentPage] = useState(selectedPage);
 
+
   useEffect(() => {
     const query = qs.parse(search);
-    if (query.items && !isNaN(Number(query.items))) {
+    if (query.items && !isNaN(Number(query.items)) && Number(query.items) !== moviesPerPage) {
       dispatch(changeMoviesPerPage((Number(query.items))));
     }
-    if (query.page && !isNaN(Number(query.page))) {
+    if (query.page && !isNaN(Number(query.page)) && Number(query.page) !== currentPage + 1) {
       setCurrentPage(Number(query.page) - 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,8 +1,7 @@
 import { throttle } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
-import { Route, Router, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
 import { ConnectionHandler, Loading } from './components';
@@ -46,14 +45,7 @@ class InitializationLayer extends React.Component {
         <TopNavBar/>
         <MainContent>
           <Router history={browserHistory}>
-            <Switch>
-              {/*<Route exact path='/'>*/}
-              {/*  <Redirect to='/?page=1&items=9' />*/}
-              {/*</Route>*/}
-              <Route path='*'>
-                <RoutingLayer/>
-              </Route>
-            </Switch>
+            <RoutingLayer/>
           </Router>
         </MainContent>
       </ThemeProvider>

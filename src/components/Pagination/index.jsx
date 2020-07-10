@@ -117,6 +117,7 @@ const Pagination = ({ itemsCount, onPageChange, currentPage = 0,
       {totalPages > 0 &&
       <PageItem
         isDisabled={selectedPage === 0}
+        disabled={selectedPage === 0}
         onClick={goPrevOrFirst}
       >
         {isOverFlow ? 'First' : 'Previous'}
@@ -127,6 +128,7 @@ const Pagination = ({ itemsCount, onPageChange, currentPage = 0,
       <PageItem
         onClick={goNextOrLast}
         isDisabled={selectedPage === totalPages - 1}
+        disabled={selectedPage === totalPages - 1}
       >
         {isOverFlow ? 'Last' : 'Next'}
       </PageItem>

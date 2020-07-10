@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { rippleConstants } from 'config/constants';
+import { rippleConstants } from 'config/animationConstants';
 import {
   ButtonWrapper,
   ContainedButton,
@@ -8,10 +8,13 @@ import {
   LeadingIcon,
 } from './styles';
 
-let time = 0;
-let timeout;
 const { SMALL_RIPPLE_DURATION } = rippleConstants;
-const Button = React.forwardRef((props, ref) => {
+const Button = React.forwardRef((
+  props,
+  ref) => {
+
+  const timeout = React.useRef(0);
+  const time = React.useRef(0);
   const {
     type = 'contained', color = 'primary', disabled = false,
     Icon, text, children, onClick, onClickCapture, ...rest
@@ -21,11 +24,11 @@ const Button = React.forwardRef((props, ref) => {
   const [coordinates, setCoordinates] = useState();
 
   // Clear ripple timeout when unmounting
-  useEffect(() => () => clearTimeout(timeout));
+  useEffect(() => () => clearTimeout(timeout.current), []);
 
   useEffect(() => {
     if (isPressed)
-      time = Date.now();
+      time.current = Date.now();
   }, [isPressed]);
 
   function mouseDown (evt) {
@@ -58,15 +61,11 @@ const Button = React.forwardRef((props, ref) => {
   }
 
   function cancelRipple () {
-    const timeLeft = Date.now() - time;
-    // Workaround to ensure ripple animation will end
-    if (timeLeft > 0 && timeLeft < SMALL_RIPPLE_DURATION)
-      timeout = setTimeout(() => {
-        setIsPressed(false);
-      }, SMALL_RIPPLE_DURATION - timeLeft);
-    else {
+    const timeLeft = Date.now() - time.current;
+    clearTimeout(timeout.current);
+    timeout.current = setTimeout(() => {
       setIsPressed(false);
-    }
+    }, SMALL_RIPPLE_DURATION - timeLeft);
   }
 
   const buttonProps = {

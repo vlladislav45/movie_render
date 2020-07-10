@@ -28,12 +28,14 @@ export const fetchGenres = () => dispatch => {
   });
 };
 
-export const fetchMovies = (page, size) => dispatch => {
+export const fetchMovies = (page, size) => (dispatch, getState) => {
   dispatch({
     type: START_LOADING_ALL,
   });
 
-  MovieAPI.getByPage(page, size).then(res => {
+  const { moviesReducer: { filters } } = getState();
+
+  MovieAPI.getByPage(page, size, { ...filters }).then(res => {
     const { data } = res;
     dispatch({
       type: FETCH_ALL_MOVIES,
@@ -41,18 +43,14 @@ export const fetchMovies = (page, size) => dispatch => {
     });
   }).catch(err => dispatch({
     type: FETCH_ALL_MOVIES,
-    payload: []
+    payload: [],
   }));
 };
 
-export const getMoviesCount = () => dispatch => {
-  // const data = require('../modules/movies/stub.json');
-  // dispatch({
-  //   type: MOVIES_COUNT,
-  //   payload: data.length,
-  // });
+export const getMoviesCount = () => (dispatch, getState) => {
+  const { moviesReducer: { filters } } = getState();
 
-  MovieAPI.getMoviesCount().then(res => {
+  MovieAPI.getMoviesCount({ ...filters }).then(res => {
     const { data } = res;
     dispatch({
       type: MOVIES_COUNT,
@@ -109,7 +107,10 @@ const initialState = {
     movieInfo: {},
     isLoading: false,
   },
-  filters: {},
+  filters: {
+    search: '',
+    genres: [],
+  },
 };
 
 export default (state = initialState, action) => {

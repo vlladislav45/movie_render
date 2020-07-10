@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { applyShadow, getOverlay, hexToRgb } from 'utils/colorUtils';
-import { rippleConstants } from 'config/constants';
+import { rippleConstants } from 'config/animationConstants';
 
 const { SMALL_RIPPLE_DURATION } = rippleConstants;
 

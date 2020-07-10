@@ -42,4 +42,4 @@ export default {
   }
 };
 //#465355
-console.log(getOverlay('#ba9bef', '#000000', 0.87, true));
+console.log(getOverlay('#121212', '#FFFFFF', 0.87, true));

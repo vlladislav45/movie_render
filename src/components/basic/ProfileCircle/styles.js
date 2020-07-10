@@ -1,20 +1,15 @@
 import styled from 'styled-components';
 
 export const StyledContainer = styled.div`
+    user-select: none;
     border-radius:50%;
-    transition: box-shadow .3s;
 `;
 
-export const StyledProfileCircle = styled.div`
+export const StyledProfileCircle = styled.img`
+    user-select: none;
     border-radius: 50%;
     width: ${props => props.size}px;
     height: ${props => props.size}px;
-    background-blend-mode: multiply;
-    background-image: url("${props => props.url}");
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-origin: content-box;
-    background-size: contain;
     cursor: pointer;
 `;
 

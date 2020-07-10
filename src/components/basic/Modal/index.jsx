@@ -6,7 +6,7 @@ const Modal = props => {
   const wrapperRef = useRef();
   const {
     isOpen = false, stateChanged,
-    slideDirection = 'toRight', fade = true,
+    slideDirection = 'toRight', fade = false,
     closeOnClickOutside = true, children,
   } = props;
 

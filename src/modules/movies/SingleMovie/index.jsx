@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Loading, Rating } from 'components';
 import { API_URL } from 'api/BaseAPI';
 import { fetchSingleMovie } from 'reducers/moviesReducer';
-import { Loading } from 'components';
-import { ReactComponent as BackArrow } from 'assets/icons/arrow_back.svg';
-import MoreInfo from './MoreInfo';
 import MovieSummary from './MovieSummary';
+import { ReactComponent as BackArrow } from 'assets/icons/arrow_back.svg';
 import {
-  BackArrowWrapper,
+  BackArrowWrapper, MovieActors, MovieDirector, MovieRating,
   MovieTitle,
-  MovieVideo,
+  MovieVideo, MovieYear,
   SingleMovieWrapper,
 } from './styles';
 
@@ -25,19 +24,24 @@ const SingleMovie = ({ match: { params }, history }) => {
       isLoading: selectedMovie.isLoading,
     }));
 
+  useEffect(() => {
+    dispatch(fetchSingleMovie(movieId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [movieId]);
+
+  // console.log(selectedMovie)
+  // console.log(isLoading)
+
   const {
     posterName, movieSummary, directorName,
     actorNames, movieYear, movieViews,
     movieRating, movieName,
   } = selectedMovie;
 
-  useEffect(() => {
-    dispatch(fetchSingleMovie(movieId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   if (isLoading || !posterName)
-    return null;
+    return <Loading/>;
 
   return (
     <SingleMovieWrapper>
@@ -46,24 +50,44 @@ const SingleMovie = ({ match: { params }, history }) => {
         onClick={() => history.goBack()}
         Icon={BackArrow}
       >
-        {/*<BackArrow/>*/}
         BACK
       </BackArrowWrapper>
       <MovieVideo
+        id='movie-video'
         controls
-        // poster={'https://placeimg.com/800/400/any&rnd='  + Math.random()}
+        // poster={'https://placeimg.com/800/400/any&rnd=' + Math.random()}
         poster={BASE_POSTER_URL + posterName}
-        onCanPlay={() => console.log('CAN PLAY')}
-        onLoadStart={() => console.log('ONLOAD_START')}
+        // onCanPlay={() => forceRender(true)}
+        // onLoadStart={() => console.log('ONLOAD_START')}
       >
         <source src={`${API_URL}stream/mp4/Kenpachi`} type="video/mp4"/>
       </MovieVideo>
       <MovieTitle>
         <p>{movieName}</p>
       </MovieTitle>
-      <MovieSummary summary={movieSummary} />
-      <MoreInfo className='more-info' />
-      {/*{renderMovieInfo()}*/}
+      <MovieSummary
+        summary={movieSummary}
+      />
+      <MovieRating className='movieInfo'>
+        <span className='movieInfoName'>Rating:</span>
+        <Rating
+          maxStars={5}
+          rating={movieRating}
+          color='onSurface'
+        />
+      </MovieRating>
+      <MovieYear className='movieInfo'>
+        <span className='movieInfoName'>Year:</span>
+        <span> {movieYear}</span>
+      </MovieYear>
+      <MovieActors className='movieInfo'>
+        <span className='movieInfoName'>Actors: </span>
+        <>{actorNames.map(a => <span>a</span>)}</>
+      </MovieActors>
+      <MovieDirector className='movieInfo'>
+        <span className='movieInfoName'>Director:</span>
+        <span>{directorName}</span>
+      </MovieDirector>
     </SingleMovieWrapper>
   );
 };

@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 export const StyledRating = styled.div`
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const StarContainer = styled.div`
@@ -9,6 +12,6 @@ export const StarContainer = styled.div`
   height: 1.5rem;
   display: inline-block;
   & > svg {   
-    fill: ${props => props.theme.secondary};
+    fill: ${props => props.theme[props.color]};
   }
 `;

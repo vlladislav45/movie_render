@@ -3,27 +3,25 @@ import {
   applyShadow,
   calcDarkThemeOverlay,
 } from 'utils/colorUtils';
+import {
+  transitionDurations,
+  transitionFunctions,
+} from 'config/animationConstants';
+
+const { standardEasing } = transitionFunctions;
+const { largeExpand } = transitionDurations;
 
 export const StyledThemedComponent = styled.div`${
   ({
-    theme, elevation, shouldElevateWhenHover, size,
-    coordinates = {}, rippleActive = false , rippleColor,
+    theme, elevation, shouldElevateWhenHover, size,    
   }) => {
     const { onSurface, surface, isDark } = theme;
     const borderRadius = (size === 'm' || size === 's')
       ? 4
       : 0;
-
-    let actualRippleColor = isDark
-      ? 'rgba(255,255,255,.24)'
-      : 'rgba(0,0,0,.24)';
-    if (rippleColor)
-      actualRippleColor = theme[rippleColor] + 40;
     
-    const { x, y } = coordinates;
+    
     return `
-            overflow: hidden;
-            position: relative;
             background: ${surface};
             color: ${onSurface};
             box-shadow: ${applyShadow(elevation)};
@@ -36,7 +34,7 @@ export const StyledThemedComponent = styled.div`${
                   ${calcDarkThemeOverlay(elevation)});
             `};
             
-            transition: box-shadow .5s;
+            transition: box-shadow ${largeExpand}ms ${standardEasing};
             
             &:hover {
               ${shouldElevateWhenHover && ` 
@@ -49,52 +47,6 @@ export const StyledThemedComponent = styled.div`${
                   `};
                `}
             }
-            
-            &:after {
-               position: absolute;
-               content: "";
-               width: 5px;
-               height: 5px;
-               left: ${x}px;
-               top: ${y}px;
-               border-radius: 50%;
-               opacity: 0;
-               ${rippleActive && `
-                 animation: materialRipple ${size === 'l' ? '.09s' : '.2s'} linear forwards;
-                 
-                 box-shadow: inset 0 0 0 500px ${actualRippleColor};
-                 opacity: 1;
-               `};
-            }
-
-             @keyframes materialRipple {
-               100% {
-                 transform: scale(130);
-                 ${size === 'l' && 'transform: scale(150)'};
-               }
-             }
-          
         `;
   }
 }`;
-/*
-*   &:after {
-               position: absolute;
-               content: "";
-               width: 5px;
-               height: 5px;
-               left: ${x}px;
-               top: ${y}px;
-               border-radius: 50%;
-               opacity: 0;
-               ${isActive && `
-                 animation: doRipple .2s linear forwards;
-                 opacity: 1;
-               `}
-           }
-
-           @keyframes doRipple {
-             100% {
-               transform: scale(80);
-             }
-           }*/

@@ -1,41 +1,23 @@
-import React, {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react';
-import { throttle } from 'lodash';
+import withRipple from 'HOC/withRipple';
+import React from 'react';
 import { StyledSingleTab } from './styles';
 
-export default React.forwardRef((props, ref) => {
-  const { tabName, onMouseDown, onMouseUp, onMouseOut, onClick, onLoad, ...rest } = props;
+const SingleTab = React.forwardRef((props, ref) => {
+  const { tabName, onClick = () => {}, ...rest } = props;
 
-  function mouseDown (e) {
-    e.stopPropagation();
-    onMouseDown(e, tabName);
-  }
-
-  //Same for mouse out and mouse up
-  function mouseUp (e) {
-    e.stopPropagation();
-    onMouseUp(tabName);
+  function handleClick () {
     onClick(tabName);
-  }
-
-  function hoverOut (e) {
-    e.stopPropagation();
-    onMouseUp(tabName);
   }
 
   return (
     <StyledSingleTab
       {...rest}
       ref={ref}
-      onMouseDown={mouseDown}
-      onMouseUp={mouseUp}
-      onMouseOut={hoverOut}
+      onClick={handleClick}
     >
       {tabName}
     </StyledSingleTab>
   );
 });
+
+export default withRipple(SingleTab);

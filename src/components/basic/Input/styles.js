@@ -2,6 +2,10 @@ import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import styled from 'styled-components';
 import { ReactComponent as ErrorSvg } from 'assets/icons/error.svg';
 import { getOverlay } from 'utils/colorUtils';
+import {
+  transitionDurations,
+  transitionFunctions,
+} from '../../../config/animationConstants';
 
 const BaseInput = styled.input`
   width: 100%;
@@ -44,7 +48,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
   
   
   return `
-    transition: all .3s;
+    transition: all ${transitionDurations.mediumExpand}ms ${transitionFunctions.standardEasing};
     display: flex;
     position: relative;
     border-top-right-radius: 4px;
@@ -93,7 +97,8 @@ export const StyledFilledInputContainer = styled.div`${props => {
     ? 'rgba(255,255,255,0.1)'
     : 'rgba(0, 0, 0, 0.1)'};
         animation-name: ripple-bg;
-        animation-duration: .3s;
+        animation-duration: ${transitionDurations.mediumExpand}ms;
+        animation-timing-function: ${transitionFunctions.standardEasing};
         animation-fill-mode: forwards;
       }
     `}
@@ -114,7 +119,8 @@ export const InputLabel = styled.label`${props => {
     user-select: none;
 
     will-change: transform;
-    transition: transform .1s ease, color .1s ease;
+    transition: transform ${transitionDurations.mediumCollapsing}ms ${transitionFunctions.deceleratedEasing},
+                color ${transitionDurations.mediumCollapsing}ms ${transitionFunctions.deceleratedEasing};
     transform-origin: left top;
    
     left: 16px;
@@ -123,7 +129,8 @@ export const InputLabel = styled.label`${props => {
     pointer-events: none;
     
     ${elevated && `
-      transition: transform .3s ease, color .3s ease;
+      transition: transform ${transitionDurations.mediumExpand}ms ${transitionFunctions.acceleratedEasing},
+                  color ${transitionDurations.mediumExpand}ms ${transitionFunctions.acceleratedEasing};
       transform: translateY(-90%) scale(0.75);
       ${isFocused && `color: ${accentColor}`};
     `};
@@ -131,7 +138,7 @@ export const InputLabel = styled.label`${props => {
     ${hasError && `
       color: ${error};
       ${elevated && `
-        animation: shake .3s linear;
+        animation: shake ${transitionDurations.mediumExpand} ${transitionFunctions.standardEasing};
       `};
       //TODO: Maybe rework the shake anim
       @keyframes shake {
@@ -191,7 +198,6 @@ export const StyledFilledInput = styled(BaseInput)`${props => {
 
 export const HelperText = styled.p`
   color: ${props => props.theme.onSurface};
-  // color: #00454D;
 `;
 
 export const ErrorText = styled.p`
@@ -209,20 +215,22 @@ export const RippleElem = styled.span`
   const color = hasError ? theme.error : accentColor;
   return `border-bottom: 2px solid ${color}`;
 }};
-  
+
   &.activate {
     animation-name: ripple;
-    animation-duration: .1s;
-    animation-timing-function: linear;
+    animation-duration: ${transitionDurations.mediumExpand}ms;
+    animation-timing-function: ${transitionFunctions.acceleratedEasing};
     animation-fill-mode: forwards;
   }
   
   @keyframes ripple{
     0% {
+      will-change: width, left;
       width: 0%;
       left: 50%;
     }
     100% {
+      will-change: unset;
       width: 100%;
       left: 0;
       
