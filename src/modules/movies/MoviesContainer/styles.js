@@ -141,3 +141,10 @@ export const Views = styled.p`
   color: ${props => props.theme.secondary};
   font-size: .8rem;
 `;
+
+export const NoMovies = styled.div`
+  font-size: 1.5rem;
+  text-align: center;
+  width: 100%;
+  color: ${props => props.theme.error};
+`;

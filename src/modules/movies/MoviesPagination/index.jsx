@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'query-string';
 import { Pagination } from 'components';
+import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
 import {
   changeMoviesPerPage,
   changeSelectedPage,
@@ -12,7 +13,11 @@ const MoviesPagination = ({ history, location, style, className }) => {
   const dispatch = useDispatch();
   const { search, pathname } = location;
 
-  const { count, selectedPage, moviesPerPage } = useSelector(
+  const {
+    count = 0,
+    selectedPage = 0,
+    moviesPerPage = DEFAULT_MOVIES_PER_PAGE,
+  } = useSelector(
     ({ moviesReducer }) => ({
       count: moviesReducer.count,
       selectedPage: moviesReducer.selectedPage,
@@ -21,13 +26,14 @@ const MoviesPagination = ({ history, location, style, className }) => {
 
   const [currentPage, setCurrentPage] = useState(selectedPage);
 
-
   useEffect(() => {
     const query = qs.parse(search);
-    if (query.items && !isNaN(Number(query.items)) && Number(query.items) !== moviesPerPage) {
+    if (query.items && !isNaN(Number(query.items)) && Number(query.items) !==
+      moviesPerPage) {
       dispatch(changeMoviesPerPage((Number(query.items))));
     }
-    if (query.page && !isNaN(Number(query.page)) && Number(query.page) !== currentPage + 1) {
+    if (query.page && !isNaN(Number(query.page)) && Number(query.page) !==
+      currentPage + 1) {
       setCurrentPage(Number(query.page) - 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

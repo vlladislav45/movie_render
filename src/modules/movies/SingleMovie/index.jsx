@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Loading, Rating } from 'components';
 import { API_URL } from 'api/BaseAPI';
 import { fetchSingleMovie } from 'reducers/moviesReducer';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import MovieSummary from './MovieSummary';
 import { ReactComponent as BackArrow } from 'assets/icons/arrow_back.svg';
 import {
@@ -13,10 +14,13 @@ import {
   SingleMovieWrapper,
 } from './styles';
 
+const MOVIE_RATIO = 16 / 10;
 const BASE_POSTER_URL = API_URL + 'movies/single/hdPoster/';
 const SingleMovie = ({ match: { params }, history }) => {
   const dispatch = useDispatch();
   const { movieId } = params;
+
+  const { width: screenWidth } = useDeviceDimensions();
 
   const { selectedMovie, isLoading } = useSelector(
     ({ moviesReducer: { selectedMovie } }) => ({
@@ -53,9 +57,10 @@ const SingleMovie = ({ match: { params }, history }) => {
         BACK
       </BackArrowWrapper>
       <MovieVideo
+        width={screenWidth / 2.5}
+        height={(screenWidth / 2.5) / MOVIE_RATIO}
         id='movie-video'
         controls
-        // poster={'https://placeimg.com/800/400/any&rnd=' + Math.random()}
         poster={BASE_POSTER_URL + posterName}
         // onCanPlay={() => forceRender(true)}
         // onLoadStart={() => console.log('ONLOAD_START')}
@@ -82,7 +87,7 @@ const SingleMovie = ({ match: { params }, history }) => {
       </MovieYear>
       <MovieActors className='movieInfo'>
         <span className='movieInfoName'>Actors: </span>
-        <>{actorNames.map(a => <span>a</span>)}</>
+        <>{actorNames.map(a => <span key='a'>{a}</span>)}</>
       </MovieActors>
       <MovieDirector className='movieInfo'>
         <span className='movieInfoName'>Director:</span>

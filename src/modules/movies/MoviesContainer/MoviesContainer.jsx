@@ -7,18 +7,24 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { API_URL } from 'api/BaseAPI';
 import { Loading, Rating } from 'components';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { fetchMovies, getMoviesCount } from 'reducers/moviesReducer';
-import withRipple from 'HOC/withRipple';
-import ImageWorker from 'service-workers/imageLoader.worker';
+import { Button } from 'components/basic';
 import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
+import withRipple from 'HOC/withRipple';
+import {
+  fetchMovies,
+  getMoviesCount,
+  resetFilter,
+} from 'reducers/moviesReducer';
+import ImageWorker from 'service-workers/imageLoader.worker';
 import MoviesPagination from '../MoviesPagination';
 import {
   MovieNameText,
   MoviePoster,
   MoviesGrid,
+  NoMovies,
   PosterContainer,
   SingleMovieLink,
   StyledMoviesContainer,
@@ -76,7 +82,6 @@ const MoviesContainer = ({ history, location }) => {
 
   }, [movies, imageWorker]);
 
-
   useLayoutEffect(() => {
     if (selectedPage !== prevPage) {
       setPrevPage(selectedPage);
@@ -85,16 +90,13 @@ const MoviesContainer = ({ history, location }) => {
     dispatch(getMoviesCount());
   }, [selectedPage, moviesPerPage, filters]);
 
-
-  function imageLoaded (e) {
-    // e.target.style.opacity = 1;
-  }
-
   function clickedMovie (id) {
     history.push('/movie/' + id);
   }
 
-
+  function dispatchResetFilter () {
+    dispatch(resetFilter());
+  }
 
   function renderMovies (moviesToRender) {
     const SingleMovie = withRipple(SingleMovieLink);
@@ -117,7 +119,6 @@ const MoviesContainer = ({ history, location }) => {
                 fadeIn={!!url}
                 alt={url ? `Movie poster ${movie.movieName}` : ''}
                 src={url}
-                onLoad={imageLoaded}
               />
             </PosterContainer>
             <Rating rating={movie.movieRating} maxStars={5}/>
@@ -132,6 +133,13 @@ const MoviesContainer = ({ history, location }) => {
     <StyledMoviesContainer
       moviesPerPage={moviesPerPage}
     >
+      {!isLoading && movies.length === 0 &&
+      <NoMovies>
+        No movies found
+        <br/>
+        <Button type='text' text='Reset filters' onClick={dispatchResetFilter}/>
+      </NoMovies>
+      }
       <MoviesPagination/>
       <TransitionGroup>
         <CSSTransition

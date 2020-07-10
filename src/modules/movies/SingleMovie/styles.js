@@ -97,14 +97,11 @@ export const MovieTitle = styled.div`
 // TODO: make text appear gradually
 export const StyledMovieSummary = styled.div`
   grid-area: s;
-  font-family: 'Roboto', sans-serif;
+  position: relative;
   
-  // Text may overflow, container shouldn't
-  // overflow: hidden;
-  // max-height: 100%;
-
   // stay above other elements, so when expanded its on top of the stack
   z-index: ${DEFAULT_Z_INDEX + 1};
+  font-family: 'Roboto', sans-serif;
   
   & > #title {
     text-align: left;
@@ -123,25 +120,36 @@ export const StyledMovieSummary = styled.div`
 `;
 
 export const ReadMore = styled(Button)`
+  float: right;
+  position: sticky;
+  right: 0;
+  top: 10px;
   color: ${props => props.theme.secondary};
 `;
 
 export const TextWrapper = styled.div`
+  position: relative;
   text-align: justify;
   font-size: 1rem;
   letter-spacing: .6px;
-  line-height: 1.5rem;
+  line-height: 1.4rem;
   
   color: ${props => props.theme.onSurfaceMD};
-  max-height: calc(${props => props.videoCoordinates.height}px - 5rem);
+  // Video height - text size of #title (1.1rem) - bottom margin of #title (10px)
+  max-height: calc(${props => props.videoCoordinates.height}px - 1.1rem - 10px);
   overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   
-  transition: all .2s;
+  transition: all .3s;
   ${props => props.isExtended && `
+    padding-top: 10px;
     height: auto;
-    line-height: 1.7rem;
     font-size: 1.1rem;
+    line-height: 1.5rem;
     color: ${props.theme.onSurface};
+    max-height: ${props.videoCoordinates.height + 250}px;
   `};  
 `;
 

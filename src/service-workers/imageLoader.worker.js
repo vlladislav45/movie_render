@@ -1,3 +1,8 @@
+/**
+ * Service worker for background image fetching
+ * currently used only for the list of movies
+ */
+
 // Not using our API classes or axios to be self sufficient
 const fetchImage = url => new Promise(resolve => {
   fetch(url).

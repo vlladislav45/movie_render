@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Route, Switch, useLocation, Redirect } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Inner } from './baseStyles';
@@ -6,7 +6,6 @@ import { Loading } from './components';
 // import MainPage from './pages/MainPage';
 // import ProfilePage from './pages/ProfilePage';
 // import SingleMoviePage from './pages/SingleMoviePage';
-import PageTransitioner from './PageTransitioner';
 
 const MainPage = React.lazy(() => import('pages/MainPage'));
 const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
@@ -32,17 +31,17 @@ export default () => {
   useEffect(() => {
   }, [location]);
 
+
   return (
-    <div style={relStyle}>
-      {/*<TransitionGroup*/}
-      {/*>*/}
+    <Inner>
+      {/*<TransitionGroup>*/}
       {/*  <CSSTransition*/}
       {/*    // nodeRef={TODO}*/}
-      {/*    timeout={3000}*/}
+      {/*    timeout={300}*/}
       {/*    classNames='fade'*/}
       {/*    key={location.key}*/}
       {/*  >*/}
-          <div key='wrapper' style={absStyle}>
+      {/*    <div key='wrapper' style={absStyle}>*/}
             <React.Suspense fallback={<Loading/>}>
               <Switch location={location}>
                 <Route exact path='/' component={MainPage}/>
@@ -51,10 +50,10 @@ export default () => {
                 <Redirect to='/'/>
               </Switch>
             </React.Suspense>
-          </div>
+          {/*</div>*/}
       {/*  </CSSTransition>*/}
       {/*</TransitionGroup>*/}
-    </div>
+    </Inner>
   );
 }
 

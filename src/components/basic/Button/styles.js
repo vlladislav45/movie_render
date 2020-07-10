@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import { applyShadow, getOverlay, hexToRgb } from 'utils/colorUtils';
 import { rippleConstants } from 'config/animationConstants';
+import styled from 'styled-components';
+import { applyShadow, getOverlay } from 'utils/colorUtils';
 
 const { SMALL_RIPPLE_DURATION } = rippleConstants;
 
@@ -51,7 +51,9 @@ export const BaseButton = styled.button`${props => {
     overflow: hidden;
     cursor: pointer;
     
+    // RIPPLE
     &:after {
+     transition: all .3s ease;
      position: absolute;
      content: "";
      width: 5px;
@@ -63,8 +65,23 @@ export const BaseButton = styled.button`${props => {
      pointer-events: none;
      ${isActive && `
        animation: doRipple ${SMALL_RIPPLE_DURATION + 20}ms linear forwards;
-       opacity: 1;
+       opacity: 0.12;
      `};
+   }
+   
+   // HOVER override :before background color property and opacity on hover to use
+   &:before {
+    transition: all .2s ease;
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+   }
+   
+   &:focus, &:active, &:focus-inner {
+    outline: none;
+    border: none;
    }
    
    @keyframes doRipple {
@@ -91,44 +108,33 @@ export const ContainedButton = styled(BaseButton)`${props => {
     background: ${backgroundColor};
     color: ${textColor};
     
-    &:hover {
-      ${!disabled && `
-        box-shadow: ${applyShadow(4)};
-        background: ${getOverlay(backgroundColor, theme.overlay, 0.08)};
-      `};
+    &:hover:not(:disabled):before {
+      opacity: 0.08;
+      background: ${theme.overlay};
     }
     
-    // TODO: remove this IIFE and find a better, more generic way to do this
+    &:hover:not(:disabled) {
+      box-shadow: ${applyShadow(4)};
+    }
+    
     &:focus, &:active {
-    ${(() => {
-      const focusBg = getOverlay(backgroundColor, theme.overlay, 0.24, true);
-      const hoverFocusBg = getOverlay(focusBg, theme.overlay, 0.08);
-      return `
-      background: ${focusBg};
-        &:hover {
-          background: ${hoverFocusBg}!important;
-      }`;
-  })()}
+      background: ${getOverlay(backgroundColor, theme.overlay, 0.24)};
+    }
+    
+    &:after {
+      background: ${theme.overlay};
     }
     
     ${disabled && `
         box-shadow: none;
         background: ${theme.disabled};
         color: ${getOverlay(textColor, '#FFFFFF', 0.38)};
-        
-        //         background: ${getOverlay(theme.surface, '#FFFFFF', 0.12)};
-        // color: ${theme.disabled};
         cursor: default;
     `};
     
     ${isActive && `
-        box-shadow: ${applyShadow(6)}!important;
+        box-shadow: ${applyShadow(4)};
      `};
-    
-    
-    &:after {
-      background: rgba(255,255,255,0.24);
-    }
     
     & svg {
       fill: ${textColor};
@@ -137,30 +143,25 @@ export const ContainedButton = styled(BaseButton)`${props => {
 }}`;
 
 export const TextButton = styled(BaseButton)`${props => {
-  const { color = 'primary', theme, disabled } = props;
-  const { r, g, b } = hexToRgb(theme[color]);
-  const { r: rO, g: gO, b: bO } = hexToRgb(
-    !theme.isDark ? '#000000' : '#FFFFFF');
-  // material guidelines suggest 0.12, however 0.22 looks clearer on dark theme
-  // maybe reconsider to put it on light theme also (0.22)
-  const activatedAlpha = theme.isDark ? '0.22' : '0.12';
-  const activatedColor = `rgba(${r},${g},${b}, ${activatedAlpha})`;
-  const hoverColor = `rgba(${rO}, ${gO}, ${bO}, 0.04)`;
-  const rippleColor = `rgba(${r}, ${g}, ${b}, 0.12)`;
-  const textColor = theme[color];
+  const { color: themeColor = 'primary', theme, disabled } = props;
+  const textColor = theme[themeColor];
+  
   return `
+    
     color: ${textColor};
+    position: relative;
     
-    &:hover:not(:disabled) {
-      background: ${hoverColor}
-    }
-    
-    &:active, &:focus {
-      background: ${activatedColor}!important;      
+    &:hover:not(:disabled):before {
+      background: ${textColor};
+      opacity: 0.04;
     }
     
     &:after {
-      background: ${rippleColor};
+      background: ${textColor};
+    }
+    
+    &:focus, &:active {
+      background: ${getOverlay(theme.surface, textColor, 0.12)};
     }
     
     ${disabled && `
