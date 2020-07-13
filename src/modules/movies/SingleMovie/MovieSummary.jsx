@@ -4,7 +4,7 @@ import { ReadMore, TextWrapper, StyledMovieSummary } from './styles';
 
 const BIG_SUMMARY_THRESHOLD = 600;
 const DEFAULT_TEXT = 'No summary available';
-export default ({ summary = '' }) => {
+export default ({ summary = '', videoRef }) => {
   const [isExtended, setIsExtended] = useState(false);
   const [isBigText, setIsBigText] = useState(false);
   const [videoCoordinates, setVideoCoordinates] = useState({});
@@ -12,8 +12,9 @@ export default ({ summary = '' }) => {
   const { width: deviceWidth } = useDeviceDimensions();
 
   useEffect(() => {
-    calcExtendedSummaryOffset();
-  }, [deviceWidth]);
+    if(videoRef)
+      calcExtendedSummaryOffset();
+  }, [deviceWidth, videoRef]);
 
   useEffect(() => {
     if (summary.length > BIG_SUMMARY_THRESHOLD) {
@@ -21,11 +22,8 @@ export default ({ summary = '' }) => {
     }
   }, [summary]);
 
-  // For some reason refs give wrong dimensions
-  // (my assumption is they get attached before the grid is properly rendered)
   function calcExtendedSummaryOffset () {
-    const elem = document.getElementById('movie-video');
-    const { width, height } = elem.getBoundingClientRect();
+    const { width, height } = videoRef.getBoundingClientRect();
     setVideoCoordinates({ width, height });
   }
 

@@ -44,6 +44,7 @@ const Genres = props => {
 
   const { width: screenWidth } = useDeviceDimensions();
 
+
   useEffect(() => {
     dispatch(fetchGenres());
   }, []);
@@ -62,7 +63,7 @@ const Genres = props => {
 
   useLayoutEffect(checkIfOverflows, [genresRef, screenWidth]);
 
-  //TODO: Currently we hide the arrows, scroll ot left and then check if we need to
+  //TODO: Currently we hide the arrows, scroll to left and then check if we need to
   // remove the arrows (in setTimeout)
   // if this is slow, we need to rework it
   function checkIfOverflows () {

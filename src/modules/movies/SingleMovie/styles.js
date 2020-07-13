@@ -25,16 +25,19 @@ export const SingleMovieWrapper = styled.div`
   * y - movie year
   * a - actors
   * d - director
+  * w - vieWs
+  * m - more movies like this (SimilarMovies)
   */
   
   grid-template-areas: ". b t t t t t t ."
-                       ". v v v v s s s ."
-                       ". v v v v s s s ."
-                       ". r . . . . . . ."
-                       ". y . . . . . . ."
-                       ". a . . . . . . ."
-                       ". d . . . . . . ."
-                       ". . . . . . . . .";
+                       ". v v v s s s s ."
+                       ". v v v s s s s ."
+                       ". r r w w . . . ."
+                       ". y y d d . . . ."
+                       ". a a a a a a a ."     
+                       ". . . . . . . . ."
+                       ". m m m m m m m ."
+                       ". m m m m m m m .";
                        ". . . . . . . . .";
                        ". . . . . . . . .";
                        ". . . . . . . . .";
@@ -42,10 +45,13 @@ export const SingleMovieWrapper = styled.div`
   
   
   grid-auto-rows: minmax(10px, min-content);
+  grid-auto-columns: 1fr;
+  grid-template-columns: repeat(9, 1fr);
+  
   grid-column-gap: ${GRID_COLUMN_GAP}px;
   grid-row-gap: ${GRID_ROW_GAP}px;
   grid-auto-flow: row;
-  padding: 0 50px; // This will be for ads later on
+  // padding: 0 50px; // This will be for ads later on
    
   & > .movieInfo {
     display: flex;
@@ -79,10 +85,11 @@ export const MovieVideo = styled.video`
 
 export const MovieTitle = styled.div`
   grid-area: t;
-  grid-column-start: 1;
+  grid-column-start: 2;
   font-family: 'Marck script', cursive;
   font-size: 2rem;
   font-weight: bold;
+  
   letter-spacing: 0.15rem;
   
   display: grid;
@@ -94,7 +101,6 @@ export const MovieTitle = styled.div`
   color: ${props => props.theme.onSurface}
 `;
 
-// TODO: make text appear gradually
 export const StyledMovieSummary = styled.div`
   grid-area: s;
   position: relative;
@@ -159,16 +165,25 @@ export const MovieRating = styled.div`
 
 export const MovieYear = styled.div`
   grid-area: y;
-  display: flex;
 `;
 
 export const MovieActors = styled.div`
   grid-area: a;
-  display: flex;
+  & > .actors {
+    display: flex;
+    flex-wrap: wrap;
+    & > .actor {
+      margin: 0 5px;
+      white-space: nowrap;
+    }
+  }
 
 `;
 
 export const MovieDirector = styled.div`
   grid-area: d;
-  display: flex;
+`;
+
+export const MovieViews = styled.div`
+  grid-area: w;
 `;

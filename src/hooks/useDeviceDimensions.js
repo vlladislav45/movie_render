@@ -8,6 +8,8 @@ const useDeviceDimensions = () => {
     width,
     height,
     device,
+    vmin: Math.min(width, height),
+    vmax: Math.max(width, height)
   }));
 };
 
