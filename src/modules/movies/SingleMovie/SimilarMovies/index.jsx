@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import {
   MoreMoviesTitle,
-  MovieLink,
+  MovieLink, MovieName,
   MoviePoster, Movies,
   SimilarMoviesContainer,
 } from './styles';
@@ -30,7 +30,7 @@ const SimilarMovies = props => {
       <Movies>
         {STUB_MOVIES.map((m, i) => (
           <MovieLink key={i}>
-            {m}
+            <MovieName>{m}</MovieName>
             <MoviePoster
               src={`https://placeimg.com/400/235/any&rnd=${Math.random()}`}/>
           </MovieLink>

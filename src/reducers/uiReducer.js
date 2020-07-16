@@ -3,6 +3,7 @@ const CLOSE_DROP_DOWN = 'CLOSE_DROP_DOWN';
 const CHANGE_WINDOW_DIMENSIONS = 'CHANGE_WINDOW_DIMENSIONS';
 const ENQUEUE_SNACKBAR_NOTIFICATION = 'ENQUEUE_SNACKBAR_NOTIFICATION';
 const DEQUEUE_SNACKBAR_NOTIFICATION = 'DEQUEUE_SNACKBAR_NOTIFICATION';
+const PROMPT = 'PROMPT';
 
 export const changeWindowDimensions = (width, height, device) => ({
   type: CHANGE_WINDOW_DIMENSIONS,
@@ -26,10 +27,19 @@ export const dequeueSnackbarMessage = () => ({
   type: DEQUEUE_SNACKBAR_NOTIFICATION,
 });
 
+export const promptUser = promptProps => ({
+  type: PROMPT,
+  payload: promptProps,
+});
+
 const initialState = {
   windowDimensions: {},
   userDropDownOpen: false,
   snackbarQueue: [],
+  prompt: {
+    isOpen: false,
+    props: {},
+  }
 };
 
 export default (state = initialState, action) => {
@@ -67,6 +77,13 @@ export default (state = initialState, action) => {
         snackbarQueue: newQueue,
       };
     }
+    case PROMPT: return {
+      ...state,
+      prompt: {
+        isOpen: true,
+        props: payload,
+      }
+    };
     default:
       return state;
   }

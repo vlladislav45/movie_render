@@ -6,6 +6,7 @@ import Pagination from './Pagination';
 import Timer from './Timer';
 import Tabs from './Tabs';
 import ConnectionHandler from './ConnectionHandler';
+import Prompt from './Prompt';
 
 export {
   ProfileButton,
@@ -16,4 +17,5 @@ export {
   Timer,
   Tabs,
   ConnectionHandler,
+  Prompt,
 };

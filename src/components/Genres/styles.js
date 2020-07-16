@@ -4,6 +4,7 @@ import {
   transitionDurations,
   transitionFunctions,
 } from 'config/animationConstants';
+import { getOverlay } from '../../utils/colorUtils';
 
 const { smallArea, mediumExpand, mediumCollapsing, largeExpand } = transitionDurations;
 const { standardEasing, acceleratedEasing, deceleratedEasing } = transitionFunctions;
@@ -35,7 +36,7 @@ export const GenresList = styled.ul`
 
 export const SingleGenre = styled.li`
     user-select: none;
-    cursor: pointer;
+    cursor: ${props => props.isDisabled ? 'default' : 'pointer'};
     
     position: relative;
     margin: 0 5px;
@@ -45,7 +46,22 @@ export const SingleGenre = styled.li`
     ${props => props.isActive && `
         transition: color ${smallArea}ms;
         color: ${props.theme.onSecondary};
+        ${props.isDisabled && `
+          &:after {
+            content: ''; 
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: ${props.theme.overlay};
+            opacity: 0.28;
+            border-radius: 20px;
+           }
+        `};
      `};
+     
+     
      
     // Hover effect
     & :before {
@@ -60,7 +76,7 @@ export const SingleGenre = styled.li`
     }
 
     & :hover:before {
-      opacity: ${props => props.isActive ? 0.08 : 0.04};
+      opacity: ${props => !props.isDisabled && (props.isActive ? 0.08 : 0.04)};
     }
      
     // Inner p for animation

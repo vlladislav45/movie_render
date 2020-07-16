@@ -9,6 +9,7 @@ export const DropDownItem = ({ element: { name, onClick, icon }, ...rest }) => (
     onClick={onClick}
     rippleColor='primary'
     rippleSize='m'
+    tag='li'
     {...rest}
   >
     {icon && <DropDownIcon IconComponent={icon}/>}

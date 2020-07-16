@@ -12,6 +12,7 @@ const withRipple = Component => React.forwardRef(({
   denseRipple = false,
   rippleColor = 'contrast',
   rippleSize = 'm',
+  tag = 'div',
   style,
   ...props
 }, ref) => {
@@ -83,6 +84,7 @@ const withRipple = Component => React.forwardRef(({
   };
 
   const containerProps = {
+    as: tag,
     ref: rippleRef,
     onMouseDownCapture: handleMouseDown,
     onMouseUpCapture: handleMouseUp,

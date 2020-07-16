@@ -14,9 +14,9 @@ export default {
     secondary: '#6d2cdf',
     surface: '#e0f5f8', // WHITE with 12% PRIMARY
     onSurface: '#1d2020', //87% black on surface
-    onSurfaceMD: '#666666', // 60% black medium emphasis
-    onPrimary: '#def4f7', // TODO: for both 87% black on primary and secondary color
-    onSecondary: '#ece4fb', //
+    onSurfaceMD: '#666666', // 60% black on surface medium emphasis
+    onPrimary: '#001619',
+    onSecondary: '#ece4fb',
     disabled: '#9F9F9F', // 38% black
     error: '#B00020',
     neon: '#8edcdc',
@@ -42,4 +42,4 @@ export default {
   }
 };
 //#465355
-console.log(getOverlay('#121212', '#FFFFFF', 0.87, true));
+console.log(getOverlay('#00ACC1', '#000000', 0.87, true));

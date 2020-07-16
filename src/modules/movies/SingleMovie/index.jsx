@@ -15,6 +15,7 @@ import {
   MovieVideo, MovieYear,
   SingleMovieWrapper,
   MovieViews,
+  MoreInfoGrid,
 } from './styles';
 
 const MOVIE_RATIO = 16 / 10;
@@ -55,6 +56,10 @@ const SingleMovie = ({ match: { params }, history }) => {
     // TODO: Rate the movie with this rating
   }
 
+
+  if(!posterName)
+    return null;
+
   return (
     <SingleMovieWrapper>
       {isLoading && <Loading/>}
@@ -83,30 +88,33 @@ const SingleMovie = ({ match: { params }, history }) => {
         videoRef={videoRef}
         summary={movieSummary}
       />
-      <MovieRating className='movieInfo'>
-        <span className='movieInfoName'>Rating:</span>
-        <Rating
-          rateable
-          onRate={rateMovie}
-          maxStars={5}
-          rating={movieRating}
-          color='onSurface'
-        />
-      </MovieRating>
-      <MovieViews className='movieInfo'>
-        <span className='movieInfoName'>Views</span>
-        <span>{movieViews}</span>
-      </MovieViews>
-      <MovieYear className='movieInfo'>
-        <span className='movieInfoName'>Year:</span>
-        <span> {movieYear}</span>
-      </MovieYear>
-      <Actors actors={actorNames}/>
-      <MovieDirector className='movieInfo'>
-        <span className='movieInfoName'>Director:</span>
-        <span>{directorName}</span>
-      </MovieDirector>
-      <SimilarMovies />
+      <MoreInfoGrid>
+        <span className='movieInfoName rating'>Rating:</span>
+        <span className='movieInfo rating'>
+          <Rating
+            id='movieRating'
+            rateable
+            onRate={rateMovie}
+            maxStars={5}
+            rating={movieRating}
+            color='onSurface'
+          />
+        </span>
+        <span className='movieInfo views'>
+          <span>{movieViews}</span>
+        </span>
+        <span className='movieInfoName views'>Views</span>
+        <span className='movieInfoName year'>Year:</span>
+        <span className='movieInfo year'>
+          <span> {movieYear}</span>
+        </span>
+        <span className='movieInfoName director'>Director:</span>
+        <span className='movieInfo director'>
+          <span>{directorName}</span>
+        </span>
+        <Actors actors={actorNames}/>
+      </MoreInfoGrid>
+      <SimilarMovies/>
     </SingleMovieWrapper>
   );
 };

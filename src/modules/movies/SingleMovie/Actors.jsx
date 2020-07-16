@@ -5,16 +5,18 @@ import { MovieActors } from './styles';
 const Actors = ({ actors = [] }) => {
 
   return (
-    <MovieActors className='movieInfo'>
-      <span className='movieInfoName'>Actors: </span>
-      <span className='actors'>
-        {actors.length > 0 ?
-          actors.map(
-            a => <span className='actor' key={a}>{a},</span>)
-          : 'Unknown'
-        }
+    <>
+      <span className='movieInfoName actors'>Actors: </span>
+      <span className='movieInfo actors'>
+        <ul>
+          {actors.length > 0 ?
+            actors.map(
+              a => <li className='actor' key={a}>{a},</li>)
+            : 'Unknown'
+          }
+        </ul>
       </span>
-    </MovieActors>
+    </>
   );
 };
 

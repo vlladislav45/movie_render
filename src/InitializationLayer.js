@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
 import { ConnectionHandler, Loading } from './components';
 import { SnackBar } from './components/basic';
+import { Prompt } from 'components';
 import { TopNavBar } from './modules/navigation';
 import { changeWindowDimensions } from './reducers/uiReducer';
 import RoutingLayer from './RoutingLayer';
@@ -41,6 +42,7 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <ConnectionHandler/>
+        <Prompt />
         <SnackBar/>
         <TopNavBar/>
         <MainContent>

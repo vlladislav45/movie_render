@@ -5,7 +5,7 @@ import { getOverlay } from 'utils/colorUtils';
 import {
   transitionDurations,
   transitionFunctions,
-} from '../../../config/animationConstants';
+} from 'config/animationConstants';
 
 const BaseInput = styled.input`
   width: 100%;
@@ -17,6 +17,20 @@ const BaseInput = styled.input`
 
 export const OuterContainer = styled.div`
   position: relative;
+  
+  
+    
+    ${props => props.isDisabled && `
+      &:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: ${props.theme.overlay};
+        opacity: 0.38;
+        z-index: ${NORMAL_Z_INDEX + 1};
+      }
+    `}
   
   // Helper and error text
   & > p {
@@ -30,7 +44,6 @@ export const OuterContainer = styled.div`
   }
 `;
 
-//TODO: disabled input
 export const StyledFilledInputContainer = styled.div`${props => {
   const { theme, focused, error, isOnPrimary, disabled: isDisabled } = props;
   const { error: errorColor, overlay, contrast, primary, onSurface, disabled, secondary, isDark } = theme;
@@ -45,9 +58,9 @@ export const StyledFilledInputContainer = styled.div`${props => {
   const background = getOverlay(surface, contrast, 0.04, true);
   const hoverBg = getOverlay(surface, contrast, 0.08, true);
   const hoverBorderColor = getOverlay(accentColor, contrast, 0.60, true);
-  
-  
+
   return `
+    ${isDisabled && 'pointer-events: none'};
     transition: all ${transitionDurations.mediumExpand}ms ${transitionFunctions.standardEasing};
     display: flex;
     position: relative;
@@ -55,7 +68,8 @@ export const StyledFilledInputContainer = styled.div`${props => {
     border-top-left-radius: 4px;
     overflow: hidden;
     background: ${background};
-    border-bottom: 1px solid ${getOverlay(accentColor, contrast, 0.38, true)};
+    border-bottom: 1px solid ${!isDisabled &&
+  getOverlay(accentColor, contrast, 0.38, true)};
     
     font-size: 1rem;
     
@@ -85,6 +99,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
       align-self: center;
       fill: ${onSurface};
     }
+    
     
     ${focused && `
       &:after {
@@ -138,9 +153,9 @@ export const InputLabel = styled.label`${props => {
     ${hasError && `
       color: ${error};
       ${elevated && `
-        animation: shake ${transitionDurations.mediumExpand} ${transitionFunctions.standardEasing};
+        animation: shake ${transitionDurations.mediumExpand}ms;
       `};
-      //TODO: Maybe rework the shake anim
+      
       @keyframes shake {
         0% {
           transform: translateY(-90%) scale(0.75) translateX(0);

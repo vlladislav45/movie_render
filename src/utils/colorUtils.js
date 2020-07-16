@@ -84,6 +84,7 @@ export function calcDarkThemeOverlay (elevation = 1) {
  * @param color color as hex value
  * @param overlayColor overlay color as hex value (without opacity)
  * @param opacity alpha channel between 0 and 1
+ * @param asHex flag if the new color should be returned as hex or rgb
  */
 export function getOverlay (color, overlayColor, opacity, asHex = false) {
   const { r: r1, g: g1, b: b1 } = hexToRgb(color);

@@ -27,7 +27,7 @@ export const StyledDropDown = styled(ThemedComponent)`
 
 export const DropDownList = styled.ul``;
 
-export const StyledDropDownItem = styled.li`
+export const StyledDropDownItem = styled.div`
   width: 100%;
   border-bottom: 1px solid ${({ theme: { isDark, disabled, surface } }) => isDark
   ? surface

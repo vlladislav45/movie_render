@@ -21,23 +21,19 @@ export const SingleMovieWrapper = styled.div`
   * v - video
   * t - movie title
   * s - movie summary
-  * r - rating bar
-  * y - movie year
-  * a - actors
-  * d - director
-  * w - vieWs
+  * i - more info (actors, rating, views etc)
   * m - more movies like this (SimilarMovies)
   */
   
   grid-template-areas: ". b t t t t t t ."
                        ". v v v s s s s ."
                        ". v v v s s s s ."
-                       ". r r w w . . . ."
-                       ". y y d d . . . ."
-                       ". a a a a a a a ."     
+                       ". i i i i i i i ."
+                       ". i i i i i i i ."
+                       ". i i i i i i i ."     
                        ". . . . . . . . ."
                        ". m m m m m m m ."
-                       ". m m m m m m m .";
+                       ". m m m m m m m ."
                        ". . . . . . . . .";
                        ". . . . . . . . .";
                        ". . . . . . . . .";
@@ -47,23 +43,12 @@ export const SingleMovieWrapper = styled.div`
   grid-auto-rows: minmax(10px, min-content);
   grid-auto-columns: 1fr;
   grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, minmax(min-content,max-content));
   
   grid-column-gap: ${GRID_COLUMN_GAP}px;
   grid-row-gap: ${GRID_ROW_GAP}px;
   grid-auto-flow: row;
-  // padding: 0 50px; // This will be for ads later on
    
-  & > .movieInfo {
-    display: flex;
-    align-items: center;
-    color: ${props => props.theme.onSurface};
-    font-size: 1rem;
-    margin: 10px 0;
-    & > .movieInfoName {
-      margin-right: 15px;
-      color: ${props => props.theme.onSurfaceMD};
-    }
-  }
 `;
 
 export const BackArrowWrapper = styled(Button)`
@@ -85,7 +70,7 @@ export const MovieVideo = styled.video`
 
 export const MovieTitle = styled.div`
   grid-area: t;
-  grid-column-start: 2;
+  grid-column-start: 3;
   font-family: 'Marck script', cursive;
   font-size: 2rem;
   font-weight: bold;
@@ -159,31 +144,89 @@ export const TextWrapper = styled.div`
   `};  
 `;
 
-export const MovieRating = styled.div`
-  grid-area: r;
-`;
-
-export const MovieYear = styled.div`
-  grid-area: y;
-`;
-
-export const MovieActors = styled.div`
-  grid-area: a;
-  & > .actors {
-    display: flex;
-    flex-wrap: wrap;
-    & > .actor {
-      margin: 0 5px;
-      white-space: nowrap;
+export const MoreInfoGrid = styled.div`
+  grid-area: i;
+  max-width: 100%;
+  display: grid;
+  grid-column-gap: 30px; // There is padding-right in .movieInfo
+  grid-row-gap: 15px;
+  grid-template-columns: repeat(4, minmax(min-content, max-content));
+  grid-template-areas: "nr ir nv iv ."
+                       "ny iy nd id ."
+                       "na ia ia ia ia";
+                       
+  align-items: center;                 
+                       
+                       
+  & .movieInfo {
+    white-space: nowrap;
+    color: ${props => props.theme.onSurface};
+    font-size: 1.1rem;
+    padding-right: 20px; //This may cause problems
+  }
+  
+  & .movieInfoName {
+    white-space: nowrap;
+    font-size: 1.1rem;
+    color: ${props => props.theme.onSurfaceMD};
+  }
+                         
+  & > .movieInfoName.rating {
+    grid-area: nr;
+  }
+  
+  & > .movieInfo.rating {
+    grid-area: ir;
+    margin-left: -5px; // little hack to compensate for star svg white space
+    & > #movieRating {
+      justify-content: unset;
     }
   }
-
-`;
-
-export const MovieDirector = styled.div`
-  grid-area: d;
-`;
-
-export const MovieViews = styled.div`
-  grid-area: w;
+  
+  & > .movieInfoName.views {
+    grid-area: nv;
+  }
+  
+  & > .movieInfo.views {
+    grid-area: iv;
+  }
+  
+    & > .movieInfoName.director {
+    grid-area: nd;
+  }
+  
+  & > .movieInfo.director {
+    grid-area: id;
+  }
+  
+  & > .movieInfoName.year {
+    grid-area: ny;
+  }
+  
+  & > .movieInfo.year {
+    grid-area: iy;
+  }
+  
+  & > .movieInfoName.actors {
+    grid-area: na;
+  }
+  
+  & > .movieInfo.actors {
+    grid-area: ia;
+    & > ul {
+      display: flex;
+      flex-wrap: wrap;
+      & > li.actor {
+        &:not(:first-child):not(:last-child) {
+          margin: 0 6px;
+        }
+        &:first-child {
+          margin-right: 6px;
+        }
+        &:last-child {
+          margin-left: 6px;
+        }
+      }
+    }
+  }
 `;

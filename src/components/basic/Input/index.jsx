@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorText, HelperText, OuterContainer } from './styles.js';
 import {
@@ -17,11 +17,13 @@ const Input = props => {
     onChange, onChangeCapture, disabled, ...rest
   } = props;
 
-  const inputId = useMemo(() => id || Input.nextId(), [id]);
+  const inputId = useMemo( () => Input.nextId(), []);
   const inputRef = useRef();
 
   const [value, setValue] = useState(preFilledText);
   const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => setValue(preFilledText), [preFilledText]);
 
   function renderBelowInput () {
     if (errorText)
@@ -54,13 +56,15 @@ const Input = props => {
     e.persist();
   }
 
+
   const hasError = !!errorText;
   const withLeadingIcon = !!LeadingIcon;
   const rippleClass = isFocused ? 'activate' : '';
   const shouldShowPlaceholder = isFocused || !label;
   return (
     <OuterContainer
-      id={inputId}
+      isDisabled={disabled}
+      id={id}
       {...rest}
     >
       <StyledFilledInputContainer
@@ -88,6 +92,8 @@ const Input = props => {
           {label}
         </InputLabel>}
         <StyledFilledInput
+          id={inputId}
+          disabled={disabled}
           ref={inputRef}
           hasError={hasError}
           focused={isFocused}

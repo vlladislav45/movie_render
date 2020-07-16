@@ -10,6 +10,7 @@ import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import { fetchGenres, updateFilter } from 'reducers/moviesReducer';
 import { transitionDurations } from 'config/animationConstants';
+import browserHistory from 'utils/browserHistory';
 
 import {
   Arrow,
@@ -43,7 +44,6 @@ const Genres = props => {
   const [rightEnd, setRightEnd] = useState(false);
 
   const { width: screenWidth } = useDeviceDimensions();
-
 
   useEffect(() => {
     dispatch(fetchGenres());
@@ -138,7 +138,8 @@ const Genres = props => {
     setOffset(newOffset);
   };
 
-  function genreClicked (genre) {
+  function genreClicked (genre, isDisabled) {
+    if (isDisabled) return;
     const { movieGenreName } = genre;
     const genreRef = genresRef[movieGenreName];
 
@@ -159,14 +160,15 @@ const Genres = props => {
   function renderGenres () {
     return genres.map(genre => {
       const { genreId: id, movieGenreName: name } = genre;
-
+      const isDisabled = browserHistory.location.pathname !== '/';
       return (
         <SingleGenre
           id={id}
           key={id}
           ref={genresRef[name]}
+          isDisabled={isDisabled}
           isActive={selectedGenres.includes(name)}
-          onClick={() => genreClicked(genre)}
+          onClick={() => genreClicked(genre, isDisabled)}
         >
           <p>
             {name}

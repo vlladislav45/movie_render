@@ -16,7 +16,7 @@ export default ({ index, type, onRate, rateable, color }) => {
       rateable={rateable}
       color={color}
       onClickCapture={handleClick}
-      title={rateable && `Rate the movie with ${index + 1} stars`}
+      title={rateable ? `Rate the movie with ${index + 1} stars` : undefined}
     >
       {type === 'empty' && <EmptyStar/>}
       {type === 'half-empty' && <HalfEmptyStar/>}

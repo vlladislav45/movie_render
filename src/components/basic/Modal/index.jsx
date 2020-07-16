@@ -49,7 +49,8 @@ Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   // represents open/closed state, receives 1 parameter the new state (true for open false for closed)
   stateChanged: PropTypes.func,
-  slideDirection: PropTypes.oneOf(['toRight', 'toLeft', 'toBottom', 'toTop']),
+  slideDirection: PropTypes.oneOf(
+    ['toRight', 'toLeft', 'toBottom', 'toTop', 'none']),
   fade: PropTypes.bool,
   closeOnClickOutside: PropTypes.bool,
 };
