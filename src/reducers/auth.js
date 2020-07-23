@@ -73,6 +73,7 @@ export const finishRedirect = () => ({
   type: FINISH_REDIRECT,
 });
 
+
 const initialState = {
   loginError: null,
   registerError: null,

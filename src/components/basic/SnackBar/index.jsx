@@ -1,7 +1,6 @@
-import { func } from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { dequeueSnackbarMessage } from '../../../reducers/uiReducer';
+import { dequeueSnackbarMessage } from 'reducers/uiReducer';
 import {
   ActionButton, ActionsContainer,
   SNACKBAR_FADE_IN_DURATION,
@@ -19,13 +18,15 @@ import {
  *   options - object with additional config
  *     available options: {
  *       closeOnAction: Array with the name of the actions that close the snackbar,
- *       autoCloseAfter: Number different time to auto close
+ *       autoCloseAfter: Number different time to auto close,
+ *       useColor: Choose what color the text should be
+ *        (any color from theme ex 'primary' 'secondary' ; or valid css hex/rgb color ex '#00FF00' 'rgb(255, 255, 0)')
  *     }
  *
  */
 let timeout;
 const AUTO_CLOSE_TIMEOUT = 4000;
-const SnackBar = props => {
+const SnackBar = () => {
   const dispatch = useDispatch();
   const { snackbarQueue } = useSelector(({ uiReducer }) => ({
     snackbarQueue: uiReducer.snackbarQueue,
@@ -44,7 +45,6 @@ const SnackBar = props => {
         },
         autoClose);
     }
-
   }, [snackbarQueue[0]]);
 
   // Issue command to hide snackbar
@@ -62,6 +62,7 @@ const SnackBar = props => {
   const { message, actions, options = {} } = snackbarQueue[0];
   const {
     closeOnAction = [],
+    useColor,
   } = options;
 
   function renderActions () {
@@ -91,7 +92,9 @@ const SnackBar = props => {
       appear={showSnackbar}
     >
       <SnackBarInner>
-        <SnackBarMessage>
+        <SnackBarMessage
+          color={useColor}
+        >
           {message}
         </SnackBarMessage>
         <ActionsContainer>

@@ -1,12 +1,12 @@
 import { throttle } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
-import { Route, Router, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
 import { ConnectionHandler, Loading } from './components';
 import { SnackBar } from './components/basic';
+import { Prompt } from 'components';
 import { TopNavBar } from './modules/navigation';
 import { changeWindowDimensions } from './reducers/uiReducer';
 import RoutingLayer from './RoutingLayer';
@@ -42,18 +42,12 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <ConnectionHandler/>
+        <Prompt {...this.props.promptProps} />
         <SnackBar/>
         <TopNavBar/>
         <MainContent>
           <Router history={browserHistory}>
-            <Switch>
-              {/*<Route exact path='/'>*/}
-              {/*  <Redirect to='/?page=1&items=9' />*/}
-              {/*</Route>*/}
-              <Route path='*'>
-                <RoutingLayer/>
-              </Route>
-            </Switch>
+            <RoutingLayer/>
           </Router>
         </MainContent>
       </ThemeProvider>
@@ -61,8 +55,9 @@ class InitializationLayer extends React.Component {
   }
 }
 
-const mapStateToProps = ({ themeReducer: { themeColors } }) => ({
+const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { prompt: { props } } }) => ({
   themeColors,
+  promptProps: props,
 });
 
 const mapDispatchToProps = {

@@ -29,7 +29,10 @@ const AuthNav = props => {
   function renderLoggedInNav () {
     return (
       <LoggedInNav {...props}>
-        <ProfileButton/>
+        <ProfileButton
+          rippleSize='s'
+          rippleColor='secondary'
+        />
       </LoggedInNav>
     );
   }

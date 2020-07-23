@@ -17,6 +17,9 @@ const START_LOADING_SINGLE = 'START_LOADING_SINGLE';
 const UPDATE_FILTER = 'UPDATE_FILTER';
 const RESET_FILTER = 'RESET_FILTER';
 
+// Rating
+const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
+
 export const fetchGenres = () => dispatch => {
   MovieAPI.getGenres().then(res => {
     const { data } = res;
@@ -28,12 +31,14 @@ export const fetchGenres = () => dispatch => {
   });
 };
 
-export const fetchMovies = (page, size) => dispatch => {
+export const fetchMovies = (page, size) => (dispatch, getState) => {
   dispatch({
     type: START_LOADING_ALL,
   });
 
-  MovieAPI.getByPage(page, size).then(res => {
+  const { moviesReducer: { filters } } = getState();
+
+  MovieAPI.getByPage(page, size, { ...filters }).then(res => {
     const { data } = res;
     dispatch({
       type: FETCH_ALL_MOVIES,
@@ -41,18 +46,14 @@ export const fetchMovies = (page, size) => dispatch => {
     });
   }).catch(err => dispatch({
     type: FETCH_ALL_MOVIES,
-    payload: []
+    payload: [],
   }));
 };
 
-export const getMoviesCount = () => dispatch => {
-  // const data = require('../modules/movies/stub.json');
-  // dispatch({
-  //   type: MOVIES_COUNT,
-  //   payload: data.length,
-  // });
+export const getMoviesCount = () => (dispatch, getState) => {
+  const { moviesReducer: { filters } } = getState();
 
-  MovieAPI.getMoviesCount().then(res => {
+  MovieAPI.getMoviesCount({ ...filters }).then(res => {
     const { data } = res;
     dispatch({
       type: MOVIES_COUNT,
@@ -98,6 +99,25 @@ export const resetFilter = () => ({
   type: RESET_FILTER,
 });
 
+// RATE
+export const rateMovie = (
+  movieId, userId, stars, review) => dispatch => new Promise(resolve => {
+  MovieAPI.rateMovie({
+    userId,
+    movieId,
+    movieRating: stars,
+    comment: review,
+  }).then(res => {
+    const { data } = res;
+    if (data.newRating)
+      dispatch({
+        type: RATE_MOVE_SUCCESS,
+        payload: { newRating: data.newRating },
+      });
+    resolve(data);
+  });
+});
+
 const initialState = {
   genres: [],
   movies: [],
@@ -107,14 +127,17 @@ const initialState = {
   isLoading: false,
   selectedMovie: {
     movieInfo: {},
+    rating: {},
     isLoading: false,
   },
-  filters: {},
+  filters: {
+    search: '',
+    genres: [],
+  },
 };
 
 export default (state = initialState, action) => {
   const { type, payload } = action;
-
   switch (type) {
     case FETCH_GENRES:
       return {
@@ -175,6 +198,17 @@ export default (state = initialState, action) => {
         filters: {
           ...state.filters,
           ...payload,
+        },
+      };
+    case RATE_MOVE_SUCCESS:
+      return {
+        ...state,
+        selectedMovie: {
+          ...state.selectedMovie,
+          movieInfo: {
+            ...state.selectedMovie.movieInfo,
+            movieRating: payload.newRating,
+          }
         },
       };
     default:

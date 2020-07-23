@@ -1,27 +1,31 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { ErrorText, HelperText, OuterContainer } from './styles.js';
-import {
-  ErrorIcon,
-  InputLabel,
-  RippleElem,
-  StyledFilledInput,
-  StyledFilledInputContainer,
-} from './styles';
+import { Loading } from 'components';
+import FilledInput from './FilledInput';
+import MultiLineInput from './MultiLine';
+import { ErrorText, HelperText, OuterContainer } from './baseStyles.js';
 
-const Input = props => {
+const Input = (props) => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
     inputType, label, helperText, errorText,
     placeholder, id, onPrimary, withIconOnError,
-    onChange, onChangeCapture, disabled, ...rest
+    onChange, onChangeCapture, disabled, loading,
+    focusOnMount, ...rest
   } = props;
 
-  const inputId = useMemo(() => id || Input.nextId(), [id]);
+  const inputId = useMemo(() => Input.nextId(), []);
   const inputRef = useRef();
 
   const [value, setValue] = useState(preFilledText);
   const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => setValue(preFilledText), [preFilledText]);
+
+  useEffect(() => {
+    if (focusOnMount)
+      setIsFocused(true);
+  }, [focusOnMount]);
 
   function renderBelowInput () {
     if (errorText)
@@ -37,13 +41,6 @@ const Input = props => {
     else return null;
   }
 
-  function focusInput () {
-    if (isFocused)
-      return;
-    setIsFocused(true);
-    inputRef.current.focus();
-  }
-
   function textChanges (e) {
     setValue(e.target.value);
     if (onChange)
@@ -51,56 +48,40 @@ const Input = props => {
     if (onChangeCapture)
       onChangeCapture(e);
 
-    e.stopPropagation();
+    e.persist();
   }
 
-  const hasError = !!errorText;
-  const withLeadingIcon = !!LeadingIcon;
-  const rippleClass = isFocused ? 'activate' : '';
-  const shouldShowPlaceholder = isFocused || !label;
+  const inputProps = {
+    hasError: !!errorText,
+    withLeadingIcon: !!LeadingIcon,
+    rippleClass: isFocused ? 'activate' : '',
+    shouldShowPlaceholder: isFocused || !label,
+    onBlur: () => { setIsFocused(false); },
+    onFocus: () => { setIsFocused(true); },
+    onChange: textChanges,
+    inputId, disabled, isFocused, label, LeadingIcon,
+    withIconOnError, placeholder, value, onPrimary,
+  };
   return (
     <OuterContainer
-      id={inputId}
+      isMultiLine={inputType === 'textarea'}
+      isDisabled={disabled}
+      id={id}
       {...rest}
     >
-      <StyledFilledInputContainer
-        disabled={disabled}
-        onClick={focusInput}
-        error={hasError}
-        focused={isFocused}
-        withLeadingIcon={withLeadingIcon}
-        isOnPrimary={onPrimary}
-      >
-        <RippleElem
-          hasError={hasError}
-          className={rippleClass}
-          isOnPrimary={onPrimary}
-        />
-        {LeadingIcon && <LeadingIcon className='leading-icon'/>}
-        {label && <InputLabel
-          htmlFor={inputId}
-          elevated={isFocused || !!value}
-          isFocused={isFocused}
-          withLeadingIcon={withLeadingIcon}
-          hasError={hasError}
-          isOnPrimary={onPrimary}
-        >
-          {label}
-        </InputLabel>}
-        <StyledFilledInput
+      {loading && <Loading/>}
+      {inputType === 'filled' && (
+        <FilledInput
           ref={inputRef}
-          hasError={hasError}
-          focused={isFocused}
-          value={value}
-          onBlur={() => setIsFocused(false)}
-          onFocus={() => setIsFocused(true)}
-          onChange={textChanges}
-          withLeadingIcon={withLeadingIcon}
-          placeholder={shouldShowPlaceholder ? placeholder : ''}
-          {...rest}
+          {...inputProps}
         />
-        {withIconOnError && hasError && <ErrorIcon />}
-      </StyledFilledInputContainer>
+      )}
+      {inputType === 'textarea' && (
+        <MultiLineInput
+          ref={inputRef}
+          {...inputProps}
+        />
+      )}
       {renderBelowInput()}
     </OuterContainer>
   );
@@ -115,13 +96,17 @@ Input.propTypes = {
   leadingIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.object]),
   onPrimary: PropTypes.bool, // Flag to use secondary for accent instead of primary
   disabled: PropTypes.bool,
-  withIconOnError: PropTypes.bool // display icon when there is error
+  withIconOnError: PropTypes.bool, // display icon when there is error
+  loading: PropTypes.bool, // Display loading above the input
+  focusOnMount: PropTypes.bool, // Focus the input when mounted
 };
 
 Input.defaultProps = {
   inputType: 'filled',
   withIconOnError: true,
   onPrimary: false,
+  disabled: false,
+  focusOnMount: false,
 };
 
 Input.nextId = (() => {

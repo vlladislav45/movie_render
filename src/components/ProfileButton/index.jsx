@@ -1,8 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleUserDropDown } from 'reducers/uiReducer';
+import withRipple from 'HOC/withRipple';
+import { ProfileImage } from '../basic';
 import { ReactComponent as ArrowIcon } from 'assets/icons/arrow_drop_down-24px.svg';
-import { ProfileCircle } from '../basic';
 import { ArrowIconContainer, StyledProfileButton, Username } from './styles';
 
 export const ProfileButton = () => {
@@ -22,13 +23,11 @@ export const ProfileButton = () => {
 
   return (
     <StyledProfileButton
-      elevation={1}
+      elevation={6}
       onClick={toggleDropDown}
       shouldElevateWhenHover
-      withRipple
-      rippleColor='secondary'
     >
-      <ProfileCircle size={32} />
+      <ProfileImage size={36} />
       <Username>
         {username}
       </Username>
@@ -39,4 +38,4 @@ export const ProfileButton = () => {
   );
 };
 
-export default ProfileButton;
+export default withRipple(ProfileButton);

@@ -9,18 +9,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import { fetchGenres, updateFilter } from 'reducers/moviesReducer';
+import { transitionDurations } from 'config/animationConstants';
+import browserHistory from 'utils/browserHistory';
+
 import {
   Arrow,
   Carousel,
   GenresContainer,
   GenresList,
   SingleGenre,
-  SLIDE_DURATION,
 } from './styles';
 
 // If the carousel is sliding, user should not be able to initiate another slide
 // because offset will be calculated wrong
 let isSliding = false;
+const { smallArea } = transitionDurations;
 
 const Genres = props => {
   const dispatch = useDispatch();
@@ -36,7 +39,6 @@ const Genres = props => {
   const [genresRef, setGenresRef] = useState({});
   const [isOverflow, setIsOverflow] = useState(false);
 
-  // const [genres, setGenres] = useState([]);
   const [offset, setOffset] = useState(0);
   const [leftEnd, setLeftEnd] = useState(true);
   const [rightEnd, setRightEnd] = useState(false);
@@ -61,8 +63,9 @@ const Genres = props => {
 
   useLayoutEffect(checkIfOverflows, [genresRef, screenWidth]);
 
-  //TODO: when scrolled, and resize does not remove arrows,
-  // maybe do some recalculations
+  //TODO: Currently we hide the arrows, scroll to left and then check if we need to
+  // remove the arrows (in setTimeout)
+  // if this is slow, we need to rework it
   function checkIfOverflows () {
     const first = Object.values(genresRef)[0]?.current;
     const last = Object.values(genresRef).reverse()[0]?.current;
@@ -70,15 +73,20 @@ const Genres = props => {
     if (!first || !last)
       return;
 
+    setIsOverflow(false);
     // Set offset to 0 when resizing, to calculate properly
     if (!leftEnd && !isVisible(first)) {
       setOffset(0);
     }
 
-    if (!isVisible(first, 'left') || !isVisible(last, 'right')) {
-      setIsOverflow(true);
-    } else
-      setIsOverflow(false);
+    // TODO: this is just a hack, rework logic
+    setTimeout(() => {
+      if (!isVisible(first, 'left') || !isVisible(last, 'right')) {
+        setIsOverflow(true);
+      } else
+        setIsOverflow(false);
+    }, 100);
+
   }
 
   function slideLeft () {
@@ -87,7 +95,7 @@ const Genres = props => {
 
     slide('left');
     isSliding = true;
-    setTimeout(() => isSliding = false, SLIDE_DURATION);
+    setTimeout(() => isSliding = false, smallArea);
   }
 
   function slideRight () {
@@ -96,7 +104,7 @@ const Genres = props => {
 
     slide('right');
     isSliding = true;
-    setTimeout(() => isSliding = false, SLIDE_DURATION);
+    setTimeout(() => isSliding = false, smallArea);
   }
 
   /**
@@ -130,29 +138,41 @@ const Genres = props => {
     setOffset(newOffset);
   };
 
-  function genreClicked (genre) {
+  function genreClicked (genre, isDisabled) {
+    if (isDisabled) return;
+    const { movieGenreName } = genre;
+    const genreRef = genresRef[movieGenreName];
+
+    if (!isVisible(genreRef.current, 'left'))
+      slideLeft();
+    else if (!isVisible(genreRef.current, 'right'))
+      slideRight();
+
     let newGenres;
-    if (selectedGenres.includes(genre))
-      newGenres = selectedGenres.filter(g => g !== genre);
+    if (selectedGenres.includes(movieGenreName))
+      newGenres = selectedGenres.filter(g => g !== movieGenreName);
     else
-      newGenres = selectedGenres.concat(genre);
+      newGenres = selectedGenres.concat(movieGenreName);
 
     dispatch(updateFilter({ genres: newGenres }));
   }
 
-  // TODO: Render selected genres as chips
   function renderGenres () {
     return genres.map(genre => {
       const { genreId: id, movieGenreName: name } = genre;
+      const isDisabled = browserHistory.location.pathname !== '/';
       return (
         <SingleGenre
           id={id}
           key={id}
           ref={genresRef[name]}
-          isActive={selectedGenres.includes(genre)}
-          onClick={() => genreClicked(genre)}
+          isDisabled={isDisabled}
+          isActive={selectedGenres.includes(name)}
+          onClick={() => genreClicked(genre, isDisabled)}
         >
-          {name}
+          <p>
+            {name}
+          </p>
         </SingleGenre>);
     });
   }

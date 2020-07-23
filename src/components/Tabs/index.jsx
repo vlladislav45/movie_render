@@ -1,16 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { rippleConstants } from 'config/constants';
+import React, { useEffect, useState } from 'react';
 import useDeviceDimensions from '../../hooks/useDeviceDimensions';
 import SingleTab from './SingleTab';
-import { StyledSingleTab, TabsContainer } from './styles';
+import { TabsContainer } from './styles';
 
-let isUpdated = false;
-let time = 0, timeout;
-const { SMALL_RIPPLE_DURATION } = rippleConstants;
 const Tabs = props => {
     const {
-      tabs: propTabs, color = 'secondary',
+      tabs: propTabs,
+      color = 'secondary',
       prominent = false,
     } = props;
 
@@ -18,12 +15,6 @@ const Tabs = props => {
     const [activeTab, setActiveTab] = useState(null);
     // used to force render when changing dimensions
     const ignored = useDeviceDimensions();
-
-    useEffect(() => {
-      return () => {
-        clearTimeout(timeout);
-      };
-    }, []);
 
     // Map all the tabs from props to state
     useEffect(() => {
@@ -35,8 +26,6 @@ const Tabs = props => {
           ref: React.createRef(),
           tabName,
           tabContent,
-          ripple: false,
-          rippleOff: false,
           isActive,
         };
       });
@@ -68,32 +57,6 @@ const Tabs = props => {
       });
     }
 
-    function rippleOn (evt, tabName) {
-      time = Date.now();
-      const x = evt.clientX - evt.target.getBoundingClientRect().left;
-      const y = evt.clientY - evt.target.getBoundingClientRect().top;
-
-      updateTabState(tabName, 'ripple', { x, y }, { rippleOff: false });
-    }
-
-    function rippleOff (tabName) {
-
-      if (time <= 0) return;
-
-      const timeLeft = Date.now() - time;
-      time = 0;
-      // Workaround to ensure ripple animation will end
-      if (timeLeft > 0 && timeLeft < SMALL_RIPPLE_DURATION) {
-        timeout = setTimeout(() => {
-          time = 0;
-          updateTabState(tabName, 'ripple', false, { rippleOff: true });
-        }, SMALL_RIPPLE_DURATION - timeLeft);
-      } else {
-        time = 0;
-        updateTabState(tabName, 'ripple', false, { rippleOff: true });
-      }
-    }
-
     function tabClicked (tabName) {
       setActiveTab({ ...tabs[tabName].ref, tabName });
     }
@@ -107,14 +70,11 @@ const Tabs = props => {
           ref={tabs[tabName].ref}
           tabIndex={0}
           prominent={prominent}
+          denseRipple={prominent}
           color={color}
+          rippleColor={color}
           isActive={activeTab?.tabName === tabName}
-          onMouseDown={rippleOn}
-          onMouseUp={rippleOff}
-          onMouseOut={rippleOff}
           onClick={tabClicked}
-          ripple={tabs[tabName].ripple}
-          rippleOff={tabs[tabName].rippleOff}
           tabName={tabName}
         />
       );
