@@ -73,7 +73,7 @@ const MoviesContainer = ({ history, location }) => {
     if (movies.length === 0 || !imageWorker)
       return;
 
-    movies.forEach(async movie => {
+    movies.forEach(movie => {
       imageWorker.postMessage({
         id: movie.id,
         url: `${API_URL}movies/poster/${movie.posterName}`,
@@ -143,7 +143,6 @@ const MoviesContainer = ({ history, location }) => {
       <MoviesPagination/>
       <TransitionGroup>
         <CSSTransition
-          // nodeRef={ref}
           appear
           timeout={500}
           classNames={classNames}

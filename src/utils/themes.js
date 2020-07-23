@@ -28,7 +28,9 @@ export default {
     primary: '#80ddea', // was #BB86FC
     primaryDark: '#00838F',
     secondary: '#ba9bef',
-    surface: '#1f2a2c', // 12% primary on surface (#121212)
+    //This is #121212 with 12% base theme primary color
+    //Prev value (#121212 with 12% dark theme primary color is #1f2a2c)
+    surface: '#102427', // 12% primary on surface (#121212)
     onSurface: '#e2e3e4', // 87% white on surface
     onSurfaceMD: '#a5aaab', // 60% white on surface
     onPrimary: '#000000',
@@ -42,4 +44,4 @@ export default {
   }
 };
 //#465355
-console.log(getOverlay('#00ACC1', '#000000', 0.87, true));
+console.log(getOverlay('#121212', '#00ACC1', 0.12, true));

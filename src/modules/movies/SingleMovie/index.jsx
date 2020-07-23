@@ -5,17 +5,18 @@ import { Loading, Rating } from 'components';
 import { API_URL } from 'api/BaseAPI';
 import { fetchSingleMovie, updateFilter } from 'reducers/moviesReducer';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
+import { Button, Input } from '../../../components/basic';
+import { promptUser } from '../../../reducers/uiReducer';
 import Actors from './Actors';
 import MovieSummary from './MovieSummary';
 import { ReactComponent as BackArrow } from 'assets/icons/arrow_back.svg';
+import RatingSection from './Rating';
 import SimilarMovies from './SimilarMovies';
 import {
-  BackArrowWrapper, MovieActors, MovieDirector, MovieRating,
+  BackArrowWrapper,
   MovieTitle,
-  MovieVideo, MovieYear,
   SingleMovieWrapper,
-  MovieViews,
-  MoreInfoGrid,
+  MoreInfoGrid, MovieVideo,
 } from './styles';
 
 const MOVIE_RATIO = 16 / 10;
@@ -52,12 +53,7 @@ const SingleMovie = ({ match: { params }, history }) => {
     return () => dispatch(updateFilter({ genres: prevGenres }));
   }, [movieGenres]);
 
-  function rateMovie (rate) {
-    // TODO: Rate the movie with this rating
-  }
-
-
-  if(!posterName)
+  if (!posterName)
     return null;
 
   return (
@@ -87,19 +83,13 @@ const SingleMovie = ({ match: { params }, history }) => {
       <MovieSummary
         videoRef={videoRef}
         summary={movieSummary}
+        movieId={movieId}
       />
       <MoreInfoGrid>
-        <span className='movieInfoName rating'>Rating:</span>
-        <span className='movieInfo rating'>
-          <Rating
-            id='movieRating'
-            rateable
-            onRate={rateMovie}
-            maxStars={5}
-            rating={movieRating}
-            color='onSurface'
-          />
-        </span>
+        <RatingSection
+          movieName={movieName}
+          movieId={movieId}
+        />
         <span className='movieInfo views'>
           <span>{movieViews}</span>
         </span>

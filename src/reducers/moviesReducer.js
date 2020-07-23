@@ -17,6 +17,9 @@ const START_LOADING_SINGLE = 'START_LOADING_SINGLE';
 const UPDATE_FILTER = 'UPDATE_FILTER';
 const RESET_FILTER = 'RESET_FILTER';
 
+// Rating
+const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
+
 export const fetchGenres = () => dispatch => {
   MovieAPI.getGenres().then(res => {
     const { data } = res;
@@ -96,6 +99,25 @@ export const resetFilter = () => ({
   type: RESET_FILTER,
 });
 
+// RATE
+export const rateMovie = (
+  movieId, userId, stars, review) => dispatch => new Promise(resolve => {
+  MovieAPI.rateMovie({
+    userId,
+    movieId,
+    movieRating: stars,
+    comment: review,
+  }).then(res => {
+    const { data } = res;
+    if (data.newRating)
+      dispatch({
+        type: RATE_MOVE_SUCCESS,
+        payload: { newRating: data.newRating },
+      });
+    resolve(data);
+  });
+});
+
 const initialState = {
   genres: [],
   movies: [],
@@ -105,6 +127,7 @@ const initialState = {
   isLoading: false,
   selectedMovie: {
     movieInfo: {},
+    rating: {},
     isLoading: false,
   },
   filters: {
@@ -115,7 +138,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   const { type, payload } = action;
-
   switch (type) {
     case FETCH_GENRES:
       return {
@@ -176,6 +198,17 @@ export default (state = initialState, action) => {
         filters: {
           ...state.filters,
           ...payload,
+        },
+      };
+    case RATE_MOVE_SUCCESS:
+      return {
+        ...state,
+        selectedMovie: {
+          ...state.selectedMovie,
+          movieInfo: {
+            ...state.selectedMovie.movieInfo,
+            movieRating: payload.newRating,
+          }
         },
       };
     default:

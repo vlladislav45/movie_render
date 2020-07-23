@@ -42,7 +42,7 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <ConnectionHandler/>
-        <Prompt />
+        <Prompt {...this.props.promptProps} />
         <SnackBar/>
         <TopNavBar/>
         <MainContent>
@@ -55,8 +55,9 @@ class InitializationLayer extends React.Component {
   }
 }
 
-const mapStateToProps = ({ themeReducer: { themeColors } }) => ({
+const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { prompt: { props } } }) => ({
   themeColors,
+  promptProps: props,
 });
 
 const mapDispatchToProps = {

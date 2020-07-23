@@ -17,10 +17,9 @@ export const ModalWrapper = styled.div`
   height: 100%;
   background: ${props => props.theme.isDark ? '#000000' : '#000000'}88;
   z-index: ${MAX_Z_INDEX};
-  overflow: auto;
+  overflow: hidden;
   
   display: flex;
-  will-change: visibility;
   visibility:  ${props => props.isOpen ? 'visible' : 'hidden'};
   ${props => !props.isOpen && `transition: visibility ${mediumCollapsing}ms ${standardEasing};`};
 
@@ -40,10 +39,11 @@ export const ModalInner = styled.div`${props => {
     color: ${onSurface};
     box-shadow: ${applyShadow(12)};
     border-radius: 6px;
-    padding: 16px 24px;
+    padding: 24px;
     animation-duration: ${mediumCollapsing}ms;
     animation-timing-function: ${deceleratedEasing};
-    animation-fill-mode: forwards; 
+    animation-fill-mode: forwards;
+    max-width: 80%;
     
     ${isOpen && `
       animation-duration: ${mediumExpand}ms;

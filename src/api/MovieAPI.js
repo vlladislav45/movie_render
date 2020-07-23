@@ -8,7 +8,9 @@ class MovieAPI extends BaseAPI {
 
   getGenres = () => this.get('/movies/genres');
 
-  getByPage = (page, size, filter) => this.post(`/movies?size=${size}&page=${page}`, filter)
+  getByPage = (page, size, filter) => this.post(`/movies?size=${size}&page=${page}`, filter);
+
+  rateMovie = data => this.post(`movies/single/rating`, data);
 }
 
 export default new MovieAPI();

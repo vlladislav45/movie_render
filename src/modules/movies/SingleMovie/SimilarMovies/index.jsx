@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
   MoreMoviesTitle,
@@ -18,9 +18,13 @@ const STUB_MOVIES = [
   'Tango & Cash',
   'Big tits at school',
   'Men of Israel',
-  'Fight club'];
+  'Fight club',
+  'I origins',
+  'I Robot',
+  'Sinister',
+];
 const SimilarMovies = props => {
-
+  const stubImages = useMemo(() => STUB_MOVIES.map(() => `https://placeimg.com/400/235/any&rnd=${Math.random()}`), []);
   return (
     <SimilarMoviesContainer
     >
@@ -32,7 +36,7 @@ const SimilarMovies = props => {
           <MovieLink key={i}>
             <MovieName>{m}</MovieName>
             <MoviePoster
-              src={`https://placeimg.com/400/235/any&rnd=${Math.random()}`}/>
+              src={stubImages[i]}/>
           </MovieLink>
         ))}
       </Movies>

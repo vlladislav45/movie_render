@@ -32,7 +32,11 @@ const Rating = ({
 
     // if we pass more rating then max stars, percentage = 1
     const percentage = Math.min(rating, maxStars) / maxStars;
-    const filledStars = percentage * maxStars;
+    //TODO: Check this out
+    // console.group('Rating');
+    // console.log(rating);
+    // console.groupEnd();
+    const filledStars = Math.min(rating, maxStars) - 1;
 
     const stars = [...Array(Math.floor(filledStars))].map((u, i) =>
       <Star

@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { ReactComponent as ArrowSvg } from 'assets/icons/right-arrow-24px.svg';
 import {
   transitionDurations,
   transitionFunctions,
 } from 'config/animationConstants';
-import { getOverlay } from '../../utils/colorUtils';
+import { getOverlay } from 'utils/colorUtils';
+import { ReactComponent as ArrowSvg } from 'assets/icons/right-arrow-24px.svg';
 
 const { smallArea, mediumExpand, mediumCollapsing, largeExpand } = transitionDurations;
 const { standardEasing, acceleratedEasing, deceleratedEasing } = transitionFunctions;
@@ -42,7 +42,12 @@ export const SingleGenre = styled.li`
     margin: 0 5px;
     font-size: 1.1rem;
     width: 100%;
-        
+    
+    ${({ isDisabled, theme }) => isDisabled 
+      ? `color: ${theme.isDark ? theme.disabled : getOverlay(theme.onPrimary, theme.primary ,0.38, true)}`
+      : `color: ${theme.isDark ? theme.primary : theme.onPrimary}`
+    };
+    
     ${props => props.isActive && `
         transition: color ${smallArea}ms;
         color: ${props.theme.onSecondary};
@@ -69,7 +74,7 @@ export const SingleGenre = styled.li`
       position: absolute;
       width: 100%;
       height: 100%;
-      background: ${props => props.theme.overlay};
+      background: ${props => props.theme.contrast};
       opacity: 0;
       left: 0;
       top: 0;
@@ -106,6 +111,7 @@ export const SingleGenre = styled.li`
         transform: scaleX(50);
         opacity: 1;
       `};
+    }
 `;
 
 export const Arrow = styled(ArrowSvg)`

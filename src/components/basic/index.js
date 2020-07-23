@@ -1,6 +1,5 @@
-import AuthButton from './AuthButton';
 import ThemedComponent from './ThemedComponent';
-import ProfileCircle from './ProfileCircle';
+import ProfileImage from './ProfileImage';
 import Input from './Input';
 import Button from './Button';
 import Modal from './Modal';
@@ -8,8 +7,7 @@ import SnackBar from './SnackBar';
 
 export {
   ThemedComponent,
-  AuthButton, // Neon button
-  ProfileCircle,
+  ProfileImage,
   Input,
   Button,
   Modal,

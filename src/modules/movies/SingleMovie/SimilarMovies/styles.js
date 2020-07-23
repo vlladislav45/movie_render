@@ -14,11 +14,13 @@ export const MoreMoviesTitle = styled.h3`
 
 export const Movies = styled.div`
   display: flex;
+  scroll-snap-type: x mandatory; // TODO: figure it out
   overflow-x: auto; // TODO: Make this scrollable like genres or like a carousel
 `;
 
 export const MovieLink = styled.div`
   margin: 0 10px;
+  scroll-snap-align: start;
 `;
 
 export const MovieName = styled.h4`

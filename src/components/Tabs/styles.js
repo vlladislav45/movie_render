@@ -32,7 +32,6 @@ export const TabsContainer = styled.div`${props => {
     `};
     
     &::before {
-      will-change: width, left;
       z-index: ${NORMAL_Z_INDEX};
       transition: left .2s ease;
       content: '';

@@ -46,6 +46,7 @@ export const BaseButton = styled.button`${props => {
     letter-spacing: 1.25px;
     white-space: nowrap;
     background: none; 
+    user-select: none;
     
     position: relative;
     overflow: hidden;

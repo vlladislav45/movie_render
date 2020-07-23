@@ -38,7 +38,10 @@ export const SnackBarInner = styled.div`${props => {
 export const SnackBarMessage = styled.span`
   font-size: 0.8rem;
   font-family: 'Roboto', sans-serif;
-  color: ${getOverlay('#323232', '#FFFFFF', 0.87)};
+  color: ${props => props.color
+  // If its not a valid color name from the theme, its probably a hex color
+  ? props.theme[props.color] || props.color 
+  : getOverlay('#323232', '#FFFFFF', 0.87)};
   
   margin-right: 70px;
 `;

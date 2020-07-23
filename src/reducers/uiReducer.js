@@ -37,7 +37,6 @@ const initialState = {
   userDropDownOpen: false,
   snackbarQueue: [],
   prompt: {
-    isOpen: false,
     props: {},
   }
 };
@@ -80,7 +79,6 @@ export default (state = initialState, action) => {
     case PROMPT: return {
       ...state,
       prompt: {
-        isOpen: true,
         props: payload,
       }
     };
