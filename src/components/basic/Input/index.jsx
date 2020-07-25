@@ -92,7 +92,7 @@ Input.propTypes = {
   label: PropTypes.string,
   helperText: PropTypes.string,
   errorText: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   leadingIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.object]),
   onPrimary: PropTypes.bool, // Flag to use secondary for accent instead of primary
   disabled: PropTypes.bool,

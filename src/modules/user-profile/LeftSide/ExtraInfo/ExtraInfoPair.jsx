@@ -23,7 +23,7 @@ export default ({ pairKey, value, onChange }) => {
       formFieldData: {
         inputType: 'filled',
         label: `Enter ${startCase(pairKey)}`,
-        value: value,
+        value: value || '',
         helperText: 'Leave empty to remove',
         onPrimary: true,
       },

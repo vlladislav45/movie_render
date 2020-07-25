@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Label,
   MultiLineInput,
-  MultiLineInputContainer,
+  MultiLineInputContainer, MultiLineRipple,
 } from './styles';
 import { RippleElem } from '../baseStyles.js';
 
@@ -13,11 +13,14 @@ export default React.forwardRef((props, ref) => {
     value, withLeadingIcon,
     onFocus, onChange, onBlur,
   } = props;
+
+
   return (
     <MultiLineInputContainer
       focused={isFocused}
+      isOnPrimary={onPrimary}
     >
-      <RippleElem
+      <MultiLineRipple
         hasError={hasError}
         className={rippleClass}
         isOnPrimary={onPrimary}
@@ -37,6 +40,7 @@ export default React.forwardRef((props, ref) => {
         onBlur={onBlur}
         onChange={onChange}
         isOnPrimary={onPrimary}
+        value={value}
       />
     </MultiLineInputContainer>
   );

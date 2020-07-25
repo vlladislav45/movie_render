@@ -12,22 +12,24 @@ export const BaseInput = styled.input`
   border: none;
   outline: none;
   font-size: 1rem;
+  min-height: 48px;
 `;
 
 export const BaseLabel = styled.label`${props => {
-  const { primary, error, secondary, onSurface } = props.theme;
+  const { primary, error, secondary, onSurfaceMD } = props.theme;
   const { elevated, withLeadingIcon, hasError, isFocused, isOnPrimary } = props;
   const accentColor = isOnPrimary ? secondary : primary;
   return `
     position: absolute;
     left: 16px;
     top: 20px;
+    height: 20px;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
     line-height: 1.15rem;
     user-select: none;
     z-index: ${NORMAL_Z_INDEX + 1};
-    color: ${onSurface};
+    color: ${onSurfaceMD};
     pointer-events: none;
     
     transform-origin: left top;
@@ -118,6 +120,7 @@ export const ErrorIcon = styled(ErrorSvg)`
 `;
 
 export const RippleElem = styled.span`
+  box-sizing: content-box;
   position: absolute;
   left: 50%;
   height: 100%;

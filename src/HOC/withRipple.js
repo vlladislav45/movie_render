@@ -62,7 +62,14 @@ const withRipple = Component => React.forwardRef(({
     const scale = Math.max(scaleX, scaleY);
     // TODO: Remove scaleX and scaleY
     setRippleData(
-      { x, y, rippleStart: true, rippleStop: false,  scale, firstRender: false, });
+      {
+        x,
+        y,
+        rippleStart: true,
+        rippleStop: false,
+        scale,
+        firstRender: false,
+      });
   }
 
   function handleMouseUp (e) {
@@ -80,10 +87,11 @@ const withRipple = Component => React.forwardRef(({
     rippleData: rippleData,
     denseRipple: denseRipple,
     size: rippleSize,
-    rippleColor: rippleColor,
+    rippleColor,
   };
 
   const containerProps = {
+    rippleColor,
     as: tag,
     ref: rippleRef,
     onMouseDownCapture: handleMouseDown,
@@ -125,6 +133,7 @@ const Ripple = styled.div`${props => {
     z-index: 10;
     pointer-events: none;
     
+    //Ripple
     &:after{
       position: absolute;
       overflow: hidden;
@@ -187,10 +196,27 @@ const Ripple = styled.div`${props => {
   `;
 }}`;
 const RippleContainer = styled.div`${props => {
-
+  const { theme, rippleColor } = props;
   return `
     position: relative;
    
+    //Hover
+    &:before {
+      pointer-events: none;
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: ${theme[rippleColor]};
+      opacity: 0;
+    }
+    
+    &:hover:before {
+      cursor: pointer;
+      opacity: 0.04;
+    }
   `;
 }}`;
 

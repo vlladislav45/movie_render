@@ -1,22 +1,25 @@
-import React, { useRef } from 'react';
-import { Input } from 'components/basic';
-import { MovieForm, MovieFormOptional, MovieFormRequired } from './styles';
+import React from 'react';
+import BaseData from './BaseData';
+import MovieTitleInput from './MovieTitleInput';
+import MetaData from './MetaData';
+import { MovieForm, MovieFormLowerSection } from './styles';
 
 const AddMovieForm = () => {
-  const videoUploadRef = useRef();
+
   return (
-    <MovieForm>
-      <MovieFormRequired>
-      <Input helperText='Movie name'/>
-      <input type='file' hidden ref={videoUploadRef} />
-      </MovieFormRequired>
-      <MovieFormOptional>
-        <Input helperText='Enter the year of release' label='Year' />
-        <Input helperText='Enter the director of the movie' label='Director' />
-        <Input inputType='textarea' label='Summary' helperText='Enter a summary for the movie '/>
-      </MovieFormOptional>
+    <MovieForm
+      autoComplete="off"
+    >
+      {/*Movie title, movie poster, movie video*/}
+      <MovieTitleInput/>
+      <MovieFormLowerSection>
+        {/* Movie preview, upload movie */}
+        <BaseData />
+        {/*Movie year, director, actors and other meta data*/}
+        <MetaData/>
+      </MovieFormLowerSection>
     </MovieForm>
-  )
+  );
 };
 
 export default AddMovieForm;

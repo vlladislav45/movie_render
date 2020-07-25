@@ -1,7 +1,9 @@
 import axios from 'axios';
 import {
   finishedRequest,
-  initiatedRequest, internetDown, networkDown,
+  initiatedRequest,
+  internetDown,
+  networkDown,
   serverDown,
 } from 'reducers/connectionReducer';
 import {
@@ -14,7 +16,8 @@ const API_SERVER = 'http://localhost';
 const API_PORT = '8090';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
-export const RETRY_CONNECTION_TIMEOUT = 10000;
+//TODO: Revert back to reasonable amount of time
+export const RETRY_CONNECTION_TIMEOUT = 100000;
 
 //TODO: maybe i dont need to save unfinished requests
 // because i cannot execute their callbacks

@@ -5,6 +5,7 @@ import uiReducer from './uiReducer';
 import moviesReducer from './moviesReducer';
 import connectionReducer from './connectionReducer';
 import userReducer from './userReducer';
+import moderatorReducer from './moderatorReducer';
 
 const reducers = combineReducers({
   auth,
@@ -12,6 +13,7 @@ const reducers = combineReducers({
   uiReducer,
   moviesReducer,
   userReducer,
+  moderatorReducer,
   connectionReducer,
 });
 

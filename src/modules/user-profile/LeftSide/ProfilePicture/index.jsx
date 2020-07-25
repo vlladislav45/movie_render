@@ -23,23 +23,23 @@ const ProfilePicture = () => {
 
   useEffect(() => {
     if (inputRef.current)
-      setOnChangeListener();
+      inputRef.current.addEventListener('change', onUploadImage);
+
+    return () => inputRef.current.removeEventListener('change', onUploadImage);
   }, [inputRef.current]);
 
-  function setOnChangeListener () {
-    inputRef.current.addEventListener('change', () => {
-      const file = inputRef.current.files[0];
-      setImageError(null);
-      setUploadedImage(null);
+  function onUploadImage () {
+    const file = inputRef.current.files[0];
+    setImageError(null);
+    setUploadedImage(null);
 
-      //TODO: All supported filed
-      if (file.type !== 'image/jpeg' && file.type !== 'image/png')
-        setImageError('Unsupported file extension');
-      else
-        setUploadedImage(file);
+    //TODO: All supported filed
+    if (file.type !== 'image/jpeg' && file.type !== 'image/png')
+      setImageError('Unsupported file extension');
+    else
+      setUploadedImage(file);
 
-      setModalOpen(true);
-    });
+    setModalOpen(true);
   }
 
   function openFileExplorer () {
@@ -49,7 +49,7 @@ const ProfilePicture = () => {
   function uploadImage () {
     const fd = new FormData();
     const FAKE_USERNAME = 'kopa4a';
-    fd.append('file', uploadedImage, `image_${Math.random()}_${FAKE_USERNAME}`);
+    fd.append('file', uploadedImage, `image_${Math.random()}_${FAKE_USERNAME}.jpg`);
     UserAPI.uploadImage(fd).then(res => {
       const { data } = res;
       if (data.error) {

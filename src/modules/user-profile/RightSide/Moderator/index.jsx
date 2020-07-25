@@ -6,7 +6,6 @@ const Moderator = () => {
 
   return (
     <ModeratorTabWrapper>
-      Moderator
       <AddMovieForm/>
     </ModeratorTabWrapper>
   )
