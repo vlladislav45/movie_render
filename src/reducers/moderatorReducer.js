@@ -8,9 +8,9 @@ const MOVIE_DATA = 'MOVIE_DATA';
 const START_LOADING_SUGGESTIONS = 'START_LOADING_SUGGESTIONS';
 const START_LOADING_SINGLE_SUGGESTION = 'START_LOADING_SINGLE_SUGGESTION';
 
-export const suggestTitles = text => dispatch => {
+export const suggestTitles = (text, page = 1) => dispatch => {
   dispatch({ type: START_LOADING_SUGGESTIONS });
-  fetch(`${OMDB_API}s=${text}`).then(res => res.json()).then(movies => {
+  fetch(`${OMDB_API}s=${text}&page=${page}`).then(res => res.json()).then(movies => {
     dispatch({
       type: SUGGESTED_TITLES,
       payload: movies,

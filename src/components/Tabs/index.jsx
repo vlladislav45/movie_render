@@ -137,7 +137,7 @@ const Tabs = props => {
     return (
       <>
         <TabsContainer
-          tabIndex={0}
+          tabIndex={-1}
           activeTab={activeTab || {}}
           onKeyDown={keyPressed}
           prominent={prominent}
@@ -145,11 +145,13 @@ const Tabs = props => {
         >
           {renderTabs()}
         </TabsContainer>
-        {TabContent && (
-          <React.Suspense fallback={<Loading/>}>
-            <TabContent/>
-          </React.Suspense>
-        )}
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          {TabContent && (
+            <React.Suspense fallback={<Loading/>}>
+              <TabContent/>
+            </React.Suspense>
+          )}
+        </div>
       </>
     );
   }

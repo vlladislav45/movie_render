@@ -20,11 +20,13 @@ const MovieTitleInput = props => {
     movieData,
     isLoading,
     error,
+    totalResults,
   } = useSelector(({ moderatorReducer }) => ({
     suggestedMovies: moderatorReducer.movies,
     movieData: moderatorReducer.movieData,
     isLoading: moderatorReducer.isLoading,
     error: moderatorReducer.error,
+    totalResults: moderatorReducer.totalResults,
   }));
 
   const [titleValue, setTitleValue] = useState(movieData.Title);
@@ -40,7 +42,16 @@ const MovieTitleInput = props => {
     setShowSuggestions(false);
   }
 
+  function loadNextPage() {
+    const ITEMS_PER_PAGE = 10;
+    const nextPage = (suggestedMovies.length / ITEMS_PER_PAGE) + 1;
+    dispatch(suggestTitles(titleValue, nextPage));
+  }
+
   function handleKeyUp(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     // Arrow up
     if (e.keyCode === 38) {
       const nextFocusedEl = e.target.previousSibling || e.target.parentNode.lastChild;
@@ -51,13 +62,12 @@ const MovieTitleInput = props => {
     } else if (e.keyCode === 13) {
       getSuggestion(e.target.id);
     }
-
-    e.preventDefault();
-    e.stopPropagation();
   }
 
+  console.log(totalResults);
   return (
-    <InputWrapper>
+    <InputWrapper
+    >
       <Input
         label='Movie title*'
         helperText='*Required. Start typing then select the desired movie from the list'
@@ -75,7 +85,7 @@ const MovieTitleInput = props => {
           <Suggestion
             hocProps={{
               id: suggestion.imdbID,
-              onKeyUp: handleKeyUp,
+              onKeyUpCapture: handleKeyUp,
               tabIndex: index,
             }}
             tag='li'
@@ -85,6 +95,14 @@ const MovieTitleInput = props => {
             handleClick={getSuggestion}
           />
         ))}
+        {suggestedMovies.length > 0 && totalResults > suggestedMovies.length &&
+        <Suggestion
+          style={{ textAlign: 'center' }}
+          handleClick={loadNextPage}
+          title='Load more'
+          tag='li'
+        />
+        }
       </Suggestions>
     </InputWrapper>
   );
