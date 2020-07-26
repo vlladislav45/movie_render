@@ -3,6 +3,7 @@ import BaseData from './BaseData';
 import MovieTitleInput from './MovieTitleInput';
 import MetaData from './MetaData';
 import Actors from './Actors';
+import MovieGenres from './MovieGenres';
 import { MovieForm, MovieFormLowerSection } from './styles';
 
 const AddMovieForm = () => {
@@ -20,6 +21,7 @@ const AddMovieForm = () => {
         <MetaData/>
       </MovieFormLowerSection>
       <Actors />
+      <MovieGenres />
     </MovieForm>
   );
 };

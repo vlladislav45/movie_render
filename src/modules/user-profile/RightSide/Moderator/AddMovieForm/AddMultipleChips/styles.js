@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 
-export const ActorsWrapper = styled.div`
+export const Wrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
 `;
 
-export const ActorsRow = styled.div`
+export const Row = styled.div`
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   
-  & > *:not(:first-child):not(:last-child) {
-    margin: 0 4px;
+  & > * {
+    margin: 4px;
   }
 `;

@@ -64,7 +64,6 @@ const MovieTitleInput = props => {
     }
   }
 
-  console.log(totalResults);
   return (
     <InputWrapper
     >
@@ -95,6 +94,7 @@ const MovieTitleInput = props => {
             handleClick={getSuggestion}
           />
         ))}
+        {/*TODO:*/}
         {suggestedMovies.length > 0 && totalResults > suggestedMovies.length &&
         <Suggestion
           style={{ textAlign: 'center' }}
