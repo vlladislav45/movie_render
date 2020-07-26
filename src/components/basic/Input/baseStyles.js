@@ -74,7 +74,9 @@ export const BaseLabel = styled.label`${props => {
 
 export const OuterContainer = styled.div`
   position: relative;
-  ${props => props.isMultiLine && 'height: 100%'};
+  ${props => props.isMultiLine && `
+    min-height: 200px;
+  `};
   
   // Overlay   
   ${props => props.isDisabled && `
@@ -97,7 +99,6 @@ export const OuterContainer = styled.div`
     font-family: 'Roboto', sans-serif; 
     padding-left: 16px;
     height: 16px;
-    align-self: bottom;
     font-size: 0.75rem;
     letter-spacing: 0.03rem;
     margin: 2px 0;
@@ -105,7 +106,7 @@ export const OuterContainer = styled.div`
 `;
 
 export const HelperText = styled.p`
-  color: ${props => props.theme.onSurface};
+  color: ${props => props.theme.onSurfaceMD};
 `;
 
 export const ErrorText = styled.p`

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Button } from 'components/basic';
+import { PosterUploadBtn } from './styles';
 
 export default props => {
 
@@ -31,9 +32,9 @@ export default props => {
   }
 
   return (
-    <>
+    <PosterUploadBtn>
       <Button text='Upload poster' onClick={openUploadPoster}/>
       <input type='file' hidden ref={posterUploadRef}/>
-    </>
+    </PosterUploadBtn>
   );
 }

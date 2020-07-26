@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'components/basic';
 import ModeratorAPI from 'api/ModeratorAPI';
+import { MovieUploadBtn } from './styles';
 
 
 export default props => {
@@ -51,7 +52,7 @@ export default props => {
   }
 
   return (
-    <>
+    <MovieUploadBtn>
       {videoData && (
         <>
           <video
@@ -67,6 +68,6 @@ export default props => {
       {progress && <progress max={100} value={progress}/>}
       <Button text='Upload movie' onClick={openUploadVideo}/>
       <input type='file' hidden ref={videoUploadRef}/>
-    </>
+    </MovieUploadBtn>
   );
 }

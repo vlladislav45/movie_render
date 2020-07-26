@@ -1,4 +1,4 @@
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
@@ -17,7 +17,7 @@ import { MainContent } from './baseStyles';
 class InitializationLayer extends React.Component {
   constructor (props) {
     super(props);
-    this.getWindowDimensions = throttle(this.getWindowDimensions, 300).
+    this.getWindowDimensions = debounce(this.getWindowDimensions, 300).
       bind(this);
   }
 
@@ -41,7 +41,7 @@ class InitializationLayer extends React.Component {
   render () {
     return (
       <ThemeProvider theme={this.props.themeColors}>
-        <ConnectionHandler/>
+        {/*<ConnectionHandler/>*/}
         <Prompt {...this.props.promptProps} />
         <SnackBar/>
         <TopNavBar/>

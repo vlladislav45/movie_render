@@ -1,17 +1,16 @@
-import React from 'react';
-import { Input, Chip } from 'components/basic';
+import React, { useEffect, useState } from 'react';
+import { Chip, Input } from 'components/basic';
 import { useSelector } from 'react-redux';
 import { MetaDataContainer } from './styles';
 
-import { ReactComponent as LeadingIcon } from 'assets/icons/error.svg';
 
-
-const MetaData = props => {
+const MetaData = () => {
 
   const {
     isLoading = false,
-    year, summary,
-    director, actors,
+    year,
+    summary,
+    director,
     writer,
   } = useSelector(({ moderatorReducer: { movieData } }) => ({
     isLoading: movieData.isLoading,
@@ -43,55 +42,12 @@ const MetaData = props => {
         helperText='Enter the director of the movie'
         label='Director'
       />
-      <div style={{ display: 'flex' }}>
-        <div style={{ display: 'flex', flexDirection: 'column'}}>
-          <Chip
-            leadingIcon={LeadingIcon}
-            chipText='With both'
-          />
-          <Chip
-            closeable={false}
-            chipText='Only text'
-          />
-          <Chip
-            leadingIcon={LeadingIcon}
-            closeable={false}
-            chipText='With leading icon'
-          />
-          <Chip
-            chipText='Only closeable'
-          />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column'}}>
-          <Chip
-            chipType='outlined'
-            leadingIcon={LeadingIcon}
-            chipText='With both'
-          />
-          <Chip
-            chipType='outlined'
-            closeable={false}
-            chipText='Only text'
-          />
-          <Chip
-            chipType='outlined'
-            leadingIcon={LeadingIcon}
-            closeable={false}
-            chipText='With leading icon'
-          />
-          <Chip
-            chipType='outlined'
-            chipText='Only closeable'
-          />
-        </div>
-      </div>
-      {/*{actors && actors.split(',').map(a => (*/}
-      {/*  <Chip*/}
-      {/*    leadingIcon={LeadingIcon}*/}
-      {/*    key={Math.random()}*/}
-      {/*    chipText={a}*/}
-      {/*  />*/}
-      {/*))}*/}
+      <Input
+        value={writer}
+        loading={isLoading}
+        helperText='Enter the writer of the movie'
+        label='Writer'
+      />
     </MetaDataContainer>
   );
 };

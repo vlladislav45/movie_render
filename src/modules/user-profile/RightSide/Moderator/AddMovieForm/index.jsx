@@ -2,6 +2,7 @@ import React from 'react';
 import BaseData from './BaseData';
 import MovieTitleInput from './MovieTitleInput';
 import MetaData from './MetaData';
+import Actors from './Actors';
 import { MovieForm, MovieFormLowerSection } from './styles';
 
 const AddMovieForm = () => {
@@ -18,6 +19,7 @@ const AddMovieForm = () => {
         {/*Movie year, director, actors and other meta data*/}
         <MetaData/>
       </MovieFormLowerSection>
+      <Actors />
     </MovieForm>
   );
 };

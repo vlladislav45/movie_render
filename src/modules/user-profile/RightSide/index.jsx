@@ -1,10 +1,11 @@
 import React from 'react';
 import { Tabs } from 'components';
-import Moderator from './Moderator';
-import Preferences from './Preferences';
-import RecentActivity from './RecentActivity';
-import Security from './Security';
 import { RightSideWrapper } from './styles';
+
+const RecentActivity = React.lazy(() => import('./RecentActivity'));
+const Moderator = React.lazy(() => import('./Moderator'));
+const Security = React.lazy(() => import('./Security'));
+const Preferences = React.lazy(() => import('./Preferences'));
 
 const RightSide = () => {
 
@@ -14,19 +15,19 @@ const RightSide = () => {
         tabs={[
           {
             tabName: 'Recent activity',
-            tabContent: <RecentActivity />,
+            tabContent: RecentActivity,
           },
           {
             tabName: 'Security',
-            tabContent: <Security />
+            tabContent: Security
           },
           {
             tabName: 'Preferences',
-            tabContent: <Preferences />
+            tabContent: Preferences
           },
           {
             tabName: 'Moderator',
-            tabContent: <Moderator />,
+            tabContent: Moderator,
             isActive: true,
           },
         ]}

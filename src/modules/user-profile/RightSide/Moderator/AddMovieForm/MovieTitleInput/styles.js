@@ -20,9 +20,17 @@ export const Suggestions = styled.ul`
   box-shadow: ${applyShadow(10)}
 `;
 
+export const SuggestionsError = styled.p`
+  color: ${props => props.theme.error};
+  font-size: 1.1rem;
+  text-align: center;
+  width: 100%;
+`;
+
 export const SuggestionItem = styled.div`
   color: ${props => props.theme.onSurface};
   font-size: 1rem;
   padding: 10px;
   cursor: pointer;
+ 
 `;

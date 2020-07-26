@@ -1,16 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { Button, Input } from 'components/basic';
-import { useDispatch } from 'react-redux';
-import MovieTitleInput from '../MovieTitleInput';
-import { MovieFormRequired } from '../styles';
+import React from 'react';
 import MovieUpload from './MovieUpload';
 import PosterUpload from './PosterUpload';
+import MoviePreview from './MoviePreview';
 import { BaseDataWrapper } from './styles';
 
-const BaseData = props => {
+const BaseData = () => {
   return (
     <BaseDataWrapper>
-      {/*<img src={} />*/}
+      <MoviePreview/>
       <MovieUpload/>
       <PosterUpload/>
     </BaseDataWrapper>

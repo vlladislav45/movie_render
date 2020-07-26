@@ -1,6 +1,7 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import useDeviceDimensions from '../../hooks/useDeviceDimensions';
+import PropTypes from 'prop-types';
+import { Loading } from 'components';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import SingleTab from './SingleTab';
 import { TabsContainer } from './styles';
 
@@ -21,7 +22,7 @@ const Tabs = props => {
       const tabsState = {};
       propTabs.forEach(tab => {
         const { tabName, tabContent, isActive = false } = tab;
-
+        console.log(typeof tabContent);
         tabsState[tabName] = {
           ref: React.createRef(),
           tabName,
@@ -46,7 +47,7 @@ const Tabs = props => {
       }
     }, [tabs]);
 
-    function updateTabState (tabName, stateName, stateValue, moreStates) {
+    function updateTabState(tabName, stateName, stateValue, moreStates) {
       setTabs({
         ...tabs,
         [tabName]: {
@@ -57,7 +58,7 @@ const Tabs = props => {
       });
     }
 
-    function tabClicked (tabName) {
+    function tabClicked(tabName) {
       setActiveTab({ ...tabs[tabName].ref, tabName });
     }
 
@@ -80,7 +81,7 @@ const Tabs = props => {
       );
     });
 
-    function cycleTabs (direction) {
+    function cycleTabs(direction) {
       // Cycle between tabs and switch to first after the last
       const tabObjects = direction.toUpperCase() === 'R' ?
         Object.values(tabs) : Object.values(tabs).reverse();
@@ -99,7 +100,7 @@ const Tabs = props => {
         tabObjects[0].ref.current.focus();
     }
 
-    function keyPressed (e) {
+    function keyPressed(e) {
       switch (e.keyCode) {
         // TAB and Right, same behaviour
         case 39:
@@ -120,13 +121,18 @@ const Tabs = props => {
             const currentTab = tabs[currentTabName];
             const { current } = currentTab.ref;
             if (document.activeElement === current) {
-              setActiveTab({...tabs[currentTabName].ref, tabName: currentTabName});
+              setActiveTab({ ...tabs[currentTabName].ref, tabName: currentTabName });
             }
           }
         }
           break;
       }
     }
+
+    const TabContent = React.useMemo(() => {
+      return tabs[activeTab?.tabName]?.tabContent;
+    }, [activeTab]);
+
 
     return (
       <>
@@ -139,9 +145,11 @@ const Tabs = props => {
         >
           {renderTabs()}
         </TabsContainer>
-        {/*<div style={{ border: '1px solid red', color: 'red' }}>*/}
-        {tabs[activeTab?.tabName]?.tabContent}
-        {/*</div>*/}
+        {TabContent && (
+          <React.Suspense fallback={<Loading/>}>
+            <TabContent/>
+          </React.Suspense>
+        )}
       </>
     );
   }
@@ -151,8 +159,10 @@ Tabs.propTypes = {
   tabs: PropTypes.arrayOf(
     PropTypes.shape({
       tabName: PropTypes.string.isRequired,
-      tabContent: PropTypes.oneOfType(
-        [PropTypes.elementType, PropTypes.element]).isRequired,
+      tabContent: PropTypes.oneOfType([
+        PropTypes.element, // Normal jsx for non lazy loading tabs
+        PropTypes.object, // React.lazy component
+      ]).isRequired,
       isActive: PropTypes.bool,
     }),
   ).isRequired,

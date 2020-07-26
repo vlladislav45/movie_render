@@ -16,8 +16,8 @@ export const MultiLineInputContainer = styled.div`${props => {
   return `
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 150px;
+  // 24px is helper text height
+  min-height: calc(100% - 24px);
   overflow: hidden;
   
   border-top-right-radius: 4px;
@@ -41,8 +41,7 @@ export const MultiLineInputContainer = styled.div`${props => {
       border-bottom-color: ${accentColor}!important;
     `};
   `;
-}}
-`;
+}}`;
 
 export const MultiLineInput = styled.textarea`${props => {
   const { theme, isOnPrimary } = props;
@@ -58,12 +57,12 @@ export const MultiLineInput = styled.textarea`${props => {
     top: 25px;
     width: 100%;
     // 20px for label height and 20px for 'padding'
-    height: calc(100% - 40px);
+    height: calc(100% - 30px);
     border: none;
     outline: none;
     font-size: 1rem;
     resize: none;
-    padding: 0 10px;   
+    padding: 0 16px;   
     color: ${onSurface};
     caret-color: ${accentColor};
     
@@ -71,8 +70,7 @@ export const MultiLineInput = styled.textarea`${props => {
       cursor: pointer;
     }
   `;
-}}
-`;
+}}`;
 
 export const Label = styled(BaseLabel)`
   top: 15px;

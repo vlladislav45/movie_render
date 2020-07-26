@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import withRipple from 'HOC/withRipple';
 import { SuggestionItem } from './styles';
 
 const Suggestion = props => {
-  const { title, id, handleClick } = props;
+  const { title, id, handleClick, ...rest } = props;
 
   function loadSuggestionData () {
     handleClick(id);
@@ -11,8 +11,9 @@ const Suggestion = props => {
 
   return (
     <SuggestionItem
-      tag='li'
-      onClick={loadSuggestionData}>
+      onClick={loadSuggestionData}
+      {...rest}
+    >
       {title}
     </SuggestionItem>
   );
