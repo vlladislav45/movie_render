@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
-import { getOverlay } from '../../../utils/colorUtils';
+import { getOverlay } from 'utils/colorUtils';
 
 
 const BaseChip = styled.div`

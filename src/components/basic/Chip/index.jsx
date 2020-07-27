@@ -8,16 +8,17 @@ const Chip = props => {
     chipType = 'filled',
     chipText = '',
     closeable = true,
-    onClose = () => {
-    },
+    onClose = () => {},
     leadingIcon: LeadingIcon,
     color,
+    editable = false,
   } = props;
 
   const chipProps = {
     closeable,
     color,
     leadingIcon: !!LeadingIcon,
+    contentEditable: editable,
   };
 
   function renderLeadingIcon() {
@@ -68,7 +69,8 @@ Chip.propTypes = {
       src: PropTypes.string,
       alt: PropTypes.string,
     })
-  ])
+  ]),
+  editable: PropTypes.bool, // Can the chip be editable
 };
 
 export default Chip;

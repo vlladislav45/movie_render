@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'components/basic';
-import ModeratorAPI from 'api/ModeratorAPI';
+import { useDispatch } from 'react-redux';
+import { updateUploadInfo } from '../../../../../../reducers/moderatorReducer';
+import { VIDEO, VIDEO_PREVIEW_ERROR } from '../../UploadConstants';
 import { MovieUploadBtn } from './styles';
 
-
-export default props => {
+export default () => {
+  const dispatch = useDispatch();
   const videoUploadRef = useRef();
 
-  const [videoData, setVideoData] = useState();
   const [progress, updateProgress] = useState(null);
 
   useEffect(() => {
@@ -26,13 +27,17 @@ export default props => {
 
     // TODO: What extension should movies be?
     // TODO: Max file size?
-
     if (!file.type.includes('video') &&
       file.type !== 'video/avi' &&
       file.type !== 'video/mp4') {
-      console.log('ERROR');
+      alert('Wrong video format');
     } else {
-      setVideoData(file);
+      dispatch(updateUploadInfo(VIDEO, URL.createObjectURL(file)));
+      if (file.type !== 'video/mp4')
+        dispatch(
+          updateUploadInfo(
+            VIDEO_PREVIEW_ERROR,
+            'Video will be uploaded, but preview is unavailable.You can only preview mp4 video format'));
     }
   }
 
@@ -41,30 +46,19 @@ export default props => {
     videoUploadRef.current.click();
   }
 
+  // TODO:
   function uploadVideo (e) {
     e.preventDefault();
-    const fd = new FormData();
-    fd.append('file', videoData, `video_${Math.random()}.mp4`);
-    ModeratorAPI.uploadMovie(fd, (e) => {
-      const progress = Math.round((e.loaded * 100) / e.total);
-      updateProgress(progress);
-    });
+    // const fd = new FormData();
+    // fd.append('file', videoData, `video_${Math.random()}.mp4`);
+    // ModeratorAPI.uploadMovie(fd, (e) => {
+    //   const progress = Math.round((e.loaded * 100) / e.total);
+    //   updateProgress(progress);
+    // });
   }
 
   return (
     <MovieUploadBtn>
-      {videoData && (
-        <>
-          <video
-            width={300}
-            height={300 * (16 / 9)}
-            controls
-          >
-            <source src={URL.createObjectURL(videoData)}/>
-          </video>
-          <Button text='Confirm' onClick={uploadVideo}/>
-        </>
-      )}
       {progress && <progress max={100} value={progress}/>}
       <Button text='Upload movie' onClick={openUploadVideo}/>
       <input type='file' hidden ref={videoUploadRef}/>

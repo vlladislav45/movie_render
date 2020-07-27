@@ -7,15 +7,18 @@ const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS';
 const MOVIE_DATA = 'MOVIE_DATA';
 const START_LOADING_SUGGESTIONS = 'START_LOADING_SUGGESTIONS';
 const START_LOADING_SINGLE_SUGGESTION = 'START_LOADING_SINGLE_SUGGESTION';
+const UPDATE_UPLOAD_INFO = 'UPDATE_UPLOAD_INFO';
 
 export const suggestTitles = (text, page = 1) => dispatch => {
   dispatch({ type: START_LOADING_SUGGESTIONS });
-  fetch(`${OMDB_API}s=${text}&page=${page}`).then(res => res.json()).then(movies => {
-    dispatch({
-      type: SUGGESTED_TITLES,
-      payload: movies,
+  fetch(`${OMDB_API}s=${text}&page=${page}`).
+    then(res => res.json()).
+    then(movies => {
+      dispatch({
+        type: SUGGESTED_TITLES,
+        payload: movies,
+      });
     });
-  });
 };
 
 export const clearSuggestions = () => ({
@@ -32,6 +35,13 @@ export const getSuggestionData = id => dispatch => {
   });
 };
 
+export const updateUploadInfo = (info, value) => ({
+  type: UPDATE_UPLOAD_INFO,
+  payload: {
+    [info]: value,
+  },
+});
+
 const initialState = {
   movies: [ /* Array of objects with Title, Year etc etc */],
   error: '',
@@ -42,6 +52,7 @@ const initialState = {
     isLoading: false,
     /* The rest of the movie data */
   },
+  uploadInfo: {},
 };
 
 export default (state = initialState, action) => {
@@ -86,6 +97,14 @@ export default (state = initialState, action) => {
         },
       };
     }
+    case UPDATE_UPLOAD_INFO:
+      return {
+        ...state,
+        uploadInfo: {
+          ...state.uploadInfo,
+          ...payload,
+        }
+      };
     default:
       return state;
   }

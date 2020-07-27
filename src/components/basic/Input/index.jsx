@@ -11,7 +11,7 @@ const Input = (props) => {
     inputType, label, helperText, errorText,
     placeholder, id, onPrimary, withIconOnError,
     onChange, onChangeCapture, disabled, loading,
-    focusOnMount, ...rest
+    autoFocus, ...rest
   } = props;
 
   const inputId = useMemo(() => Input.nextId(), []);
@@ -23,9 +23,9 @@ const Input = (props) => {
   useEffect(() => setValue(preFilledText), [preFilledText]);
 
   useEffect(() => {
-    if (focusOnMount)
+    if (autoFocus)
       setIsFocused(true);
-  }, [focusOnMount]);
+  }, [autoFocus]);
 
   function renderBelowInput () {
     if (errorText)
@@ -98,7 +98,7 @@ Input.propTypes = {
   disabled: PropTypes.bool,
   withIconOnError: PropTypes.bool, // display icon when there is error
   loading: PropTypes.bool, // Display loading above the input
-  focusOnMount: PropTypes.bool, // Focus the input when mounted
+  autoFocus: PropTypes.bool, // Focus the input when mounted
 };
 
 Input.defaultProps = {
@@ -106,7 +106,7 @@ Input.defaultProps = {
   withIconOnError: true,
   onPrimary: false,
   disabled: false,
-  focusOnMount: false,
+  autoFocus: false,
 };
 
 Input.nextId = (() => {

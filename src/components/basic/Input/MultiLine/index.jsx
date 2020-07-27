@@ -4,7 +4,6 @@ import {
   MultiLineInput,
   MultiLineInputContainer, MultiLineRipple,
 } from './styles';
-import { RippleElem } from '../baseStyles.js';
 
 export default React.forwardRef((props, ref) => {
   const {
@@ -12,8 +11,8 @@ export default React.forwardRef((props, ref) => {
     inputId, label, isFocused,
     value, withLeadingIcon,
     onFocus, onChange, onBlur,
+    ...rest
   } = props;
-
 
   return (
     <MultiLineInputContainer
@@ -41,6 +40,7 @@ export default React.forwardRef((props, ref) => {
         onChange={onChange}
         isOnPrimary={onPrimary}
         value={value}
+        {...rest}
       />
     </MultiLineInputContainer>
   );

@@ -58,7 +58,7 @@ const Prompt = props => {
     return (
       <FormField isCompact={isCompact}>
         <Input
-          focusOnMount
+          autoFocus
           label={label}
           inputType={type}
           helperText={helperText}

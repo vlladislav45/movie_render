@@ -8,4 +8,8 @@ export const MetaDataContainer = styled.div`
   & > *:not(:last-child):not(:first-child) {
     margin: 10px 0;
   }
+  
+  & > * {
+    flex: 1 1 0;
+  }
 `;

@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+import { NORMAL_Z_INDEX } from 'config/zIndexes';
+import { ThemedComponent } from 'components/basic';
+import { applyShadow } from 'utils/colorUtils';
 
 export const BaseDataWrapper = styled.div`
   width: 48%;
@@ -17,6 +20,7 @@ export const VideoPreview = styled.div`
 `;
 
 export const VideoElement = styled.video`
+  z-index: ${NORMAL_Z_INDEX};
   position: absolute;
   width: 100%;
   height: 100%;
@@ -30,4 +34,16 @@ export const MovieUploadBtn = styled.div`
 
 export const PosterUploadBtn = styled.div`
   grid-area: p;
+`;
+
+export const PreviewError = styled(ThemedComponent)`
+  position: absolute;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  padding: 5px 10px;
+  width: 90%;
+  left: 5%;
+  background: ${props => props.theme.surface};
+  color: ${props => props.theme.error};
+  z-index: ${NORMAL_Z_INDEX + 1};
 `;

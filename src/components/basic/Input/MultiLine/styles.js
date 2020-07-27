@@ -17,7 +17,8 @@ export const MultiLineInputContainer = styled.div`${props => {
   position: relative;
   width: 100%;
   // 24px is helper text height
-  min-height: calc(100% - 24px);
+  // 200px is the container min-height
+  min-height: calc(200px - 24px);
   overflow: hidden;
   
   border-top-right-radius: 4px;

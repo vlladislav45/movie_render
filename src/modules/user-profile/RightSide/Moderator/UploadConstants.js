@@ -1,0 +1,10 @@
+export const TITLE = 'TITLE';
+export const VIDEO = 'VIDEO';
+export const VIDEO_PREVIEW_ERROR = 'VIDEO_PREVIEW_ERROR';
+export const POSTER = 'POSTER';
+export const SUMMARY = 'SUMMARY';
+export const YEAR = 'YEAR';
+export const DIRECTOR = 'DIRECTOR';
+export const WRITER = 'WRITER';
+export const GENRE = 'GENRE';
+export const ACTORS = 'ACTORS';
