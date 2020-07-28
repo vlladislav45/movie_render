@@ -8,11 +8,11 @@ import { ConnectionHandler, Loading } from './components';
 import { SnackBar } from './components/basic';
 import { Prompt } from 'components';
 import { TopNavBar } from './modules/navigation';
+import { checkToken } from './reducers/auth';
 import { changeWindowDimensions } from './reducers/uiReducer';
 import RoutingLayer from './RoutingLayer';
 import { checkMedia } from './utils/mediaUtils';
 import { MainContent } from './baseStyles';
-
 
 class InitializationLayer extends React.Component {
   constructor (props) {
@@ -28,6 +28,11 @@ class InitializationLayer extends React.Component {
   }
 
   componentDidMount () {
+    // Wait for redux to be imported in BaseApi, so authorization header is added
+    // TODO: On slower devices this may cause problems
+    setTimeout(() => {
+      this.props.checkToken();
+    }, 200);
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
 
@@ -62,6 +67,7 @@ const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { prompt: {
 
 const mapDispatchToProps = {
   changeWindowDimensions,
+  checkToken,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(

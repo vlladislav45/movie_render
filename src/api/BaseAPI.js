@@ -10,9 +10,10 @@ import {
   checkInternetConnection,
   ConnectionStatus,
 } from 'utils/apiUtils';
+import { JWT_TOKEN } from 'config/authConstants';
 
 const API_SERVER = 'http://localhost';
-// const API_SERVER = 'http://192.168.1.115';
+// const API_SERVER = 'http://192.168.1.110';
 const API_PORT = '8090';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
@@ -46,6 +47,10 @@ class BaseAPI {
       const { default: reduxStore } = module;
 
       this.api.interceptors.request.use(req => {
+        const jwt = localStorage.getItem(JWT_TOKEN);
+
+        if (jwt)
+          req.headers['Authorization'] = `Bearer ${jwt}`;
         reduxStore.dispatch(initiatedRequest(req));
         return req;
       });
@@ -61,7 +66,7 @@ class BaseAPI {
     });
   }
 
-  //RIP OOP
+
   static request = req => axios.request(req);
 
   get = (url, options) => this.api.get(url, options);

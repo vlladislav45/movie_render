@@ -1,16 +1,23 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { API_URL } from '../../../api/BaseAPI';
 
 import { StyledProfileCircle } from './styles';
 
+const IMAGE_BASE_PATH = API_URL + 'user/';
 const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
-  const { profileImage } = useSelector(({ auth: { loggedInUser }, userReducer: { user } }) => ({
-    profileImage: loggedInUser?.photoUrl || user.photoUrl,
-  }));
+  const { profileImage, username } = useSelector(
+    ({ auth: { loggedInUser }, userReducer: { user } }) => ({
+      profileImage: user.userInfo.photoUrl || loggedInUser.profileImage ,
+      username: loggedInUser.username,
+    }));
 
-  const url = useMemo(() => profileImage ||
-    require('../../../assets/profile/blank-profile.png'), [profileImage]);
+
+  const url = useMemo(() => profileImage
+    ? IMAGE_BASE_PATH + username + `/${profileImage.imageName}`
+    : require('../../../assets/profile/blank-profile.png'), [profileImage]);
+
 
   const isSameWidthHeight = (typeof size === 'number');
   const width = isSameWidthHeight ? size : size.width;

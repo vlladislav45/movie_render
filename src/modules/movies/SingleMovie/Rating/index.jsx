@@ -7,14 +7,17 @@ import { rateMovie } from 'reducers/moviesReducer';
 const RatingSection = ({ movieName, movieId }) => {
   const dispatch = useDispatch();
 
-  // TODO: userId from auth reducer
   const { movieRating, userId } = useSelector(
-    ({ moviesReducer: { selectedMovie: { movieInfo } } }) => ({
+    ({
+      moviesReducer: { selectedMovie: { movieInfo } },
+      auth: { loggedInUser },
+    }) => ({
       movieRating: movieInfo.movieRating,
+      userId: loggedInUser.userId,
     }));
 
   async function doRate (review, rate) {
-    const { error } = await dispatch(rateMovie(movieId, 1, rate, review));
+    const { error } = await dispatch(rateMovie(movieId, userId, rate, review));
     const message = error
       ? `Error: ${error}`
       : `Successfully rated ${movieName} with ${rate} stars`;

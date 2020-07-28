@@ -22,7 +22,7 @@ const Tabs = props => {
       const tabsState = {};
       propTabs.forEach(tab => {
         const { tabName, tabContent, isActive = false } = tab;
-        console.log(typeof tabContent);
+
         tabsState[tabName] = {
           ref: React.createRef(),
           tabName,

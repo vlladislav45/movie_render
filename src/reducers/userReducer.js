@@ -1,11 +1,26 @@
+import UserAPI from '../api/UserAPI';
+
 const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 
-export const updateUserData = (dataKey, dataValue) => dispatch => {
+export const updateUserData = (dataKey, dataValue, userId) => dispatch => {
+  if (userId) {
+    UserAPI.updateData({
+      [dataKey]: dataValue,
+      userId,
+    }).then(res => {
+      console.log(res);
 
-  dispatch({
-    type: UPDATE_USER_DATA,
-    payload: { dataKey, dataValue },
-  });
+      dispatch({
+        type: UPDATE_USER_DATA,
+        payload: { dataKey, dataValue },
+      });
+    });
+  } else {
+    dispatch({
+      type: UPDATE_USER_DATA,
+      payload: { dataKey, dataValue },
+    });
+  }
 };
 
 const STUB_INFO = {
@@ -19,7 +34,7 @@ const STUB_INFO = {
 
 const initialState = {
   user: {
-    userInfo: STUB_INFO,
+    userInfo: {},
   },
 };
 

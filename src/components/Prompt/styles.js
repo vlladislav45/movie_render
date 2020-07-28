@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const PromptContainer = styled.div`
   ${props => `
     display: grid;
-    grid-template: repeat(${props.rows}, 1fr) / repeat(${props.cols}, 1fr);
+    grid-template: repeat(${props.rows}, min-content) / repeat(${props.cols}, 1fr);
     grid-gap: 15px;
   `}  
 `;

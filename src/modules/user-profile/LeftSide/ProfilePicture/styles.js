@@ -7,6 +7,7 @@ export const ProfilePictureContainer = styled.div`
   position: relative;
   min-width: 150px;
   padding-top: 75%;
+  cursor: pointer;
   
   & > img {
     position: absolute;
@@ -16,7 +17,7 @@ export const ProfilePictureContainer = styled.div`
     right: 0;
     width: 100%!important;
     height: 100%!important;
-    object-fit: cover;
+    object-fit: fill;
   }
   
   border: 10px solid ${({ theme }) => getOverlay(theme.surface, theme.overlay,

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import ExtraInfo from './ExtraInfo';
 import ProfilePicture from './ProfilePicture';
 import {
@@ -7,18 +8,19 @@ import {
   Wrapper,
 } from './styles';
 
-const STUB_DATA = {
-  username: 'kopa4a',
-  email: 'a582hs@gmail.com',
-};
 const LeftSide = props => {
+
+  const { username, email } = useSelector(({ auth: { loggedInUser }}) => ({
+    username: loggedInUser.username,
+    email: loggedInUser.email
+  }));
 
   return (
     <Wrapper>
       <ProfilePicture/>
       <BaseInfo>
-        <BaseInfoLine>{STUB_DATA.username}</BaseInfoLine>
-        <BaseInfoLine>{STUB_DATA.email}</BaseInfoLine>
+        <BaseInfoLine title='You need to go to security to change username'>{username}</BaseInfoLine>
+        <BaseInfoLine title='You need to go to security to change email'>{email}</BaseInfoLine>
       </BaseInfo>
       <ExtraInfo/>
     </Wrapper>

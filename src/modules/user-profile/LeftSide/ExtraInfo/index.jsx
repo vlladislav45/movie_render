@@ -6,13 +6,16 @@ import { ExtraInfoContainer } from './styles';
 
 const ExtraInfo = props => {
   const dispatch = useDispatch();
-  const userInfo = useSelector(({ userReducer: { user } }) => user.userInfo);
+  const { userInfo, userId } = useSelector(({ userReducer: { user }, auth: { loggedInUser } }) => ({
+    userInfo: user.userInfo,
+    userId: loggedInUser.userId,
+  }));
 
   function renderUserInfo() {
     return Object.keys(userInfo).map(key => {
       function updateInfo (newValue) {
         //TODO: Request to backend
-        dispatch(updateUserData(key, newValue));
+        dispatch(updateUserData(key, newValue, userId));
       }
       return (
         <ExtraInfoPair

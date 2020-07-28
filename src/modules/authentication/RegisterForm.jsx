@@ -38,8 +38,11 @@ export default () => {
   useEffect(() => {
     (async () => {
       if (!username) return;
-      const { data: isTaken } = await AuthAPI.usernameAvailable(username);
-      if (isTaken) setUsernameError('Username is already taken');
+      const { data: { isUsernameExist } } = await AuthAPI.usernameAvailable(username);
+
+      if (isUsernameExist === "true") {
+        setUsernameError('Username is already taken');
+      }
       else if (username.length < 3 || username.length > 20) {
         setUsernameError('Username must be between 3 and 20 symbols');
       } else

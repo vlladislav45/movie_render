@@ -14,7 +14,6 @@ const MoviePreview = () => {
     previewError: moderatorReducer.uploadInfo[VIDEO_PREVIEW_ERROR],
   }));
 
-  console.log(previewError);
   return (
     <VideoPreview>
       {isLoading && <Loading />}

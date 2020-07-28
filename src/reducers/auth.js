@@ -1,43 +1,55 @@
 import AuthAPI from 'api/AuthAPI';
+import { JWT_TOKEN } from 'config/authConstants';
 
+export const LOGIN_SUCCESS = 'LOGIC_SUCCESS';
 const START_LOADING = 'START_LOADING';
-const LOGIN_SUCCESS = 'LOGIC_SUCCESS';
 const LOGIN_FAILED = 'LOGIN_FAILED';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAILED = 'REGISTER_FAILED';
 const LOGOUT = 'LOGOUT';
 const FINISH_REDIRECT = 'FINISH_REDIRECT';
 
+export const checkToken = () => dispatch => {
+  const jwt = localStorage.getItem(JWT_TOKEN);
 
-export const attemptLogin = (account, password) => dispatch => {
-  // dispatch({
-  //   type: LOGIN_SUCCESS,
-  //   payload: {
-  //     username: 'vlad',
-  //   },
-  // });
+  if(jwt) {
+    AuthAPI.checkToken(jwt).then(({ data }) => {
+      if (data.user) {
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: data.user,
+        })
+      }
+    })
+  }
+};
+
+export const attemptLogin = (username, password) => dispatch => {
   dispatch({
     type: START_LOADING,
   });
 
-  const formData = new FormData();
-  formData.append('username', account);
-  formData.append('password', password);
-
-  AuthAPI.login(formData).then(res => {
+  AuthAPI.login({ username, password }).then(res => {
     const { data } = res;
     if (data.error)
       dispatch({
         type: LOGIN_FAILED,
         payload: data.error,
       });
-    else
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: data,
-      });
+    else {
+      const { jwt } = data;
+      localStorage.setItem(JWT_TOKEN, jwt);
+      AuthAPI.checkToken(jwt).then(({ data }) => {
+        if (data.user) {
+          dispatch({
+            type: LOGIN_SUCCESS,
+            payload: data.user,
+          })
+        }
+      })
+    }
   }).catch(err => {
-    console.log(err)
+    console.log(err);
     dispatch({
       type: LOGIN_FAILED,
       payload: err.toString(),
@@ -73,16 +85,16 @@ export const finishRedirect = () => ({
   type: FINISH_REDIRECT,
 });
 
-
 const initialState = {
   loginError: null,
   registerError: null,
   redirectToLogin: false, // we just registered, redirect to login
-  isLoggedIn: true,
   isLoading: false,
-  loggedInUser: {
-    username: 'Stefan',
-  },
+  isLoggedIn: false,
+  loggedInUser: {},
+  // loggedInUser: {
+  //   username: 'Stefan',
+  // },
 };
 
 export default (state = initialState, action) => {
@@ -118,7 +130,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         redirectToLogin: false,
-      }
+      };
     case REGISTER_FAILED:
       return {
         ...state,

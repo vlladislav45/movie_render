@@ -57,7 +57,7 @@ export const getMoviesCount = () => (dispatch, getState) => {
     const { data } = res;
     dispatch({
       type: MOVIES_COUNT,
-      payload: data,
+      payload: data.count,
     });
   }).catch(() => dispatch({
     type: MOVIES_COUNT,

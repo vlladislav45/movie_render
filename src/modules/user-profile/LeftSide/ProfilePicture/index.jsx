@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal, ProfileImage, Button } from 'components/basic';
 import { updateUserData } from 'reducers/userReducer';
+import { API_URL } from '../../../../api/BaseAPI';
 import UserAPI from '../../../../api/UserAPI';
 import { enqueueSnackbarMessage } from '../../../../reducers/uiReducer';
 import {
@@ -17,9 +18,16 @@ const ProfilePicture = () => {
   const dispatch = useDispatch();
   const inputRef = useRef();
 
+  const [recentImagesModalOpen, setRecentImagesModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [imageError, setImageError] = useState('');
   const [uploadedImage, setUploadedImage] = useState();
+
+  const { username, userImages } = useSelector(
+    ({ auth: { loggedInUser } }) => ({
+      username: loggedInUser.username,
+      userImages: loggedInUser.userImages,
+    }));
 
   useEffect(() => {
     if (inputRef.current)
@@ -48,8 +56,8 @@ const ProfilePicture = () => {
 
   function uploadImage () {
     const fd = new FormData();
-    const FAKE_USERNAME = 'kopa4a';
-    fd.append('file', uploadedImage, `image_${Math.random()}_${FAKE_USERNAME}.jpg`);
+    const fileName = `image_${Math.random()}_${username}.jpg`;
+    fd.append('file', uploadedImage, fileName);
     UserAPI.uploadImage(fd).then(res => {
       const { data } = res;
       if (data.error) {
@@ -57,7 +65,7 @@ const ProfilePicture = () => {
       } else {
         dispatch(enqueueSnackbarMessage(data.success));
         dispatch(
-          updateUserData('photoUrl', URL.createObjectURL(uploadedImage)));
+          updateUserData('photoUrl', { imageName: fileName }));
         setModalOpen(false);
       }
     });
@@ -65,7 +73,7 @@ const ProfilePicture = () => {
 
   return (
     <>
-      <ProfilePictureContainer>
+      <ProfilePictureContainer onClick={() => setRecentImagesModalOpen(true)}>
         <ProfileImage shape='rectangle'/>
       </ProfilePictureContainer>
       <UpdateImageButton
@@ -74,6 +82,34 @@ const ProfilePicture = () => {
         color='secondary'
         text='update'
       />
+
+
+      {ReactDOM.createPortal(
+        <Modal isOpen={recentImagesModalOpen}
+               stateChanged={newState => setRecentImagesModalOpen(newState)}
+               closeOnClickOutside={!!imageError}
+        >
+          <>
+            <PreviewImageModal>
+              {userImages && userImages.map(({ imageName }) => (
+                <>
+                  <PreviewImage
+                    src={API_URL + 'user/' + username + '/' + imageName}
+                    alt='preview image'/>
+                </>
+              ))}
+            </PreviewImageModal>
+            <ActionsBar>
+              <Button type='text' text='cancel'
+                      onClick={() => setRecentImagesModalOpen(false)}/>
+              {/*<Button type='contained' text='confirm'*/}
+              {/*        onClick={uploadImage}/>*/}
+            </ActionsBar>
+          </>
+        </Modal>,
+        document.getElementById('modal'))}
+
+
       {ReactDOM.createPortal(
         <Modal isOpen={modalOpen}
                stateChanged={newState => setModalOpen(newState)}
