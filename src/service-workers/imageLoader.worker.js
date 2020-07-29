@@ -14,7 +14,8 @@ const fetchImage = url => new Promise(resolve => {
 // TODO: Implement caching and comparing new content
 const loadedImages = [];
 
-self.addEventListener('message', msg => {
+
+self.addEventListener('message', msg => {// eslint-disable-line no-restricted-globals
   const { data: { url, id }, currentTarget: { origin } } = msg;
   // TODO: figure out origin
   // if (!origin) return;
@@ -24,6 +25,6 @@ self.addEventListener('message', msg => {
 
   fetchImage(url).then(res => {
     loadedImages.push(id);
-    self.postMessage({ id, imageData: res });
+    self.postMessage({ id, imageData: res });// eslint-disable-line no-restricted-globals
   });
 });

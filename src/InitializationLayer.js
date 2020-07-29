@@ -43,6 +43,7 @@ class InitializationLayer extends React.Component {
     window.removeEventListener('resize', this.getWindowDimensions);
   }
 
+
   render () {
     return (
       <ThemeProvider theme={this.props.themeColors}>

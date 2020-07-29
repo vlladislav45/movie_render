@@ -1,7 +1,7 @@
 import AuthAPI from 'api/AuthAPI';
 import { JWT_TOKEN } from 'config/authConstants';
 
-export const LOGIN_SUCCESS = 'LOGIC_SUCCESS';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const START_LOADING = 'START_LOADING';
 const LOGIN_FAILED = 'LOGIN_FAILED';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -12,15 +12,19 @@ const FINISH_REDIRECT = 'FINISH_REDIRECT';
 export const checkToken = () => dispatch => {
   const jwt = localStorage.getItem(JWT_TOKEN);
 
-  if(jwt) {
+  if (jwt) {
+    dispatch({
+      type: START_LOADING,
+    });
+
     AuthAPI.checkToken(jwt).then(({ data }) => {
       if (data.user) {
         dispatch({
           type: LOGIN_SUCCESS,
           payload: data.user,
-        })
+        });
       }
-    })
+    });
   }
 };
 
@@ -44,9 +48,9 @@ export const attemptLogin = (username, password) => dispatch => {
           dispatch({
             type: LOGIN_SUCCESS,
             payload: data.user,
-          })
+          });
         }
-      })
+      });
     }
   }).catch(err => {
     console.log(err);

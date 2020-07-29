@@ -6,6 +6,7 @@ import React, {
   useLayoutEffect,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Loading } from 'components';
 import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import { fetchGenres, updateFilter } from 'reducers/moviesReducer';
@@ -27,17 +28,22 @@ const { smallArea } = transitionDurations;
 
 const Genres = props => {
   const dispatch = useDispatch();
-  const { genres = [], selectedGenres = [] } = useSelector(
-    ({ moviesReducer: { filters, genres } }) => ({
+  const {
+    genres = [],
+    selectedGenres = [],
+    isLoading = false,
+  } = useSelector(
+    ({ moviesReducer: { filters, genres, genresLoading }, auth: { isLoading } }) => ({
       selectedGenres: filters.genres,
       genres,
+      isLoading: genresLoading || isLoading,
     }));
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
 
   // Array with refs for all the genres
   const [genresRef, setGenresRef] = useState({});
-  const [isOverflow, setIsOverflow] = useState(false);
+  const [isOverflow, setIsOverflow] = useState(null);
 
   const [offset, setOffset] = useState(0);
   const [leftEnd, setLeftEnd] = useState(true);
@@ -50,6 +56,7 @@ const Genres = props => {
   }, []);
 
   useEffect(() => {
+    console.log(genres);
     const refs = {};
     genres.forEach(genre => refs[genre['movieGenreName']] = createRef());
     setGenresRef(refs);
@@ -177,8 +184,13 @@ const Genres = props => {
     });
   }
 
+  //TODO: rework loading logic
+
   return (
-    <GenresContainer {...props} isOverflow={isOverflow}>
+    <GenresContainer
+      {...props}
+      isOverflow={isOverflow}
+    >
       {isOverflow &&
       <Arrow
         flipped={'true'}
