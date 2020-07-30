@@ -14,7 +14,7 @@ import { JWT_TOKEN } from 'config/authConstants';
 
 const API_SERVER = 'http://localhost';
 // const API_SERVER = 'http://192.168.1.110';
-const API_PORT = '8090';
+const API_PORT = '8080';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
 //TODO: Revert back to reasonable amount of time

@@ -20,7 +20,7 @@ export const GenresContainer = styled.div`
     // If is overflow === null then calculations have not yet been made
     transition: opacity 150ms linear;
     opacity: 1;
-    ${props => props.isOverflow === null && 'opacity: 0'};
+    ${props => props.isLoading && 'opacity: 0'};
 `;
 
 export const Carousel = styled.div`

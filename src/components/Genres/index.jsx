@@ -36,7 +36,7 @@ const Genres = props => {
     ({ moviesReducer: { filters, genres, genresLoading }, auth: { isLoading } }) => ({
       selectedGenres: filters.genres,
       genres,
-      isLoading: genresLoading || isLoading,
+      isLoading: genresLoading || isLoading, // If auth is loading so width can be calculated properly
     }));
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
@@ -56,11 +56,10 @@ const Genres = props => {
   }, []);
 
   useEffect(() => {
-    console.log(genres);
     const refs = {};
     genres.forEach(genre => refs[genre['movieGenreName']] = createRef());
     setGenresRef(refs);
-  }, [genres]);
+  }, [genres.length]);
 
   useEffect(() => {
     setOffset(0);
@@ -77,10 +76,11 @@ const Genres = props => {
     const first = Object.values(genresRef)[0]?.current;
     const last = Object.values(genresRef).reverse()[0]?.current;
 
+
     if (!first || !last)
       return;
 
-    setIsOverflow(false);
+    // setIsOverflow(false);
     // Set offset to 0 when resizing, to calculate properly
     if (!leftEnd && !isVisible(first)) {
       setOffset(0);
@@ -92,7 +92,7 @@ const Genres = props => {
         setIsOverflow(true);
       } else
         setIsOverflow(false);
-    }, 100);
+    });
 
   }
 
@@ -185,11 +185,11 @@ const Genres = props => {
   }
 
   //TODO: rework loading logic
-
   return (
     <GenresContainer
       {...props}
       isOverflow={isOverflow}
+      isLoading={isOverflow === null || isLoading}  // if overflow is not yet calculated or if genres are loading
     >
       {isOverflow &&
       <Arrow
