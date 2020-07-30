@@ -5,7 +5,7 @@ import themes, { DARK_THEME } from 'utils/themes';
 import { StyledThemedComponent } from './styles';
 
 /**
- * TODO: Maybe rename to MaterialComponent
+ * TODO: Find a better name (Surface SurfaceComponent MaterialSurface ??)
  * Basic material component handling elevation adn theming
  */
 const ThemedComponent = React.forwardRef(

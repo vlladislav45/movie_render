@@ -4,6 +4,7 @@ import Input from './Input';
 import Button from './Button';
 import Modal from './Modal';
 import SnackBar from './SnackBar';
+import Chip from './Chip';
 
 export {
   ThemedComponent,
@@ -12,4 +13,5 @@ export {
   Button,
   Modal,
   SnackBar,
+  Chip,
 };

@@ -1,20 +1,24 @@
 import axios from 'axios';
 import {
   finishedRequest,
-  initiatedRequest, internetDown, networkDown,
+  initiatedRequest,
+  internetDown,
+  networkDown,
   serverDown,
 } from 'reducers/connectionReducer';
 import {
   checkInternetConnection,
   ConnectionStatus,
 } from 'utils/apiUtils';
+import { JWT_TOKEN } from 'config/authConstants';
 
 const API_SERVER = 'http://localhost';
-// const API_SERVER = 'http://192.168.1.115';
-const API_PORT = '8090';
+// const API_SERVER = 'http://192.168.1.110';
+const API_PORT = '8080';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
-export const RETRY_CONNECTION_TIMEOUT = 10000;
+//TODO: Revert back to reasonable amount of time
+export const RETRY_CONNECTION_TIMEOUT = 100000;
 
 //TODO: maybe i dont need to save unfinished requests
 // because i cannot execute their callbacks
@@ -43,6 +47,10 @@ class BaseAPI {
       const { default: reduxStore } = module;
 
       this.api.interceptors.request.use(req => {
+        const jwt = localStorage.getItem(JWT_TOKEN);
+
+        if (jwt)
+          req.headers['Authorization'] = `Bearer ${jwt}`;
         reduxStore.dispatch(initiatedRequest(req));
         return req;
       });
@@ -58,7 +66,7 @@ class BaseAPI {
     });
   }
 
-  //RIP OOP
+
   static request = req => axios.request(req);
 
   get = (url, options) => this.api.get(url, options);

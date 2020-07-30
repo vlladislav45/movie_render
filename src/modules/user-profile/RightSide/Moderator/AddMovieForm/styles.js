@@ -1,15 +1,14 @@
 import styled from 'styled-components';
 
 export const MovieForm = styled.form`
-  width: 100%%;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+`;
+
+export const MovieFormLowerSection = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-export const MovieFormRequired = styled.div`
-  width: 45%;
-`;
-
-export const MovieFormOptional = styled.div`
-  width: 45%;
 `;

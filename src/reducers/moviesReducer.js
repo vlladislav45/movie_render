@@ -2,6 +2,7 @@ import MovieAPI from 'api/MovieAPI';
 import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
 
 //Genres
+const START_LOADING_GENRES = 'START_LOADING_GENRES';
 const FETCH_GENRES = 'FETCH_GENRES';
 
 const CHANGE_SELECTED_PAGE = 'CHANGE_SELECTED_PAGE';
@@ -23,6 +24,10 @@ const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
 export const fetchGenres = () => dispatch => {
   MovieAPI.getGenres().then(res => {
     const { data } = res;
+
+    dispatch({
+      type: START_LOADING_GENRES,
+    });
 
     dispatch({
       type: FETCH_GENRES,
@@ -57,7 +62,7 @@ export const getMoviesCount = () => (dispatch, getState) => {
     const { data } = res;
     dispatch({
       type: MOVIES_COUNT,
-      payload: data,
+      payload: data.count,
     });
   }).catch(() => dispatch({
     type: MOVIES_COUNT,
@@ -125,6 +130,7 @@ const initialState = {
   selectedPage: 0,
   moviesPerPage: DEFAULT_MOVIES_PER_PAGE,
   isLoading: false,
+  genresLoading: false,
   selectedMovie: {
     movieInfo: {},
     rating: {},
@@ -139,9 +145,15 @@ const initialState = {
 export default (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case START_LOADING_GENRES:
+      return {
+        ...state,
+        genresLoading: true,
+      };
     case FETCH_GENRES:
       return {
         ...state,
+        genresLoading: false,
         genres: payload,
       };
     case FETCH_ALL_MOVIES:
@@ -208,7 +220,7 @@ export default (state = initialState, action) => {
           movieInfo: {
             ...state.selectedMovie.movieInfo,
             movieRating: payload.newRating,
-          }
+          },
         },
       };
     default:

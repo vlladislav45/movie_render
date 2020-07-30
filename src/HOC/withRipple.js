@@ -8,14 +8,16 @@ import {
 import themes, { DARK_THEME } from 'utils/themes';
 
 const { SMALL_RIPPLE_DURATION, MEDIUM_RIPPLE_DURATION, LARGE_RIPPLE_DURATION } = rippleConstants;
-const withRipple = Component => React.forwardRef(({
-  denseRipple = false,
-  rippleColor = 'contrast',
-  rippleSize = 'm',
-  tag = 'div',
-  style,
-  ...props
-}, ref) => {
+const withRipple = Component => React.forwardRef((
+  {
+    denseRipple = false,
+    rippleColor = 'contrast',
+    rippleSize = 'm',
+    tag = 'div',
+    style,
+    hocProps,
+    ...props
+  }, ref) => {
 
   const rippleRef = useRef();
   const timeWhenMouseDown = useRef();
@@ -40,11 +42,11 @@ const withRipple = Component => React.forwardRef(({
     }
   }, [rippleData.rippleStop]);
 
-  function endRipple () {
+  function endRipple() {
     setRippleData({ ...rippleData, rippleStart: false, rippleStop: true });
   }
 
-  function handleMouseDown (e) {
+  function handleMouseDown(e) {
     // Ripple in progress, ignore
     if (rippleData.rippleStart)
       return;
@@ -62,10 +64,17 @@ const withRipple = Component => React.forwardRef(({
     const scale = Math.max(scaleX, scaleY);
     // TODO: Remove scaleX and scaleY
     setRippleData(
-      { x, y, rippleStart: true, rippleStop: false,  scale, firstRender: false, });
+      {
+        x,
+        y,
+        rippleStart: true,
+        rippleStop: false,
+        scale,
+        firstRender: false,
+      });
   }
 
-  function handleMouseUp (e) {
+  function handleMouseUp(e) {
     const timeSinceMouseDown = Date.now() - timeWhenMouseDown.current;
     const timeUntilEndOfAnimation = getRippleDuration(rippleSize) -
       timeSinceMouseDown;
@@ -80,10 +89,12 @@ const withRipple = Component => React.forwardRef(({
     rippleData: rippleData,
     denseRipple: denseRipple,
     size: rippleSize,
-    rippleColor: rippleColor,
+    rippleColor,
   };
 
   const containerProps = {
+    ...hocProps,
+    rippleColor,
     as: tag,
     ref: rippleRef,
     onMouseDownCapture: handleMouseDown,
@@ -109,6 +120,7 @@ withRipple.propTypes = {
   denseRipple: PropTypes.bool, // Is the ripple on surface or on colored surface (less opacity when on surface)
   rippleColor: PropTypes.oneOf(availableColors), // The color of the ripple, default is overlay of the theme
   rippleSize: PropTypes.oneOf(['s', 'm', 'l']), // The size of the component, bigger have longer ripple durations
+  hocProps: PropTypes.object, // Props passed directly to the wrapper of the ripple
 };
 
 export default withRipple;
@@ -125,6 +137,7 @@ const Ripple = styled.div`${props => {
     z-index: 10;
     pointer-events: none;
     
+    //Ripple
     &:after{
       position: absolute;
       overflow: hidden;
@@ -187,14 +200,41 @@ const Ripple = styled.div`${props => {
   `;
 }}`;
 const RippleContainer = styled.div`${props => {
-
+  const { theme, rippleColor } = props;
   return `
     position: relative;
    
+    //Hover
+    &:before, &:after {
+      pointer-events: none;
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: ${theme[rippleColor]};
+      opacity: 0;
+    }
+    
+    &:hover:before {
+      cursor: pointer;
+      opacity: 0.04;
+    }
+    
+    // TODO: make sure it doesnt make another layer on already focusable elements     
+    &:focus {
+      border: none;
+      outline: none;
+    }
+    
+    &:focus:after, &:focus-within:after {
+      opacity: 0.12;
+    }
   `;
 }}`;
 
-function getRippleDuration (size) {
+function getRippleDuration(size) {
   switch (size) {
     case 's' :
       return SMALL_RIPPLE_DURATION;

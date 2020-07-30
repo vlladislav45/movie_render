@@ -27,11 +27,6 @@ export default React.forwardRef((props,
       withLeadingIcon={withLeadingIcon}
       isOnPrimary={onPrimary}
     >
-      <RippleElem
-        hasError={hasError}
-        className={rippleClass}
-        isOnPrimary={onPrimary}
-      />
       {LeadingIcon && <LeadingIcon className='leading-icon'/>}
       {label && <InputLabel
         htmlFor={inputId}
@@ -59,6 +54,11 @@ export default React.forwardRef((props,
         {...rest}
       />
       {withIconOnError && hasError && <ErrorIcon/>}
+      <RippleElem
+        hasError={hasError}
+        className={rippleClass}
+        isOnPrimary={onPrimary}
+      />
     </StyledFilledInputContainer>
   );
 });

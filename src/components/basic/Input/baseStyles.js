@@ -12,22 +12,24 @@ export const BaseInput = styled.input`
   border: none;
   outline: none;
   font-size: 1rem;
+  min-height: 48px;
 `;
 
 export const BaseLabel = styled.label`${props => {
-  const { primary, error, secondary, onSurface } = props.theme;
+  const { primary, error, secondary, onSurfaceMD } = props.theme;
   const { elevated, withLeadingIcon, hasError, isFocused, isOnPrimary } = props;
   const accentColor = isOnPrimary ? secondary : primary;
   return `
     position: absolute;
     left: 16px;
     top: 20px;
+    height: 20px;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
     line-height: 1.15rem;
     user-select: none;
     z-index: ${NORMAL_Z_INDEX + 1};
-    color: ${onSurface};
+    color: ${onSurfaceMD};
     pointer-events: none;
     
     transform-origin: left top;
@@ -72,7 +74,9 @@ export const BaseLabel = styled.label`${props => {
 
 export const OuterContainer = styled.div`
   position: relative;
-  ${props => props.isMultiLine && 'height: 100%'};
+  ${props => props.isMultiLine && `
+    min-height: 200px;
+  `};
   
   // Overlay   
   ${props => props.isDisabled && `
@@ -95,7 +99,6 @@ export const OuterContainer = styled.div`
     font-family: 'Roboto', sans-serif; 
     padding-left: 16px;
     height: 16px;
-    align-self: bottom;
     font-size: 0.75rem;
     letter-spacing: 0.03rem;
     margin: 2px 0;
@@ -103,7 +106,7 @@ export const OuterContainer = styled.div`
 `;
 
 export const HelperText = styled.p`
-  color: ${props => props.theme.onSurface};
+  color: ${props => props.theme.onSurfaceMD};
 `;
 
 export const ErrorText = styled.p`
@@ -118,6 +121,7 @@ export const ErrorIcon = styled(ErrorSvg)`
 `;
 
 export const RippleElem = styled.span`
+  box-sizing: content-box;
   position: absolute;
   left: 50%;
   height: 100%;

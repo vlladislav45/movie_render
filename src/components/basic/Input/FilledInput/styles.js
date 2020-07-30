@@ -1,9 +1,7 @@
-import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import styled from 'styled-components';
 import { getOverlay } from 'utils/colorUtils';
 import {
   transitionDurations,
-  transitionFunctions,
 } from 'config/animationConstants';
 import { BaseLabel } from '../baseStyles';
 import { BaseInput } from '../baseStyles.js';
@@ -28,7 +26,6 @@ export const StyledFilledInputContainer = styled.div`${props => {
     position: relative;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
-    overflow: hidden;
     font-size: 1rem;
     border-bottom: 1px solid ${borderColor};
     background: ${background};
