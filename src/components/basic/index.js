@@ -1,4 +1,4 @@
-import ThemedComponent from './ThemedComponent';
+import MaterialSurface from './MaterialSurface';
 import ProfileImage from './ProfileImage';
 import Input from './Input';
 import Button from './Button';
@@ -7,7 +7,7 @@ import SnackBar from './SnackBar';
 import Chip from './Chip';
 
 export {
-  ThemedComponent,
+  MaterialSurface,
   ProfileImage,
   Input,
   Button,

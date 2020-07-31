@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { ThemedComponent } from 'components/basic';
+import { MaterialSurface } from 'components/basic';
 import { VERY_HIGH_Z_INDEX } from 'config/zIndexes';
 import {
   transitionDurations,
   transitionFunctions,
 } from 'config/animationConstants';
 
-export const StyledDropDown = styled(ThemedComponent)`
+export const StyledDropDown = styled(MaterialSurface)`
   position: absolute;
   top: 0;
   right: 0;

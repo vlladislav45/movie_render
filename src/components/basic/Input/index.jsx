@@ -5,7 +5,7 @@ import FilledInput from './FilledInput';
 import MultiLineInput from './MultiLine';
 import { ErrorText, HelperText, OuterContainer } from './baseStyles.js';
 
-const Input = (props) => {
+const Input = React.forwardRef((props, ref) => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
     inputType, label, helperText, errorText,
@@ -15,7 +15,6 @@ const Input = (props) => {
   } = props;
 
   const inputId = useMemo(() => Input.nextId(), []);
-  const inputRef = useRef();
 
   const [value, setValue] = useState(preFilledText);
   const [isFocused, setIsFocused] = useState(false);
@@ -23,8 +22,9 @@ const Input = (props) => {
   useEffect(() => setValue(preFilledText), [preFilledText]);
 
   useEffect(() => {
-    if (autoFocus)
+    if (autoFocus) {
       setIsFocused(true);
+    }
   }, [autoFocus]);
 
   function renderBelowInput () {
@@ -72,20 +72,20 @@ const Input = (props) => {
       {loading && <Loading/>}
       {inputType === 'filled' && (
         <FilledInput
-          ref={inputRef}
+          ref={ref}
           {...inputProps}
         />
       )}
       {inputType === 'textarea' && (
         <MultiLineInput
-          ref={inputRef}
+          ref={ref}
           {...inputProps}
         />
       )}
       {renderBelowInput()}
     </OuterContainer>
   );
-};
+});
 
 Input.propTypes = {
   inputType: PropTypes.oneOf(['filled', 'textarea', 'outline']),

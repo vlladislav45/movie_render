@@ -7,6 +7,7 @@ import Timer from './Timer';
 import Tabs from './Tabs';
 import ConnectionHandler from './ConnectionHandler';
 import Prompt from './Prompt';
+import NavigationDrawer from './NavigationDrawer';
 
 export {
   ProfileButton,
@@ -18,4 +19,5 @@ export {
   Tabs,
   ConnectionHandler,
   Prompt,
+  NavigationDrawer,
 };

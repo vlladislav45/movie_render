@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
-import { ConnectionHandler, Loading } from './components';
+import { ConnectionHandler, Loading, NavigationDrawer } from './components';
 import { SnackBar } from './components/basic';
 import { Prompt } from 'components';
 import { TopNavBar } from './modules/navigation';
@@ -48,6 +48,7 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         {/*<ConnectionHandler/>*/}
+        <NavigationDrawer />
         <Prompt {...this.props.promptProps} />
         <SnackBar/>
         <TopNavBar/>
