@@ -1,7 +1,7 @@
 import styled, { css, keyframes } from 'styled-components';
 import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import { applyShadow, getOverlay } from 'utils/colorUtils';
-import { rippleConstants } from 'config/constants';
+import { rippleConstants } from 'config/animationConstants';
 
 const { SMALL_RIPPLE_DURATION } = rippleConstants;
 
@@ -9,10 +9,11 @@ export const TabsContainer = styled.div`${props => {
   const { prominent, color, theme, activeTab } = props;
   const onColor = theme[`on${color.charAt(0).toUpperCase() + color.slice(1)}`];
   let left = 0, width = 0;
+  // We use parentNode here, because tab is wrapped in RippleContainer
   if (activeTab && activeTab.current) {
-    left = activeTab.current.offsetLeft;
-    width = activeTab.current.offsetWidth;
-  } 
+    left = activeTab.current.parentNode.offsetLeft;
+    width = activeTab.current.parentNode.offsetWidth;
+  }
   
   return `
     display: flex;
@@ -31,7 +32,6 @@ export const TabsContainer = styled.div`${props => {
     `};
     
     &::before {
-      will-change: width, left;
       z-index: ${NORMAL_Z_INDEX};
       transition: left .2s ease;
       content: '';
@@ -48,14 +48,10 @@ export const TabsContainer = styled.div`${props => {
 
 
 export const StyledSingleTab = styled.div`${props => {
-  const { isActive, ripple, prominent, color, theme, rippleOff } = props;
-  
-  const rippleActive = !!ripple;
-  const { x, y } = ripple || {};
+  const { isActive, prominent, color, theme } = props;
   
   const themedColor = theme[color];
   const onColor = theme[`on${color.charAt(0).toUpperCase() + color.slice(1)}`];
-  
   
   const hoverColor = prominent
     ? getOverlay(themedColor, theme.overlay, 0.08, true)
@@ -66,8 +62,6 @@ export const StyledSingleTab = styled.div`${props => {
     : getOverlay(theme.surface, themedColor,  0.12, true);
 
   return `
-    position: relative;
-    overflow: hidden;
     height: 100%;
     text-transform: uppercase;
     text-align: center;
@@ -95,68 +89,15 @@ export const StyledSingleTab = styled.div`${props => {
 
 
      ${isActive && `
-      color: ${prominent ? onColor : themedColor};
-      &:hover {
-        background: ${prominent && getOverlay(hoverColor, theme.overlay, 0.04)};
-      }
-      &:focus {
-        background: ${prominent && getOverlay(focusColor, theme.overlay, 0.12)};
-      }
-      &:after {
-        ${rippleActive && prominent && 'minOpacity: 0.16!important'};
-      }
+        color: ${prominent ? onColor : themedColor};
+        &:hover {
+          background: ${prominent && getOverlay(hoverColor, theme.overlay, 0.04)};
+        }
+        &:focus {
+          background: ${prominent && getOverlay(focusColor, theme.overlay, 0.12)};
+        }
     `};
-
-    &:after {
-     position: absolute;
-     content: "";
-     width: 10px;
-     height: 10px;
-     left: ${x}px;
-     top: ${y}px;
-     border-radius: 50%;
-     opacity: 0;
-     pointer-events: none; 
-     background: ${prominent ? theme.overlay : themedColor};
-     ${rippleOff && `
-      animation: rippleOff 250ms linear!important;
-     `};
-     ${rippleActive && `animation: rippleOn ${SMALL_RIPPLE_DURATION}ms linear forwards!Important`};
-
-   }
-   
-   @keyframes rippleOn {
-    0% {
-      will-change: transform, opacity;
-      opacity: 0;
-      transform: scale(0);
-    }
-    20% {
-      opacity: ${prominent ? 0.32 : 0.24};
-      transform: scale(5);
-    }
-    100% {
-      will-change: unset;
-      opacity: ${prominent ? 0.32 : 0.24};
-      transform: scale(30);
-    }
-   }
-   
-   @keyframes rippleOff {
-    0% {
-      will-change: transform, opacity;
-      opacity: ${prominent ? 0.32 : 0.24};
-      transform: scale(30);
-    }
-    50% {
-      opacity: 0.10;
-      transform: scale(27);
-    }
-    100% {
-      will-change: unset;
-      opacity: 0;
-    }
-  }
+    
   `;
 }}
 `;

@@ -1,23 +1,23 @@
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
-import { Route, Router, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
 import { ConnectionHandler, Loading } from './components';
 import { SnackBar } from './components/basic';
+import { Prompt } from 'components';
 import { TopNavBar } from './modules/navigation';
+import { checkToken } from './reducers/auth';
 import { changeWindowDimensions } from './reducers/uiReducer';
 import RoutingLayer from './RoutingLayer';
 import { checkMedia } from './utils/mediaUtils';
 import { MainContent } from './baseStyles';
 
-
 class InitializationLayer extends React.Component {
   constructor (props) {
     super(props);
-    this.getWindowDimensions = throttle(this.getWindowDimensions, 300).
+    this.getWindowDimensions = debounce(this.getWindowDimensions, 300).
       bind(this);
   }
 
@@ -28,6 +28,11 @@ class InitializationLayer extends React.Component {
   }
 
   componentDidMount () {
+    // Wait for redux to be imported in BaseApi, so authorization header is added
+    // TODO: On slower devices this may cause problems
+    setTimeout(() => {
+      this.props.checkToken();
+    }, 200);
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
 
@@ -38,22 +43,17 @@ class InitializationLayer extends React.Component {
     window.removeEventListener('resize', this.getWindowDimensions);
   }
 
+
   render () {
     return (
       <ThemeProvider theme={this.props.themeColors}>
-        <ConnectionHandler/>
+        {/*<ConnectionHandler/>*/}
+        <Prompt {...this.props.promptProps} />
         <SnackBar/>
         <TopNavBar/>
         <MainContent>
           <Router history={browserHistory}>
-            <Switch>
-              {/*<Route exact path='/'>*/}
-              {/*  <Redirect to='/?page=1&items=9' />*/}
-              {/*</Route>*/}
-              <Route path='*'>
-                <RoutingLayer/>
-              </Route>
-            </Switch>
+            <RoutingLayer/>
           </Router>
         </MainContent>
       </ThemeProvider>
@@ -61,12 +61,14 @@ class InitializationLayer extends React.Component {
   }
 }
 
-const mapStateToProps = ({ themeReducer: { themeColors } }) => ({
+const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { prompt: { props } } }) => ({
   themeColors,
+  promptProps: props,
 });
 
 const mapDispatchToProps = {
   changeWindowDimensions,
+  checkToken,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(

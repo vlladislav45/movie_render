@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import { MAX_Z_INDEX } from '../../config/zIndexes';
 
+// TODO: Position was changed to absolute, this means this should only be used inside
+//  relative positioned parent
 const cogWheel = require('../../assets/loading/loading-img.png');
 export const LoadingOuter = styled.div`
-    position: relative;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;

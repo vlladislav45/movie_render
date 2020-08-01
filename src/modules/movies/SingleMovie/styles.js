@@ -1,39 +1,59 @@
 import styled from 'styled-components';
-import { Button, ThemedComponent } from 'components/basic';
-import { applyShadow } from '../../../utils/colorUtils';
+import { Button } from 'components/basic';
+import { DEFAULT_Z_INDEX } from 'config/zIndexes';
+import {
+  transitionDurations,
+  transitionFunctions,
+} from 'config/animationConstants';
 
-
+const GRID_ROW_GAP = 20;
+const GRID_COLUMN_GAP = 20;
 export const SingleMovieWrapper = styled.div`
   display: grid;
   
   // 12 column grid system
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: min-content repeat(11, minmax(min-content, 1fr));
-  grid-row-gap: 20px;
+  // grid-template-columns: repeat(12, 1fr);
+  // grid-template-rows: min-content repeat(11, minmax(min-content, 1fr));
+  
+  
+  /**
+  * b - back button
+  * v - video
+  * t - movie title
+  * s - movie summary
+  * i - more info (actors, rating, views etc)
+  * m - more movies like this (SimilarMovies)
+  */
+  
+  grid-template-areas: ". b t t t t t t ."
+                       ". v v v s s s s ."
+                       ". v v v s s s s ."
+                       ". i i i i i i i ."
+                       ". i i i i i i i ."
+                       ". i i i i i i i ."     
+                       ". . . . . . . . ."
+                       ". m m m m m m m ."
+                       ". m m m m m m m ."
+                       ". . . . . . . . .";
+                       ". . . . . . . . .";
+                       ". . . . . . . . .";
+                       ". . . . . . . . .";
+  
+  
+  grid-auto-rows: minmax(10px, min-content);
+  grid-auto-columns: 1fr;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, minmax(min-content,max-content));
+  
+  grid-column-gap: ${GRID_COLUMN_GAP}px;
+  grid-row-gap: ${GRID_ROW_GAP}px;
   grid-auto-flow: row;
-  
-  max-width: 100%;
-  height: 200vh;
-  max-height: 200vh;
-  & > * {
-    // width: 100%;
-    // height: 100%;
-    max-width: 100%;
-    // max-height: 100%;
-  }
-  
-  animation: appear 1s linear;
+   
 `;
 
-// TODO: change to button
 export const BackArrowWrapper = styled(Button)`
-  grid-column: 2 / auto;
-  grid-row: 1 / 2;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
+  grid-area: b;
   color: ${props => props.theme.secondary};
-  font-family: 'Lato', sans-serif;
 
   & > svg {
     width: 24px;
@@ -43,22 +63,18 @@ export const BackArrowWrapper = styled(Button)`
 `;
 
 export const MovieVideo = styled.video`
-  width: 100%;
-  height: 100%;
-  grid-column: 2 / -2;
-  grid-row: 2 / 6;
+  grid-area: v;
   object-fit: fill;
-  // To span full columns and rows
-  width: 100%;
-  height: 100%;
+  max-width: 100%; // Stay inside your assigned columns biatch
 `;
 
 export const MovieTitle = styled.div`
-  grid-column: 2 / 12;
-  grid-row: 6 / 7;
+  grid-area: t;
+  grid-column-start: 3;
   font-family: 'Marck script', cursive;
   font-size: 2rem;
   font-weight: bold;
+  
   letter-spacing: 0.15rem;
   
   display: grid;
@@ -71,54 +87,146 @@ export const MovieTitle = styled.div`
 `;
 
 export const StyledMovieSummary = styled.div`
-  transition: all .3s;
-  grid-column: 2 / 12;
-  grid-row: 7 / 9;
-  font-family: 'Roboto', sans-serif;
-  text-align: justify;
-  font-size: 1rem;
-  letter-spacing: .6px;
-  line-height: 1.5rem;
-  overflow: hidden;
-  ${props => props.isExtended && `
-      // grid-row: 7 / 14;
-      animation: expand .7s ease forwards;
-      box-shadow: ${applyShadow(5)};
-      padding: 0 10px;
-  `};
+  grid-area: s;
+  position: relative;
   
-  @keyframes expand {
-    0% {
-      // height: 0;
-      grid-row: 7 / 9;
-    }
-    100% {
-      // height: 2000px;
-      grid-row: 7 / 14;
-    }
+  // stay above other elements, so when expanded its on top of the stack
+  z-index: ${DEFAULT_Z_INDEX + 1};
+  font-family: 'Roboto', sans-serif;
+  
+  & > #title {
+    text-align: left;
+    color: ${props => props.theme.onSurface};
+    margin-bottom: 10px;
+    font-size: 1.1rem;
   }
   
-  color: ${props => props.theme.onSurfaceMD}
+  transition: all ${transitionDurations.largeExpand}ms ${transitionFunctions.acceleratedEasing};
+  ${props => props.isExtended && `
+     transition: all ${transitionDurations.largeCollapsing}ms ${transitionFunctions.deceleratedEasing};
+     background: ${props.theme.surface};
+     transform: translateX(${-(props.videoCoordinates.width + GRID_ROW_GAP + 5)}px);  
+     width: calc(100% + ${props.videoCoordinates.width}px);
+  `};
 `;
 
 export const ReadMore = styled(Button)`
-  grid-column: 2 / auto;
-  grid-row: 9 / 10;
-  margin-top: 0.5rem;
-  text-align: center;
-  font-weight: 500;
-  font-size: 1rem;
-  font-family: 'Roboto', sans-serif;
-  white-space: no-wrap;
-  
-  cursor: pointer;
-  user-select: none;
-  text-transform: capitalize;
+  float: right;
+  position: sticky;
+  right: 0;
+  top: 10px;
   color: ${props => props.theme.secondary};
 `;
 
-export const MoreInfoContainer = styled.div`
+export const TextWrapper = styled.div`
+  position: relative;
+  text-align: justify;
+  font-size: 1rem;
+  letter-spacing: .6px;
+  line-height: 1.4rem;
+  
+  color: ${props => props.theme.onSurfaceMD};
+  // Video height - text size of #title (1.1rem) - bottom margin of #title (10px)
+  max-height: calc(${props => props.videoCoordinates.height}px - 1.1rem - 10px);
+  overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  transition: all .3s;
+  ${props => props.isExtended && `
+    padding-top: 10px;
+    height: auto;
+    font-size: 1.1rem;
+    line-height: 1.5rem;
+    color: ${props.theme.onSurface};
+    max-height: ${props.videoCoordinates.height + 250}px;
+  `};  
+`;
+
+export const MoreInfoGrid = styled.div`
+  grid-area: i;
+  max-width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  // padding: 12px 16px;
+  grid-column-gap: 30px; // There is padding-right in .movieInfo
+  grid-row-gap: 15px;
+  grid-template-columns: repeat(4, minmax(min-content, max-content));
+  grid-template-areas: "nr ir nv iv ."
+                       "ny iy nd id ."
+                       "na ia ia ia ia";
+                       
+  align-items: center;                 
+                       
+                       
+  & .movieInfo {
+    white-space: nowrap;
+    color: ${props => props.theme.onSurface};
+    font-size: 1.1rem;
+    padding-right: 20px; //This may cause problems
+  }
+  
+  & .movieInfoName {
+    white-space: nowrap;
+    font-size: 1.1rem;
+    color: ${props => props.theme.onSurfaceMD};
+  }
+                         
+  & > .movieInfoName.rating {
+    grid-area: nr;
+  }
+  
+  & > .movieInfo.rating {
+    grid-area: ir;
+    margin-left: -5px; // little hack to compensate for star svg white space
+    & > #movieRating {
+      justify-content: unset;
+    }
+  }
+  
+  & > .movieInfoName.views {
+    grid-area: nv;
+  }
+  
+  & > .movieInfo.views {
+    grid-area: iv;
+  }
+  
+    & > .movieInfoName.director {
+    grid-area: nd;
+  }
+  
+  & > .movieInfo.director {
+    grid-area: id;
+  }
+  
+  & > .movieInfoName.year {
+    grid-area: ny;
+  }
+  
+  & > .movieInfo.year {
+    grid-area: iy;
+  }
+  
+  & > .movieInfoName.actors {
+    grid-area: na;
+  }
+  
+  & > .movieInfo.actors {
+    grid-area: ia;
+    & > ul {
+      display: flex;
+      flex-wrap: wrap;
+      & > li.actor {
+        &:not(:first-child):not(:last-child) {
+          margin: 0 6px;
+        }
+        &:first-child {
+          margin-right: 6px;
+        }
+        &:last-child {
+          margin-left: 6px;
+        }
+      }
+    }
+  }
 `;

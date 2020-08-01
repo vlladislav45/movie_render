@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 import { MAX_Z_INDEX } from 'config/zIndexes';
-import { applyShadow } from '../../../utils/colorUtils';
+import { applyShadow } from 'utils/colorUtils';
+import {
+  transitionDurations,
+  transitionFunctions,
+} from 'config/animationConstants';
+
+const { acceleratedEasing, deceleratedEasing, standardEasing } = transitionFunctions;
+const { mediumExpand, mediumCollapsing } = transitionDurations;
 
 export const ModalWrapper = styled.div`
   position: fixed;
@@ -10,12 +17,12 @@ export const ModalWrapper = styled.div`
   height: 100%;
   background: ${props => props.theme.isDark ? '#000000' : '#000000'}88;
   z-index: ${MAX_Z_INDEX};
-  overflow: auto;
+  overflow: hidden;
   
   display: flex;
-  will-change: visibility;
   visibility:  ${props => props.isOpen ? 'visible' : 'hidden'};
-  transition: visibility .32s;
+  ${props => !props.isOpen && `transition: visibility ${mediumCollapsing}ms ${standardEasing};`};
+
   
   align-items: center;
   justify-content: center;
@@ -32,10 +39,16 @@ export const ModalInner = styled.div`${props => {
     color: ${onSurface};
     box-shadow: ${applyShadow(12)};
     border-radius: 6px;
-    padding: 16px 24px;
-    animation-duration: .3s;
-    animation-timing-function: ease;
-    animation-fill-mode: forwards; 
+    padding: 24px;
+    animation-duration: ${mediumCollapsing}ms;
+    animation-timing-function: ${deceleratedEasing};
+    animation-fill-mode: forwards;
+    max-width: 80%;
+    
+    ${isOpen && `
+      animation-duration: ${mediumExpand}ms;
+      animation-timing-function: ${acceleratedEasing};   
+    `}
     
     ${direction === 'toRight' && `
       ${isOpen && 'animation-name: slideToRight'};
@@ -71,14 +84,14 @@ export const ModalInner = styled.div`${props => {
     
     ${fade && `
       opacity: 0;
-      transition: opacity .4s;
+      transition: opacity ${mediumExpand}ms ${standardEasing};
     `};
     
     ${isOpen && `opacity: 1`};
     
     @keyframes slideToBottom {
       0% {
-        transform: translateY(-200%);
+        transform: translateY(-300%);
       }
       100% {
         transform: translateY(0);
@@ -87,7 +100,7 @@ export const ModalInner = styled.div`${props => {
     
     @keyframes slideToTop {
       0% {
-        transform: translateY(200%);
+        transform: translateY(300%);
       }
       100% {
         transform: translateY(0);
@@ -96,7 +109,7 @@ export const ModalInner = styled.div`${props => {
     
     @keyframes slideToRight {
       0% {
-        transform: translateX(-200%);
+        transform: translateX(-300%);
       }
       100% {
         transform: translateX(0);
@@ -105,7 +118,7 @@ export const ModalInner = styled.div`${props => {
     
     @keyframes slideToLeft {
       0% {
-        transform: translateX(200%);
+        transform: translateX(300%);
       }
       100% {
         transform: translateX(0);

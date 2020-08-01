@@ -1,54 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { ReadMore, SingleMovieWrapper, StyledMovieSummary } from './styles';
+import React, { useState, useEffect, useRef } from 'react';
+import useDeviceDimensions from '../../../hooks/useDeviceDimensions';
+import { ReadMore, TextWrapper, StyledMovieSummary } from './styles';
 
-const MAX_LENGTH = 600;
+const BIG_SUMMARY_THRESHOLD = 600;
 const DEFAULT_TEXT = 'No summary available';
-export default ({ summary = '' }) => {
+export default ({ summary = '', videoRef }) => {
   const [isExtended, setIsExtended] = useState(false);
-  const [text, setText] = useState(summary);
-  const [isOverflow, setIsOverflow] = useState(false);
+  const [isBigText, setIsBigText] = useState(false);
+  const [videoCoordinates, setVideoCoordinates] = useState({});
 
-  const truncate = () => summary.slice(0, MAX_LENGTH).concat('... ');
+  const { width: deviceWidth } = useDeviceDimensions();
 
   useEffect(() => {
-    if (summary.length > MAX_LENGTH) {
-      setIsOverflow(true);
-      setText(truncate());
-    } else if (summary.length === 0) {
-      setIsOverflow(false);
-      setText(DEFAULT_TEXT);
-    } else {
-      setIsOverflow(false);
+    if(videoRef)
+      calcExtendedSummaryOffset();
+  }, [deviceWidth, videoRef]);
+
+  useEffect(() => {
+    if (summary.length > BIG_SUMMARY_THRESHOLD) {
+      setIsBigText(true);
     }
   }, [summary]);
 
-  useEffect(() => {
-    if (isExtended)
-      setText(summary);
-    else if (!isExtended && isOverflow)
-      setText(truncate());
-  }, [isExtended]);
+  function calcExtendedSummaryOffset () {
+    const { width, height } = videoRef.getBoundingClientRect();
+    setVideoCoordinates({ width, height });
+  }
 
   function toggleSummary () {
+    calcExtendedSummaryOffset();
     setIsExtended(!isExtended);
   }
 
+  const isEmpty = summary.length === 0;
 
   return (
-    <>
-      <StyledMovieSummary
+    <StyledMovieSummary
+      isExtended={isExtended}
+      videoCoordinates={videoCoordinates}
+    >
+      {!isExtended && <h2 id='title'>{isEmpty ? DEFAULT_TEXT : `Summary:`}</h2>}
+      <TextWrapper
+        videoCoordinates={videoCoordinates}
         isExtended={isExtended}
       >
-        {text}
-      </StyledMovieSummary>
-      {isOverflow &&
-        <ReadMore
-          onClickCapture={toggleSummary}
-          isExtended={isExtended}
-        >
-          {isExtended ? 'Hide' : 'Read more'}
-        </ReadMore>
-      }
-    </>
+        {isBigText &&
+          <ReadMore
+            type='contained'
+            onClickCapture={toggleSummary}
+          >
+            {isExtended ? 'Shrink' : 'Extend'}
+          </ReadMore>
+        }
+        {summary}
+      </TextWrapper>
+    </StyledMovieSummary>
   );
 }

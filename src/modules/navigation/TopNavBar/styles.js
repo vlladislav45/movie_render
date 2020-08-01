@@ -5,14 +5,13 @@ import { ThemedComponent } from 'components/basic';
 import { VERY_HIGH_Z_INDEX } from 'config/zIndexes';
 
 export const StyledTopNav = styled(ThemedComponent)`
-    ${({ theme: { primary, onPrimary, secondary, surface, isDark }, device }) => {
+    ${({ theme: { primary, secondary, isDark }, device }) => {
       
   return `
             position: relative;
             width: 100%;
             padding: 48px 24px;
             background:  ${isDark ? '121212' : primary};
-            color: ${isDark ? primary : onPrimary};
             z-index: ${VERY_HIGH_Z_INDEX};
             // We dont need anything positioned right below it
             margin-bottom: 30px;

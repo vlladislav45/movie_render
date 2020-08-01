@@ -14,6 +14,7 @@ export const MainContent = styled.div`${props => {
 `;
 
 export const Inner = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
 `

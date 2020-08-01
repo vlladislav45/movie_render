@@ -1,4 +1,4 @@
-import { ProfileButton } from 'components';
+import { ProfileButton, Loading } from 'components';
 import { Button, Modal } from 'components/basic';
 import LoginForm from 'modules/authentication/LoginForm';
 import RegisterForm from 'modules/authentication/RegisterForm';
@@ -13,9 +13,10 @@ const AuthNav = props => {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-  const { isLoggedIn, redirectToLogin } = useSelector(({ auth }) => ({
+  const { isLoggedIn, redirectToLogin, isLoading } = useSelector(({ auth }) => ({
     isLoggedIn: auth.isLoggedIn,
     redirectToLogin: auth.redirectToLogin,
+    isLoading: auth.isLoading,
   }));
 
   useEffect(() => {
@@ -29,7 +30,10 @@ const AuthNav = props => {
   function renderLoggedInNav () {
     return (
       <LoggedInNav {...props}>
-        <ProfileButton/>
+        <ProfileButton
+          rippleSize='s'
+          rippleColor='secondary'
+        />
       </LoggedInNav>
     );
   }
@@ -66,13 +70,16 @@ const AuthNav = props => {
     );
   }
 
+
+
   return (
-    <>
+    <div style={{ position: 'relative'}}>
+      {isLoading && <Loading />}
       {isLoggedIn
         ? renderLoggedInNav()
         : renderAnonymousNav()
       }
-    </>
+    </div>
   );
 };
 
