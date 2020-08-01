@@ -9,7 +9,7 @@ const Input = React.forwardRef((props, ref) => {
   const {
     leadingIcon: LeadingIcon, value: preFilledText = '',
     inputType, label, helperText, errorText,
-    placeholder, id, onPrimary, withIconOnError,
+    placeholder, onPrimary, withIconOnError,
     onChange, onChangeCapture, disabled, loading,
     autoFocus, ...rest
   } = props;
@@ -23,7 +23,9 @@ const Input = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (autoFocus) {
-      setIsFocused(true);
+      setTimeout(() => {
+        document.getElementById(inputId).focus()
+      })
     }
   }, [autoFocus]);
 
@@ -66,7 +68,6 @@ const Input = React.forwardRef((props, ref) => {
     <OuterContainer
       isMultiLine={inputType === 'textarea'}
       isDisabled={disabled}
-      id={id}
       {...rest}
     >
       {loading && <Loading/>}

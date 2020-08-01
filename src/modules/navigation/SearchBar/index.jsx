@@ -4,16 +4,21 @@ import { debounce } from 'lodash';
 import { updateFilter } from 'reducers/moviesReducer';
 import browserHistory from 'utils/browserHistory';
 import { ReactComponent as SearchIcon } from 'assets/icons/search-24px.svg';
-import { SearchInput, SearchInputContainer, StyledSearchBar, ToggleButton } from './styles';
+import {
+  EXTEND_STATES,
+  SearchInput,
+  SearchInputContainer,
+  StyledSearchBar,
+  ToggleButton
+} from './styles';
 
 /**
  * Expandable searchbar
  * Idea about 3 values extended state https://stackoverflow.com/a/50428572
  */
-export const INITIAL = 0, EXTENDED = 1, NOT_EXTENDED = 2;
+const { EXTENDED, NOT_EXTENDED, INITIAL } = EXTEND_STATES;
 const SearchBar = props => {
   const dispatch = useDispatch();
-  const inputRef = useRef();
   
   const handleChange = React.useCallback(debounce(e => {
     dispatch(updateFilter({ search: e.target.value }));
@@ -21,14 +26,11 @@ const SearchBar = props => {
   
   const [extendedState, setExtendedState] = useState(INITIAL);
   
+  // We attach the event listener ONLY when we extend the searchbar
   useEffect(() => {
-    console.log(extendedState)
-    if (extendedState === EXTENDED)
-      inputRef.current.focus();
-  }, [extendedState]);
-  
-  useEffect(() => {
+    if (extendedState !== EXTENDED) return;
     const click = (e) => {
+      // This may be outside the search-container or the TopNavBar, TODO: Decide which one
       if (e.target.closest('#search-container') === null)
         setExtendedState(state => {
           if (state === INITIAL)
@@ -38,7 +40,7 @@ const SearchBar = props => {
     }
     window.addEventListener('click', click);
     return () => window.removeEventListener('click', click);
-  }, [])
+  }, [extendedState])
   
   const { search = '' } = useSelector(({ moviesReducer: { filters } }) => ({
     search: filters.search,
@@ -58,7 +60,7 @@ const SearchBar = props => {
         extendedstate={extendedState}
       >
         <SearchInput
-          ref={inputRef}
+          autoFocus={extendedState === EXTENDED}
           disabled={browserHistory.location.pathname !== '/'}
           onPrimary
           onChange={handleChange}

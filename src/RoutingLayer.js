@@ -11,51 +11,20 @@ const MainPage = React.lazy(() => import('pages/MainPage'));
 const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
 const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));
 
-const styleObj = {
-  width: '100%',
-  height: '100%',
-};
-const relStyle = {
-  ...styleObj,
-  position: 'relative',
-};
-const absStyle = {
-  ...styleObj,
-  position: 'absolute',
-};
-export default () => {
-  // TODO: Work with nodeRef to not use findDOMNode
-  // const ref = useRef();
-  const location = useLocation();
 
-  useEffect(() => {
-  }, [location]);
+export default () => (
+  <Inner>
+    <React.Suspense fallback={<Loading/>}>
+      <Switch>
+        <Route exact path='/' component={MainPage}/>
+        <Route path='/profile' component={ProfilePage}/>
+        <Route path='/movie/:movieId' component={SingleMoviePage}/>
+        <Redirect to='/'/>
+      </Switch>
+    </React.Suspense>
+  </Inner>
+);
 
-
-  return (
-    <Inner>
-      {/*<TransitionGroup>*/}
-      {/*  <CSSTransition*/}
-      {/*    // nodeRef={TODO}*/}
-      {/*    timeout={300}*/}
-      {/*    classNames='fade'*/}
-      {/*    key={location.key}*/}
-      {/*  >*/}
-      {/*    <div key='wrapper' style={absStyle}>*/}
-            <React.Suspense fallback={<Loading/>}>
-              <Switch location={location}>
-                <Route exact path='/' component={MainPage}/>
-                <Route path='/profile' component={ProfilePage}/>
-                <Route path='/movie/:movieId' component={SingleMoviePage}/>
-                <Redirect to='/'/>
-              </Switch>
-            </React.Suspense>
-          {/*</div>*/}
-      {/*  </CSSTransition>*/}
-      {/*</TransitionGroup>*/}
-    </Inner>
-  );
-}
 
 /*
  *

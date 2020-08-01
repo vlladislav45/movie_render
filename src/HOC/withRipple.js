@@ -14,8 +14,10 @@ const withRipple = Component => React.forwardRef((
     rippleColor = 'contrast',
     rippleSize = 'm',
     tag = 'div',
-    style,
+    focusable = false,
+    autoFocus = false,
     hocProps,
+    style,
     ...props
   }, ref) => {
 
@@ -35,6 +37,12 @@ const withRipple = Component => React.forwardRef((
     firstRender: true,
     scale: 0,
   });
+  
+  useEffect(() => {
+    // For some reason its not working automatically
+    if (autoFocus)
+      rippleRef.current.focus();
+  }, [autoFocus])
 
   useEffect(() => {
     if (rippleData.rippleStop) {
@@ -92,16 +100,19 @@ const withRipple = Component => React.forwardRef((
     rippleColor,
   };
 
+
   const containerProps = {
     ...hocProps,
     rippleColor,
+    style,
     as: tag,
     ref: rippleRef,
+    tabIndex: focusable ? -1 : null,
     onMouseDownCapture: handleMouseDown,
     onMouseUpCapture: handleMouseUp,
     onMouseOutCapture: endRipple,
   };
-
+  
   return (
     <RippleContainer
       {...containerProps}
@@ -154,12 +165,12 @@ const Ripple = styled.div`${props => {
       
       ${rippleStop && !firstRender && `
         animation: rippleOff ${getRippleDuration(
-    size)}ms ${transitionFunctions.standardEasing} forwards!important;
+    size)}ms ${transitionFunctions.deceleratedEasing} forwards!important;
       `};
       
        ${rippleStart && `
           animation: rippleOn ${getRippleDuration(
-    size)}ms ${transitionFunctions.standardEasing} forwards!important;
+    size)}ms ${transitionFunctions.acceleratedEasing} forwards!important;
   
         `}
       }
@@ -169,11 +180,8 @@ const Ripple = styled.div`${props => {
         0% {
           will-change: transform, opacity, border-radius;
           opacity: 0.02;
+          border-radius: 50%;
           transform: scale(${scale / 15});
-        }
-        20% {
-          border-radius: 30%;
-          opacity: ${denseRipple ? 0.32 : 0.12};
         }
         100% {
           will-change: unset;
@@ -189,7 +197,7 @@ const Ripple = styled.div`${props => {
           transform: scale(${scale / 4});  
         }
         50% {
-          transform: scale(${scale / 8});  
+          transform: scale(${scale / 8});
           opacity: 0;
         }
         100% {
@@ -200,9 +208,10 @@ const Ripple = styled.div`${props => {
   `;
 }}`;
 const RippleContainer = styled.div`${props => {
-  const { theme, rippleColor } = props;
+  const { theme, rippleColor: hoverFocusColor } = props;
   return `
     position: relative;
+    overflow: hidden;
    
     //Hover
     &:before, &:after {
@@ -213,7 +222,7 @@ const RippleContainer = styled.div`${props => {
       width: 100%;
       top: 0;
       left: 0;
-      background: ${theme[rippleColor]};
+      background: ${theme[hoverFocusColor]};
       opacity: 0;
     }
     

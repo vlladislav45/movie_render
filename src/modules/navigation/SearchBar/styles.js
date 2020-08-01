@@ -2,10 +2,9 @@ import styled from 'styled-components';
 import { ReactComponent as SearchIcon } from 'assets/icons/search-24px.svg';
 import { transitionDurations, transitionFunctions } from 'config/animationConstants';
 import { Input } from 'components/basic';
-import { EXTENDED, INITIAL, NOT_EXTENDED } from './index';
 
 const { deceleratedEasing, acceleratedEasing } = transitionFunctions;
-const { smallArea, mediumExpand, mediumCollapsing } = transitionDurations;
+const { mediumExpand, mediumCollapsing } = transitionDurations;
 const INPUT_WIDTH = 200;
 export const StyledSearchBar = styled.div`
 	position: relative;
@@ -25,11 +24,17 @@ export const ToggleButton = styled(SearchIcon)`
 	`};
 `;
 
+
+export const EXTEND_STATES = {
+	INITIAL: 0,
+	EXTENDED: 1,
+	NOT_EXTENDED: 2,
+}
 //https://stackoverflow.com/a/50428572
 const stateToAnimation = {
-	0: 'none',
-	1: `extend ${mediumExpand}ms ${acceleratedEasing} forwards`,
-	2: `shrink ${mediumCollapsing}ms ${deceleratedEasing}`,
+	[EXTEND_STATES.INITIAL]: 'none',
+	[EXTEND_STATES.EXTENDED]: `extend ${mediumExpand}ms ${acceleratedEasing} forwards`,
+	[EXTEND_STATES.NOT_EXTENDED]: `shrink ${mediumCollapsing}ms ${deceleratedEasing}`,
 }
 export const SearchInputContainer = styled.div`
 	overflow: hidden;
@@ -39,7 +44,7 @@ export const SearchInputContainer = styled.div`
   top: -12px;
 	
 	animation: ${props => stateToAnimation[props.extendedstate]};
-	
+
 	@keyframes extend {
 		from {
 			transform: translateX(0);

@@ -86,12 +86,12 @@ export const TopNavTitle = styled(Title)`
   flex: 1 1 auto;
   padding-left: 32px;
   align-self: center;
-  ${props => props.deviceWidth < 360 && 'padding-left: 12px'};
+  ${props => props.$deviceWidth < 360 && 'padding-left: 12px'};
 `;
 
 export const TopNavExpand = styled(ExpandIcon)`
   transition: transform ${smallArea}ms;
-  ${props => props.isExpanded && `
+  ${props => props.$isExpanded && `
     transform: rotate(180deg);
   `};
 `;

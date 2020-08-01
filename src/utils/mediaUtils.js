@@ -18,6 +18,10 @@ export function greaterThen(current, shouldBeGreater) {
 	return Object.keys(medias).indexOf(current) > Object.keys(medias).indexOf(shouldBeGreater);
 }
 
+export function lessThen(current, shouldBeLesser) {
+	return Object.keys(medias).indexOf(current) < Object.keys(medias).indexOf(shouldBeLesser);
+}
+
 export function checkMedia() {
 	for (let mediasKey in medias) {
 		const { matches } = medias[mediasKey];

@@ -26,6 +26,8 @@ const Modal = props => {
   function wrapperClicked (e) {
     if (closeOnClickOutside && e.target === wrapperRef?.current)
       setIsOpen(false);
+    
+    e.stopPropagation();
   }
 
   return (
