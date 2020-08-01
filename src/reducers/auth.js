@@ -8,6 +8,7 @@ const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAILED = 'REGISTER_FAILED';
 const LOGOUT = 'LOGOUT';
 const FINISH_REDIRECT = 'FINISH_REDIRECT';
+const CHANGE_MODAL_STATE = 'CHANGE_MODAL_STATE';
 
 export const checkToken = () => dispatch => {
   const jwt = localStorage.getItem(JWT_TOKEN);
@@ -81,24 +82,38 @@ export const attemptRegister = credentials => dispatch => {
   }).catch(err => console.log('Register error: ' + err));
 };
 
-export const logout = () => ({
-  type: LOGOUT,
-});
+export const logout = () => dispatch => {
+  localStorage.removeItem(JWT_TOKEN);
+  dispatch({
+    type: LOGOUT,
+  })
+};
 
 export const finishRedirect = () => ({
   type: FINISH_REDIRECT,
 });
 
+/**
+ * Modal state should be with shape
+ * login: isOpen :bool,
+ * register: isOpen :bool
+ */
+export const changeModalState = modalState => ({
+  type: CHANGE_MODAL_STATE,
+  payload: modalState,
+})
+
 const initialState = {
   loginError: null,
   registerError: null,
-  redirectToLogin: false, // we just registered, redirect to login
   isLoading: false,
   isLoggedIn: false,
   loggedInUser: {},
-  // loggedInUser: {
-  //   username: 'Stefan',
-  // },
+  redirectToLogin: false, // we just registered, redirect to login
+  modalsOpen: {
+    register: false,
+    login: false,
+  }
 };
 
 export default (state = initialState, action) => {
@@ -117,6 +132,11 @@ export default (state = initialState, action) => {
         isLoggedIn: true,
         isLoading: false,
         loggedInUser: payload,
+        //TODO: Do i need to close modals when login?
+        modalsOpen: {
+          login: false,
+          register: false,
+        }
       };
     case LOGIN_FAILED:
       return {
@@ -145,9 +165,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: false,
-        loggedInUser: null,
+        loggedInUser: {},
       };
-
+    case CHANGE_MODAL_STATE:
+      return {
+        ...state,
+        modalsOpen: {
+          ...state.modalsOpen,
+          ...payload,
+        }
+      }
     default:
       return state;
   }

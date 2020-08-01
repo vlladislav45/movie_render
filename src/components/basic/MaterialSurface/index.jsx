@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import themes, { DARK_THEME } from 'utils/themes';
-import { StyledThemedComponent } from './styles';
+import { StyledMaterialSurface } from './styles';
 
 /**
- * TODO: Find a better name (Surface SurfaceComponent MaterialSurface ??)
  * Basic material component handling elevation adn theming
  */
-const ThemedComponent = React.forwardRef(
+const MaterialSurface = React.forwardRef(
   (
     props,
     ref) => {
@@ -23,7 +22,7 @@ const ThemedComponent = React.forwardRef(
     } = props;
 
     return (
-      <StyledThemedComponent
+      <StyledMaterialSurface
         ref={ref}
         elevation={elevation}
         shouldElevateWhenHover={shouldElevateWhenHover}
@@ -31,14 +30,14 @@ const ThemedComponent = React.forwardRef(
         {...rest}
       >
         {children}
-      </StyledThemedComponent>
+      </StyledMaterialSurface>
     );
   });
 
-ThemedComponent.propTypes = {
+MaterialSurface.propTypes = {
   elevation: PropTypes.number,
   shouldElevateWhenHover: PropTypes.bool,
   size: PropTypes.oneOf(['s', 'm', 'l']),
 };
 
-export default ThemedComponent;
+export default MaterialSurface;

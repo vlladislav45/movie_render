@@ -6,8 +6,8 @@ import {
 import { getOverlay } from 'utils/colorUtils';
 import { ReactComponent as ArrowSvg } from 'assets/icons/right-arrow-24px.svg';
 
-const { smallArea, mediumExpand, mediumCollapsing, largeExpand } = transitionDurations;
-const { standardEasing, acceleratedEasing, deceleratedEasing } = transitionFunctions;
+const { smallArea, mediumExpand } = transitionDurations;
+const { standardEasing, acceleratedEasing } = transitionFunctions;
 export const GenresContainer = styled.div`
     // To be centered in the grid
     ${props => !props.isOverflow && 'justify-self: center;'};
@@ -40,7 +40,11 @@ export const GenresList = styled.ul`
 
 export const SingleGenre = styled.li`
     user-select: none;
-    cursor: ${props => props.isDisabled ? 'default' : 'pointer'};
+    cursor: pointer;
+    ${props => props.isDisabled && `
+        cursor: default;
+        pointer-events: none;
+    `};
     
     position: relative;
     margin: 0 5px;

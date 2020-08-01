@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { NORMAL_Z_INDEX } from 'config/zIndexes';
-import { ThemedComponent } from 'components/basic';
+import { MaterialSurface } from 'components/basic';
 import { applyShadow } from 'utils/colorUtils';
 
 export const BaseDataWrapper = styled.div`
@@ -36,7 +36,7 @@ export const PosterUploadBtn = styled.div`
   grid-area: p;
 `;
 
-export const PreviewError = styled(ThemedComponent)`
+export const PreviewError = styled(MaterialSurface)`
   position: absolute;
   font-size: 1rem;
   font-family: 'Roboto', sans-serif;

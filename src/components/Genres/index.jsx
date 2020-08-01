@@ -41,11 +41,14 @@ const Genres = props => {
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
 
-  // Array with refs for all the genres
-  const [genresRef, setGenresRef] = useState({});
+  // Object with keys the genre name and value its ref
+  const [genresRef, setGenresRef] = useState(null);
+  // If genres overflow their container, render arrows
   const [isOverflow, setIsOverflow] = useState(null);
 
+  // current arrow offset
   const [offset, setOffset] = useState(0);
+  // is the left or right arrow disabled
   const [leftEnd, setLeftEnd] = useState(true);
   const [rightEnd, setRightEnd] = useState(false);
 
@@ -73,27 +76,18 @@ const Genres = props => {
   // remove the arrows (in setTimeout)
   // if this is slow, we need to rework it
   function checkIfOverflows () {
-    const first = Object.values(genresRef)[0]?.current;
-    const last = Object.values(genresRef).reverse()[0]?.current;
-
-
-    if (!first || !last)
+    // Refs still not attached
+    if (genresRef === null ||  genresRef[genres[0]]?.current === null)
       return;
 
-    // setIsOverflow(false);
-    // Set offset to 0 when resizing, to calculate properly
-    if (!leftEnd && !isVisible(first)) {
-      setOffset(0);
-    }
+    const GENRE_MARGIN = 10;
+    const width = Object.values(genresRef).reduce((initial, ref) => (initial += ref.current.clientWidth + GENRE_MARGIN), 0);
 
-    // TODO: this is just a hack, rework logic
-    setTimeout(() => {
-      if (!isVisible(first, 'left') || !isVisible(last, 'right')) {
-        setIsOverflow(true);
-      } else
-        setIsOverflow(false);
-    });
-
+    
+    if (width > screenWidth)
+      setIsOverflow(true);
+    else
+      setIsOverflow(false)
   }
 
   function slideLeft () {
@@ -145,11 +139,12 @@ const Genres = props => {
     setOffset(newOffset);
   };
 
-  function genreClicked (genre, isDisabled) {
-    if (isDisabled) return;
+  // Add/remove the genre from the filter
+  function genreClicked (genre) {
     const { movieGenreName } = genre;
     const genreRef = genresRef[movieGenreName];
 
+    // If the genre is not 100% visible, slide
     if (!isVisible(genreRef.current, 'left'))
       slideLeft();
     else if (!isVisible(genreRef.current, 'right'))
@@ -175,7 +170,7 @@ const Genres = props => {
           ref={genresRef[name]}
           isDisabled={isDisabled}
           isActive={selectedGenres.includes(name)}
-          onClick={() => genreClicked(genre, isDisabled)}
+          onClick={() => genreClicked(genre)}
         >
           <p>
             {name}
@@ -218,3 +213,30 @@ const Genres = props => {
 };
 
 export default Genres;
+
+
+/**
+ * function checkIfOverflows () {
+    const first = Object.values(genresRef)[0]?.current;
+    const last = Object.values(genresRef).reverse()[0]?.current;
+
+
+    if (!first || !last)
+      return;
+
+    // setIsOverflow(false);
+    // Set offset to 0 when resizing, to calculate properly
+    if (!leftEnd && !isVisible(first)) {
+      setOffset(0);
+    }
+
+    // TODO: this is just a hack, rework logic
+    setTimeout(() => {
+      if (!isVisible(first, 'left') || !isVisible(last, 'right')) {
+        setIsOverflow(true);
+      } else
+        setIsOverflow(false);
+    });
+
+  }
+ */

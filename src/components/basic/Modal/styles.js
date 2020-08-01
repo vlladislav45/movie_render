@@ -15,7 +15,7 @@ export const ModalWrapper = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  background: ${props => props.theme.isDark ? '#000000' : '#000000'}88;
+  background: #00000088;
   z-index: ${MAX_Z_INDEX};
   overflow: hidden;
   

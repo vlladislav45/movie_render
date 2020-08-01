@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
-import { ConnectionHandler, Loading } from './components';
+import { ConnectionHandler, Loading, NavigationDrawer } from './components';
 import { SnackBar } from './components/basic';
 import { Prompt } from 'components';
 import { TopNavBar } from './modules/navigation';
@@ -15,19 +15,18 @@ import { checkMedia } from './utils/mediaUtils';
 import { MainContent } from './baseStyles';
 
 class InitializationLayer extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.getWindowDimensions = debounce(this.getWindowDimensions, 300).
-      bind(this);
+    this.getWindowDimensions = debounce(this.getWindowDimensions, 300).bind(this);
   }
-
-  getWindowDimensions () {
+  
+  getWindowDimensions() {
     const media = checkMedia();
     this.props.changeWindowDimensions(window.innerWidth, window.innerHeight,
       media);
   }
-
-  componentDidMount () {
+  
+  componentDidMount() {
     // Wait for redux to be imported in BaseApi, so authorization header is added
     // TODO: On slower devices this may cause problems
     setTimeout(() => {
@@ -35,27 +34,28 @@ class InitializationLayer extends React.Component {
     }, 200);
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
-
+    
     document.body.style.background = this.props.themeColors.surface;
   }
-
-  componentWillUnmount () {
+  
+  componentWillUnmount() {
     window.removeEventListener('resize', this.getWindowDimensions);
   }
-
-
-  render () {
+  
+  
+  render() {
     return (
       <ThemeProvider theme={this.props.themeColors}>
-        {/*<ConnectionHandler/>*/}
-        <Prompt {...this.props.promptProps} />
-        <SnackBar/>
-        <TopNavBar/>
-        <MainContent>
-          <Router history={browserHistory}>
+        <Router history={browserHistory}>
+          {/*<ConnectionHandler/>*/}
+          <TopNavBar/>
+          <NavigationDrawer/>
+          <Prompt {...this.props.promptProps} />
+          <SnackBar/>
+          <MainContent>
             <RoutingLayer/>
-          </Router>
-        </MainContent>
+          </MainContent>
+        </Router>
       </ThemeProvider>
     );
   }
