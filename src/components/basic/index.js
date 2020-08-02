@@ -5,6 +5,7 @@ import Button from './Button';
 import Modal from './Modal';
 import SnackBar from './SnackBar';
 import Chip from './Chip';
+import Switch from './Switch';
 
 export {
   MaterialSurface,
@@ -14,4 +15,5 @@ export {
   Modal,
   SnackBar,
   Chip,
+  Switch,
 };

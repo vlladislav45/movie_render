@@ -39,7 +39,7 @@ export default {
     error: '#CF6679',
     neon: '#9d71ea', // was #00909e
     isDark: true,
-    overlay: '#000000',
+    overlay: '#121212', // was black
     contrast: '#FFFFFF',
   }
 };

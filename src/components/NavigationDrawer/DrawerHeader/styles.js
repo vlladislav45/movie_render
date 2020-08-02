@@ -22,13 +22,11 @@ export const LogoutButton = styled(Button)`
   grid-area: 3 / 1 / 3 / -1;
 `
 
-// export const NotLoggedInText = styled.p`
-//
-//   font-size: 1.2rem;
-//   font-family: 'Lato', sans-serif;
-//   white-space: pre-wrap;
-//   line-height: 40px;
-// `;
+export const DarkModeToggle = styled.span`
+  grid-area: 3 / 5 / 3 / -1;
+  display: flex;
+  align-items: center;
+`;
 
 export const ProfilePhoto = styled(ProfileImage)``;
 
