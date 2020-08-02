@@ -35,10 +35,7 @@ const DrawerMenu = () => {
     return !bookmarks.some(bookmark => Number(bookmark.movieId) === Number(selectedMovieInfo.movieId))
   }, [selectedMovieInfo, location.pathname])
   
-  function toggleTheme() {
-    dispatch(isDark ? setBaseTheme : setDarkTheme);
-  }
-  
+
   const logOut = () => dispatch(logout());
   return (
     <>

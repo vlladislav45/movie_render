@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { finishRedirect } from 'reducers/auth';
-import { Modal } from 'components/basic';
+import { setBaseTheme, setDarkTheme } from 'reducers/themeReducer';
+import { Modal, Switch } from 'components/basic';
 import { Loading } from 'components';
 import RegisterForm from 'modules/authentication/RegisterForm';
 import LoginForm from 'modules/authentication/LoginForm';
 import {
+  DarkModeToggle,
   HeaderPrimaryText, HeaderSecondaryText,
   LoginButton,
-  NotLoggedInText,
   ProfilePhoto,
   RegisterButton,
   StyledDrawerHeader
@@ -21,10 +22,11 @@ const DrawerHeader = () => {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   
-  const { isLoggedIn, redirectToLogin, isLoading } = useSelector(({ auth }) => ({
+  const { isLoggedIn, redirectToLogin, isLoading, isDark } = useSelector(({ auth, themeReducer: { themeColors } }) => ({
     isLoggedIn: auth.isLoggedIn,
     redirectToLogin: auth.redirectToLogin,
     isLoading: auth.isLoading,
+    isDark: themeColors.isDark,
   }));
   
   useEffect(() => {
@@ -34,6 +36,11 @@ const DrawerHeader = () => {
       dispatch(finishRedirect());
     }
   }, [redirectToLogin]);
+  
+  function toggleTheme() {
+    dispatch(isDark ? setBaseTheme : setDarkTheme);
+  }
+  
   
   function renderAnonymousHeader() {
     return (
@@ -87,6 +94,10 @@ const DrawerHeader = () => {
     <StyledDrawerHeader>
       {isLoading && <Loading/>}
       {isLoggedIn ? renderAuthenticatedHeader() : renderAnonymousHeader()}
+      <DarkModeToggle>
+        {isDark ? 'Normal mode' : 'Dark mode'}
+        <Switch onCheckedStateChange={toggleTheme}/>
+      </DarkModeToggle>
     </StyledDrawerHeader>
   );
 };
