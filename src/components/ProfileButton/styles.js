@@ -3,9 +3,9 @@ import {
   transitionDurations,
   transitionFunctions,
 } from 'config/animationConstants';
-import { ThemedComponent } from '../basic';
+import { MaterialSurface } from '../basic';
 
-export const StyledProfileButton = styled(ThemedComponent)`
+export const StyledProfileButton = styled(MaterialSurface)`
   display: flex;
   justify-content: space-around;
   align-items: center;

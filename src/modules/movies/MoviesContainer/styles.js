@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ThemedComponent } from 'components/basic';
+import { MaterialSurface } from 'components/basic';
 
 // TODO: Responsive
 export const StyledMoviesContainer = styled.div`${props => {
@@ -77,7 +77,7 @@ export const MoviesGrid = styled.div`${props => {
     `;
 }}`;
 
-export const SingleMovieLink = styled(ThemedComponent)`${props => {
+export const SingleMovieLink = styled(MaterialSurface)`${props => {
   return `
     padding: 5px 0;
     // Margin between all the children

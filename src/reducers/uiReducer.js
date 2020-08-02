@@ -1,5 +1,5 @@
-const TOGGLE_USER_DROP_DOWN = 'TOGGLE_USER_DROP_DOWN';
-const CLOSE_DROP_DOWN = 'CLOSE_DROP_DOWN';
+const TOGGLE_NAVIGATION_DRAWER = 'TOGGLE_NAVIGATION_DRAWER';
+const CLOSE_DRAWER = 'CLOSE_DRAWER';
 const CHANGE_WINDOW_DIMENSIONS = 'CHANGE_WINDOW_DIMENSIONS';
 const ENQUEUE_SNACKBAR_NOTIFICATION = 'ENQUEUE_SNACKBAR_NOTIFICATION';
 const DEQUEUE_SNACKBAR_NOTIFICATION = 'DEQUEUE_SNACKBAR_NOTIFICATION';
@@ -10,12 +10,12 @@ export const changeWindowDimensions = (width, height, device) => ({
   payload: { width, height, device },
 });
 
-export const toggleUserDropDown = () => ({
-  type: TOGGLE_USER_DROP_DOWN,
+export const toggleNavigationDrawer = () => ({
+  type: TOGGLE_NAVIGATION_DRAWER,
 });
 
-export const closeUserDropDown = () => ({
-  type: CLOSE_DROP_DOWN,
+export const closeNavigationDrawer = () => ({
+  type: CLOSE_DRAWER,
 });
 
 export const enqueueSnackbarMessage = (message, actions, options) => ({
@@ -34,7 +34,7 @@ export const promptUser = promptProps => ({
 
 const initialState = {
   windowDimensions: {},
-  userDropDownOpen: false,
+  drawerOpen: false,
   snackbarQueue: [],
   prompt: {
     props: {},
@@ -45,15 +45,15 @@ export default (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case TOGGLE_USER_DROP_DOWN:
+    case TOGGLE_NAVIGATION_DRAWER:
       return {
         ...state,
-        userDropDownOpen: !state.userDropDownOpen,
+        drawerOpen: !state.drawerOpen,
       };
-    case CLOSE_DROP_DOWN:
+    case CLOSE_DRAWER:
       return {
         ...state,
-        userDropDownOpen: false,
+        drawerOpen: false,
       };
     case CHANGE_WINDOW_DIMENSIONS:
       return {

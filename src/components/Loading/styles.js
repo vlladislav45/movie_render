@@ -11,11 +11,11 @@ export const LoadingOuter = styled.div`
     width: 100%;
     height: 100%;
 `;
-
+// Check if the zIndex works properly in modals
 export const LoadingInner = styled.div`
     position: relative;
     // Even above modals
-    z-index: ${props => MAX_Z_INDEX + props.elevation};
+    z-index: ${props => MAX_Z_INDEX - 1 + props.elevation};
     background: ${props => props.theme.disabled}33;
     backdrop-filter: blur(2px);
     min-width: 100px;

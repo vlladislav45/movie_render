@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleUserDropDown } from 'reducers/uiReducer';
+import { toggleNavigationDrawer } from 'reducers/uiReducer';
 import withRipple from 'HOC/withRipple';
 import { ProfileImage } from '../basic';
 import { ReactComponent as ArrowIcon } from 'assets/icons/arrow_drop_down-24px.svg';
@@ -10,7 +10,7 @@ export const ProfileButton = () => {
   const dispatch = useDispatch();
 
   const toggleDropDown = () => {
-    dispatch(toggleUserDropDown());
+    dispatch(toggleNavigationDrawer());
   };
 
   const {
