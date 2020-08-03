@@ -46,7 +46,7 @@ const MoviesContainer = ({ history, location }) => {
       selectedPage: moviesReducer.selectedPage,
       moviesPerPage: moviesReducer.moviesPerPage,
       filters: moviesReducer.filters,
-      isLoading: isOnline && moviesReducer.isLoading,
+      isLoading: moviesReducer.isLoading,
     }));
 
   const [prevPage, setPrevPage] = useState(selectedPage);
@@ -128,6 +128,7 @@ const MoviesContainer = ({ history, location }) => {
       },
     );
   }
+  
 
   return (
     <StyledMoviesContainer

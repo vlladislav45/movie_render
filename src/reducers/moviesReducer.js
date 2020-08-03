@@ -27,7 +27,7 @@ export const fetchGenres = () => dispatch => {
   if (cachedGenres !== null) {
     dispatch({
       type: FETCH_GENRES,
-      payload: cachedGenres,
+      payload: JSON.parse(cachedGenres),
     })
     return;
   }
@@ -39,7 +39,7 @@ export const fetchGenres = () => dispatch => {
   MovieAPI.getGenres().then(res => {
     const { data } = res;
     
-    localStorage.setItem(GENRES_STORAGE_KEY, data)
+    localStorage.setItem(GENRES_STORAGE_KEY, JSON.stringify(data))
     dispatch({
       type: FETCH_GENRES,
       payload: data,

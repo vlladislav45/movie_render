@@ -1,6 +1,7 @@
-import BaseAPI, { RETRY_CONNECTION_TIMEOUT } from 'api/BaseAPI';
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
+import BaseAPI, { RETRY_CONNECTION_TIMEOUT } from 'api/BaseAPI';
 import { finishedRequest, serverUp } from 'reducers/connectionReducer';
 import { enqueueSnackbarMessage } from 'reducers/uiReducer';
 import { checkInternetConnection, ConnectionStatus } from 'utils/apiUtils';
@@ -10,6 +11,7 @@ import Timer from '../Timer';
  * Utility component for managing connection
  */
 const ConnectionHandler = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const {
@@ -66,8 +68,10 @@ const ConnectionHandler = () => {
   ));
 
   useEffect(() => {
+    console.log('tuuk')
     if (!serverOnline)
-      enqueueError('Server is not responding!');
+      history.push('/error', { error: 'Server is not responding'})
+      // enqueueError('Server is not responding!');
   }, [serverOnline]);
 
   useEffect(() => {

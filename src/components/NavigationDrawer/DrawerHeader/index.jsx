@@ -98,7 +98,7 @@ const DrawerHeader = () => {
         <MoonIcon
           isDark={isDark}
         />
-        <Switch onCheckedStateChange={toggleTheme}/>
+        <Switch color='secondary' onCheckedStateChange={toggleTheme}/>
       </DarkModeToggle>
     </StyledDrawerHeader>
   );
