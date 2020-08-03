@@ -8,9 +8,9 @@ import { ErrorMessage, FormTitle, LoginContainer, LoginForm } from './styles';
 
 export default () => {
   const dispatch = useDispatch();
-  const { isLoading, loginError } = useSelector(({ auth }) => ({
+  const { isLoading, loginError } = useSelector(({ auth, connectionReducer }) => ({
     isLoading: auth.isLoading,
-    loginError: auth.loginError,
+    loginError: connectionReducer.isOnline && auth.loginError,
   }));
 
   //TODO: debounce checking for username availability

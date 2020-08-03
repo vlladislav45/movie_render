@@ -41,7 +41,7 @@ const MoviesContainer = ({ history, location }) => {
     selectedPage = 1,
     isLoading, filters,
   } = useSelector(
-    ({ moviesReducer }) => ({
+    ({ moviesReducer, connectionReducer: { isOnline } }) => ({
       movies: moviesReducer.movies,
       selectedPage: moviesReducer.selectedPage,
       moviesPerPage: moviesReducer.moviesPerPage,
@@ -128,6 +128,7 @@ const MoviesContainer = ({ history, location }) => {
       },
     );
   }
+  
 
   return (
     <StyledMoviesContainer

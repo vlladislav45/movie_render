@@ -21,28 +21,39 @@ const RESET_FILTER = 'RESET_FILTER';
 // Rating
 const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
 
+const GENRES_STORAGE_KEY = 'genres';
 export const fetchGenres = () => dispatch => {
+  const cachedGenres = localStorage.getItem(GENRES_STORAGE_KEY);
+  if (cachedGenres !== null) {
+    dispatch({
+      type: FETCH_GENRES,
+      payload: JSON.parse(cachedGenres),
+    })
+    return;
+  }
+  
+  dispatch({
+    type: START_LOADING_GENRES,
+  });
+  
   MovieAPI.getGenres().then(res => {
     const { data } = res;
-
-    dispatch({
-      type: START_LOADING_GENRES,
-    });
-
+    
+    localStorage.setItem(GENRES_STORAGE_KEY, JSON.stringify(data))
     dispatch({
       type: FETCH_GENRES,
       payload: data,
     });
-  });
+  }).catch(err => alert(err));
 };
 
 export const fetchMovies = (page, size) => (dispatch, getState) => {
   dispatch({
     type: START_LOADING_ALL,
   });
-
+  
   const { moviesReducer: { filters } } = getState();
-
+  
   MovieAPI.getByPage(page, size, { ...filters }).then(res => {
     const { data } = res;
     dispatch({
@@ -57,7 +68,7 @@ export const fetchMovies = (page, size) => (dispatch, getState) => {
 
 export const getMoviesCount = () => (dispatch, getState) => {
   const { moviesReducer: { filters } } = getState();
-
+  
   MovieAPI.getMoviesCount({ ...filters }).then(res => {
     const { data } = res;
     dispatch({
@@ -74,7 +85,7 @@ export const fetchSingleMovie = movieId => dispatch => {
   dispatch({
     type: START_LOADING_SINGLE,
   });
-
+  
   MovieAPI.getSingleMovie(movieId).then(res => {
     const { data } = res;
     dispatch({

@@ -46,6 +46,7 @@ const initialState = {
   serverOnline: true,
   networkOnline: window.navigator.onLine,
   internetOnline: true,
+  isOnline: window.navigator.onLine, // this will be true if all other variables are true
 };
 
 export default (state = initialState, action) => {
@@ -71,31 +72,37 @@ export default (state = initialState, action) => {
       return {
         ...state,
         networkOnline: false,
+        isOnline: false,
       };
     case NETWORK_UP:
       return {
         ...state,
         networkOnline: true,
+        isOnline: true,
       };
     case INTERNET_ERROR:
       return {
         ...state,
         internetOnline: false,
+        isOnline: false,
       };
     case INTERNET_UP:
       return {
         ...state,
         internetOnline: true,
+        isOnline: true,
       };
     case SERVER_ERROR:
       return {
         ...state,
         serverOnline: false,
+        isOnline: true,
       };
     case SERVER_UP:
       return {
         ...state,
         serverOnline: true,
+        isOnline: true,
       };
     default:
       return state;

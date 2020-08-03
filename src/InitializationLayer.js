@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from 'utils/browserHistory';
-import { ConnectionHandler, Loading, NavigationDrawer } from './components';
+import { ConnectionHandler, ErrorBoundary, Loading, NavigationDrawer } from './components';
 import { SnackBar } from './components/basic';
 import { Prompt } from 'components';
 import { TopNavBar } from './modules/navigation';
@@ -47,15 +47,18 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <Router history={browserHistory}>
-          {/*<ConnectionHandler/>*/}
+          <ConnectionHandler/>
           <TopNavBar/>
           <NavigationDrawer/>
           <Prompt {...this.props.promptProps} />
           <SnackBar/>
           <MainContent>
-            <RoutingLayer/>
+            <ErrorBoundary>
+              <RoutingLayer/>
+            </ErrorBoundary>
           </MainContent>
         </Router>
+        {/*Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>*/}
       </ThemeProvider>
     );
   }

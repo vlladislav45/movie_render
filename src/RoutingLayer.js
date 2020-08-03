@@ -10,6 +10,7 @@ import { Loading } from './components';
 const MainPage = React.lazy(() => import('pages/MainPage'));
 const ProfilePage = React.lazy(() => import('pages/ProfilePage'));
 const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));
+const ErrorPage = React.lazy(() => import('pages/ErrorPage'));
 
 
 export default () => (
@@ -19,6 +20,7 @@ export default () => (
         <Route exact path='/' component={MainPage}/>
         <Route path='/profile' component={ProfilePage}/>
         <Route path='/movie/:movieId' component={SingleMoviePage}/>
+        <Route path='/error' component={ErrorPage}/>
         <Redirect to='/'/>
       </Switch>
     </React.Suspense>

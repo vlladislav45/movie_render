@@ -8,6 +8,7 @@ import Tabs from './Tabs';
 import ConnectionHandler from './ConnectionHandler';
 import Prompt from './Prompt';
 import NavigationDrawer from './NavigationDrawer';
+import ErrorBoundary from './ErrorBoundary';
 
 export {
   ProfileButton,
@@ -20,4 +21,5 @@ export {
   ConnectionHandler,
   Prompt,
   NavigationDrawer,
+  ErrorBoundary,
 };
