@@ -3,7 +3,7 @@ import { transitionFunctions, transitionDurations } from 'config/animationConsta
 import { MAX_Z_INDEX } from 'config/zIndexes';
 import { MaterialSurface } from '../basic';
 import DrawerHeader from './DrawerHeader';
-import { L, lessThen, M } from '../../utils/mediaUtils';
+import { L, lessThen, M, SM } from '../../utils/mediaUtils';
 
 export const Overlay = styled.div`
   position: fixed;
@@ -30,8 +30,7 @@ export const Drawer = styled(MaterialSurface)`
   left: 0;
   top: 0;
   height: 100%;
-  width: 40%;
-  min-width: 360px;
+  width: 300px;
   border-top-left-radius: 0!important;
   border-bottom-left-radius: 0!important;
   
@@ -46,10 +45,9 @@ export const Drawer = styled(MaterialSurface)`
     const { responsive: { device, width } } = props;
     const FREE_SPACE_ON_MOBILE = 56;
     return `
-      ${lessThen(device, M) && `
+      ${lessThen(device, SM) && `
         width: ${width - FREE_SPACE_ON_MOBILE}px;
-        max-width: ${width - FREE_SPACE_ON_MOBILE}px;
-        min-width: ${width - FREE_SPACE_ON_MOBILE}px;
+        max-width: 300px;
       `}
     `
     }

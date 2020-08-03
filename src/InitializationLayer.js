@@ -56,6 +56,7 @@ class InitializationLayer extends React.Component {
             <RoutingLayer/>
           </MainContent>
         </Router>
+        {/*Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>*/}
       </ThemeProvider>
     );
   }

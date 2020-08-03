@@ -30,9 +30,9 @@ export default () => {
   const [passwordError, setPasswordError] = useState(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
-  const { isLoading, registerError } = useSelector(({ auth }) => ({
+  const { isLoading, registerError } = useSelector(({ auth, connectionReducer }) => ({
     isLoading: auth.isLoading,
-    registerError: auth.registerError,
+    registerError: connectionReducer.isOnline && auth.registerError,
   }));
 
   useEffect(() => {

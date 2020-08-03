@@ -10,7 +10,7 @@ import LoginForm from 'modules/authentication/LoginForm';
 import {
   DarkModeToggle,
   HeaderPrimaryText, HeaderSecondaryText,
-  LoginButton,
+  LoginButton, MoonIcon,
   ProfilePhoto,
   RegisterButton,
   StyledDrawerHeader
@@ -95,7 +95,9 @@ const DrawerHeader = () => {
       {isLoading && <Loading/>}
       {isLoggedIn ? renderAuthenticatedHeader() : renderAnonymousHeader()}
       <DarkModeToggle>
-        {isDark ? 'Normal mode' : 'Dark mode'}
+        <MoonIcon
+          isDark={isDark}
+        />
         <Switch onCheckedStateChange={toggleTheme}/>
       </DarkModeToggle>
     </StyledDrawerHeader>
