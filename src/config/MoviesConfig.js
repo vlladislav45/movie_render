@@ -1,1 +1,20 @@
-export const DEFAULT_MOVIES_PER_PAGE = 9;
+import { checkMedia, XS_SM, SM, lessThen, greaterThen, M, L, XL, FULL_HD } from 'utils/mediaUtils';
+
+export const getMoviesPerPage = () => {
+  const media = checkMedia();
+  console.log(media)
+  switch (media) {
+    case XS_SM:
+    case SM:
+      return 1
+    case M:
+    case L:
+      return 3;
+    case XL:
+      return 6;
+    case FULL_HD:
+      return 9;
+    default:
+      return 1;
+  }
+}

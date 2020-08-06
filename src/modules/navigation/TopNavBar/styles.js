@@ -25,6 +25,7 @@ export const StyledTopNav = styled.div`
     // We dont need anything positioned right below it
     margin-bottom: 30px;
     
+    // TODO: Maybe dark theme overlay is too much
     box-shadow: ${applyShadow(16)};
     ${isDark && `
       box-shadow: ${applyShadow(16)},

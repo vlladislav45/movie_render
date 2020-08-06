@@ -35,8 +35,8 @@ const SimilarMovies = props => {
         {STUB_MOVIES.map((m, i) => (
           <MovieLink key={i}>
             <MovieName>{m}</MovieName>
-            <MoviePoster
-              src={stubImages[i]}/>
+            {/*<MoviePoster*/}
+            {/*  src={stubImages[i]}/>*/}
           </MovieLink>
         ))}
       </Movies>

@@ -96,7 +96,7 @@ const DrawerHeader = () => {
       {isLoggedIn ? renderAuthenticatedHeader() : renderAnonymousHeader()}
       <DarkModeToggle>
         <MoonIcon
-          isDark={isDark}
+          $isDark={isDark}
         />
         <Switch color='secondary' onCheckedStateChange={toggleTheme}/>
       </DarkModeToggle>

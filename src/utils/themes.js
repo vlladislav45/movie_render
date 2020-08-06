@@ -33,8 +33,8 @@ export default {
     surface: '#102427', // 12% primary on surface (#121212)
     onSurface: '#e2e3e4', // 87% white on surface
     onSurfaceMD: '#a5aaab', // 60% white on surface
-    onPrimary: '#000000',
-    onSecondary: '#000000',
+    onPrimary: '#111d1e',
+    onSecondary: '#18141f',
     disabled: '#747b7c', // 38% white on surface
     error: '#CF6679',
     neon: '#9d71ea', // was #00909e
@@ -44,4 +44,4 @@ export default {
   }
 };
 //#465355
-console.log(getOverlay('#121212', '#00ACC1', 0.12, true));
+console.log(getOverlay('#ba9bef', '#000000', 0.87, true));

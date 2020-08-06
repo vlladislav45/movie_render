@@ -47,7 +47,7 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <Router history={browserHistory}>
-          <ConnectionHandler/>
+          {/*<ConnectionHandler/>*/}
           <TopNavBar/>
           <NavigationDrawer/>
           <Prompt {...this.props.promptProps} />

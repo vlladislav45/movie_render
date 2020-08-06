@@ -24,88 +24,92 @@ const BASE_POSTER_URL = API_URL + 'movies/single/hdPoster/';
 const SingleMovie = ({ match: { params }, history }) => {
   const dispatch = useDispatch();
   const { movieId } = params;
-
+  
   const { vmax: screenWidth } = useDeviceDimensions();
   const [videoRef, setVideoRef] = useState();
   const [prevGenres, setPrevGenres] = useState();
-
+  
   const { selectedMovie, previousGenres, isLoading } = useSelector(
     ({ moviesReducer: { selectedMovie, filters: { genres } } }) => ({
       selectedMovie: selectedMovie.movieInfo,
       previousGenres: genres,
       isLoading: selectedMovie.isLoading,
     }));
-
+  
   useEffect(() => {
     dispatch(fetchSingleMovie(movieId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieId]);
-
+  
   const {
     posterName, movieSummary, directorName,
     actorNames = [], movieYear, movieViews,
-    movieRating, movieName, movieGenres,
+    movieName, movieGenres,
   } = selectedMovie;
-
+  
   useEffect(() => {
     setPrevGenres(previousGenres);
     dispatch(updateFilter({ genres: movieGenres }));
     return () => dispatch(updateFilter({ genres: prevGenres }));
   }, [movieGenres]);
-
+  
   if (!posterName)
     return null;
-
+  
   return (
-    <SingleMovieWrapper>
-      {isLoading && <Loading/>}
-      <BackArrowWrapper
-        color='primary'
-        onClick={() => history.goBack()}
-        Icon={BackArrow}
+    <>
+      <Loading isLoading={isLoading}/>
+      <SingleMovieWrapper
+        fadeIn={!isLoading}
       >
-        BACK
-      </BackArrowWrapper>
-      <MovieVideo
-        width={screenWidth / 3}
-        height={(screenWidth / 3) / MOVIE_RATIO}
-        ref={ref => setVideoRef(ref)}
-        controls
-        poster={BASE_POSTER_URL + posterName}
-        // onCanPlay={() => forceRender(true)}
-        // onLoadStart={() => console.log('ONLOAD_START')}
-      >
-        <source src={`${API_URL}stream/mp4/Kenpachi`} type="video/mp4"/>
-      </MovieVideo>
-      <MovieTitle>
-        <p>{movieName}</p>
-      </MovieTitle>
-      <MovieSummary
-        videoRef={videoRef}
-        summary={movieSummary}
-        movieId={movieId}
-      />
-      <MoreInfoGrid>
-        <RatingSection
-          movieName={movieName}
+        <BackArrowWrapper
+          color='primary'
+          onClick={() => history.goBack()}
+          Icon={BackArrow}
+        >
+          BACK
+        </BackArrowWrapper>
+        <MovieVideo
+          width={screenWidth / 3}
+          height={(screenWidth / 3) / MOVIE_RATIO}
+          ref={ref => setVideoRef(ref)}
+          controls
+          poster={BASE_POSTER_URL + posterName}
+          // onCanPlay={() => forceRender(true)}
+          // onLoadStart={() => console.log('ONLOAD_START')}
+        >
+          <source src={`${API_URL}stream/mp4/Kenpachi`} type="video/mp4"/>
+        </MovieVideo>
+        <MovieTitle>
+          <p>{movieName}</p>
+        </MovieTitle>
+        <MovieSummary
+          videoRef={videoRef}
+          summary={movieSummary}
           movieId={movieId}
         />
-        <span className='movieInfo views'>
+        <MoreInfoGrid>
+          <RatingSection
+            movieName={movieName}
+            movieId={movieId}
+          />
+          <span className='movieInfo views'>
           <span>{movieViews}</span>
         </span>
-        <span className='movieInfoName views'>Views</span>
-        <span className='movieInfoName year'>Year:</span>
-        <span className='movieInfo year'>
+          <span className='movieInfoName views'>Views</span>
+          <span className='movieInfoName year'>Year:</span>
+          <span className='movieInfo year'>
           <span> {movieYear}</span>
         </span>
-        <span className='movieInfoName director'>Director:</span>
-        <span className='movieInfo director'>
+          <span className='movieInfoName director'>Director:</span>
+          <span className='movieInfo director'>
           <span>{directorName}</span>
         </span>
-        <Actors actors={actorNames}/>
-      </MoreInfoGrid>
-      <SimilarMovies/>
-    </SingleMovieWrapper>
+          <Actors actors={actorNames}/>
+        </MoreInfoGrid>
+        <SimilarMovies/>
+      </SingleMovieWrapper>
+    </>
   );
 };
 

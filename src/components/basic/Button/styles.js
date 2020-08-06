@@ -162,7 +162,7 @@ export const TextButton = styled(BaseButton)`${props => {
     }
     
     &:focus, &:active {
-      background: ${getOverlay(theme.surface, textColor, 0.12)};
+      background: ${textColor}25;
     }
     
     ${disabled && `

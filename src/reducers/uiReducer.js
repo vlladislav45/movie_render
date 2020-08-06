@@ -18,6 +18,18 @@ export const closeNavigationDrawer = () => ({
   type: CLOSE_DRAWER,
 });
 
+// noinspection JSClosureCompilerSyntax
+/**
+ *     errorMessage(msg),
+ { ['retry now']: retryConnection },
+ {
+      closeOnAction: ['retry now'],
+      autoCloseAfter: RETRY_CONNECTION_TIMEOUT,
+    },
+ * @param message any jsx or text
+ * @param actions object with key = action text and value function when click on action
+ * @param options {@link components/basic/Snackbar} for available options
+ */
 export const enqueueSnackbarMessage = (message, actions, options) => ({
   type: ENQUEUE_SNACKBAR_NOTIFICATION,
   payload: { message, actions, options },

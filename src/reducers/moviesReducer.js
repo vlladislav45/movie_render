@@ -1,5 +1,5 @@
 import MovieAPI from 'api/MovieAPI';
-import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
+import { getMoviesPerPage } from 'config/MoviesConfig';
 
 //Genres
 const START_LOADING_GENRES = 'START_LOADING_GENRES';
@@ -44,7 +44,7 @@ export const fetchGenres = () => dispatch => {
       type: FETCH_GENRES,
       payload: data,
     });
-  }).catch(err => alert(err));
+  }).catch(err => alert(err.data));
 };
 
 export const fetchMovies = (page, size) => (dispatch, getState) => {
@@ -102,7 +102,7 @@ export const changeSelectedPage = newPage => ({
 
 export const changeMoviesPerPage = moviesPerPage => ({
   type: CHANGE_MOVIES_PER_PAGE,
-  payload: moviesPerPage || DEFAULT_MOVIES_PER_PAGE,
+  payload: moviesPerPage || getMoviesPerPage,
 });
 
 // FILTER
@@ -139,7 +139,7 @@ const initialState = {
   movies: [],
   count: 0,
   selectedPage: 0,
-  moviesPerPage: DEFAULT_MOVIES_PER_PAGE,
+  moviesPerPage: getMoviesPerPage(),
   isLoading: false,
   genresLoading: false,
   selectedMovie: {
