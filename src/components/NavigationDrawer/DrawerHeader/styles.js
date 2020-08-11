@@ -54,7 +54,7 @@ export const MoonIcon = styled(DarkModeIcon)`
   width: 24px;
   height: 24px;
   
-  ${({ isDark, theme }) => isDark && `
+  ${({ $isDark, theme }) => $isDark && `
     & >.moon {
       fill: ${theme.onSurface};
       &.moonShadow {

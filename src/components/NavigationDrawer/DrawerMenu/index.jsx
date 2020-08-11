@@ -1,12 +1,11 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setBaseTheme, setDarkTheme } from 'reducers/themeReducer';
 import { logout } from 'reducers/auth';
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout-24px.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/profile-24px.svg';
 import { ReactComponent as BookmarkIcon } from 'assets/icons/bookmark.svg';
-import { ReactComponent as NotInBookmarkIcon } from 'assets/icons/not_in_bookmark.svg';
+import { ReactComponent as SelectedMovieIcon } from 'assets/icons/selected_movie_icon.svg';
 import { ReactComponent as HomeIcon } from 'assets/icons/home.svg';
 import MenuItem from './MenuItem';
 import { MenuItems, MenuItemTitle } from './styles';
@@ -16,14 +15,12 @@ const DrawerMenu = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   
-  const { isDark, bookmarks, isLoggedIn, selectedMovieInfo } = useSelector(
+  const { bookmarks, isLoggedIn, selectedMovieInfo } = useSelector(
     ({
-       themeReducer: { themeColors },
-       bookmarksReducer: { bookmarks },
+       userReducer: { bookmarks },
        auth: { isLoggedIn },
        moviesReducer: { selectedMovie: { movieInfo: selectedMovieInfo } },
      }) => ({
-      isDark: themeColors.isDark,
       bookmarks,
       isLoggedIn,
       selectedMovieInfo,
@@ -33,14 +30,26 @@ const DrawerMenu = () => {
     if (!selectedMovieInfo.movieId || location.pathname.split('/')[1] !== 'movie') return false;
     // If it is not in the bookmarks
     return !bookmarks.some(bookmark => Number(bookmark.movieId) === Number(selectedMovieInfo.movieId))
-  }, [selectedMovieInfo, location.pathname])
+  }, [selectedMovieInfo, location.pathname, isLoggedIn])
   
-
-  const logOut = () => dispatch(logout());
+  function logOut() {
+    dispatch(logout())
+  }
+  
   return (
     <>
       <MenuItems>
         <MenuItemTitle>Navigation</MenuItemTitle>
+        {/* First item should be the current movie page */}
+        {shouldRenderCurrentMovie && (
+          <MenuItem
+            autoFocus
+            to={location.pathname}
+            name={selectedMovieInfo.movieName}
+            icon={SelectedMovieIcon}
+            isActive={true}
+          />
+        )}
         <MenuItem
           name='Home'
           to='/'
@@ -58,6 +67,7 @@ const DrawerMenu = () => {
             <MenuItem
               name='Logout'
               onClick={logOut}
+              to={location.pathname}
               icon={LogoutIcon}
             />
           </>
@@ -67,17 +77,6 @@ const DrawerMenu = () => {
       {isLoggedIn && (
         <MenuItems>
           <MenuItemTitle>Bookmarks</MenuItemTitle>
-          {/* First item should be the current movie page */}
-          {shouldRenderCurrentMovie && (
-            <MenuItem
-              autoFocus
-              title='This movie is not added to your bookmarks'
-              to={location.pathname}
-              name={selectedMovieInfo.movieName}
-              icon={NotInBookmarkIcon}
-              isActive={true}
-            />
-          )}
           {bookmarks.map(bookmark => {
             return (
               <MenuItem

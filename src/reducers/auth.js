@@ -1,7 +1,10 @@
 import AuthAPI from 'api/AuthAPI';
 import { JWT_TOKEN } from 'config/authConstants';
+import { enqueueSnackbarMessage } from './uiReducer';
+import { setBookmarks } from './userReducer';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const TOKEN_EXPIRED = 'TOKEN_EXPIRED';
 const START_LOADING = 'START_LOADING';
 const LOGIN_FAILED = 'LOGIN_FAILED';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -12,12 +15,12 @@ const CHANGE_MODAL_STATE = 'CHANGE_MODAL_STATE';
 
 export const checkToken = () => dispatch => {
   const jwt = localStorage.getItem(JWT_TOKEN);
-
+  
   if (jwt) {
     dispatch({
       type: START_LOADING,
     });
-
+    
     AuthAPI.checkToken(jwt).then(({ data }) => {
       if (data.user) {
         dispatch({
@@ -33,7 +36,7 @@ export const attemptLogin = (username, password) => dispatch => {
   dispatch({
     type: START_LOADING,
   });
-
+  
   AuthAPI.login({ username, password }).then(res => {
     const { data } = res;
     if (data.error)
@@ -68,7 +71,7 @@ export const attemptRegister = credentials => dispatch => {
   dispatch({
     type: START_LOADING,
   });
-
+  
   AuthAPI.register(credentials).then(res => {
     const { data } = res;
     if (data.error)
@@ -84,10 +87,29 @@ export const attemptRegister = credentials => dispatch => {
 
 export const logout = () => dispatch => {
   localStorage.removeItem(JWT_TOKEN);
+  // Empty user bookmarks
+  dispatch(setBookmarks([]));
   dispatch({
     type: LOGOUT,
   })
 };
+
+export const tokenExpired = () => dispatch => {
+  if (!localStorage.getItem(JWT_TOKEN)) return; // Dont dispatch multiple snackbar messages
+  dispatch(logout());
+  dispatch({ type: TOKEN_EXPIRED });
+  dispatch(enqueueSnackbarMessage(
+    'Session expired, please login again',
+    {
+      ['Login']: () => dispatch(changeModalState({ login: true, register: false })),
+      ['Cancel']: () => {
+      }
+    },
+    {
+      closeOnAction: ['Cancel', 'Login'],
+    }
+  ))
+}
 
 export const finishRedirect = () => ({
   type: FINISH_REDIRECT,
@@ -132,11 +154,6 @@ export default (state = initialState, action) => {
         isLoggedIn: true,
         isLoading: false,
         loggedInUser: payload,
-        //TODO: Do i need to close modals when login?
-        modalsOpen: {
-          login: false,
-          register: false,
-        }
       };
     case LOGIN_FAILED:
       return {

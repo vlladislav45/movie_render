@@ -68,7 +68,6 @@ const ConnectionHandler = () => {
   ));
 
   useEffect(() => {
-    console.log('tuuk')
     if (!serverOnline)
       history.push('/error', { error: 'Server is not responding'})
       // enqueueError('Server is not responding!');

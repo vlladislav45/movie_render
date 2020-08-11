@@ -21,7 +21,7 @@ const SearchBar = props => {
   const dispatch = useDispatch();
   
   const handleChange = React.useCallback(debounce(e => {
-    dispatch(updateFilter({ search: e.target.value }));
+    dispatch(updateFilter({ searchMovie: e.target.value }));
   }, 200), []);
   
   const [extendedState, setExtendedState] = useState(INITIAL);
@@ -43,7 +43,7 @@ const SearchBar = props => {
   }, [extendedState])
   
   const { search = '' } = useSelector(({ moviesReducer: { filters } }) => ({
-    search: filters.search,
+    search: filters.searchMovie,
   }));
   
   
@@ -53,6 +53,7 @@ const SearchBar = props => {
       {...props}
     >
       <ToggleButton
+        className='navbar-action'
         onClick={() => setExtendedState(isExtended => isExtended % 2 + 1)}
         extendedstate={extendedState}
       />

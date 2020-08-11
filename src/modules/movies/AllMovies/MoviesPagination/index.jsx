@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'query-string';
 import { Pagination } from 'components';
-import { DEFAULT_MOVIES_PER_PAGE } from 'config/MoviesConfig';
 import {
   changeMoviesPerPage,
   changeSelectedPage,
@@ -16,7 +15,7 @@ const MoviesPagination = ({ history, location, style, className }) => {
   const {
     count = 0,
     selectedPage = 0,
-    moviesPerPage = DEFAULT_MOVIES_PER_PAGE,
+    moviesPerPage,
   } = useSelector(
     ({ moviesReducer }) => ({
       count: moviesReducer.count,

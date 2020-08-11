@@ -51,10 +51,10 @@ export const SingleGenre = styled.li`
     font-size: 1.1rem;
     width: 100%;
     
-    ${({ isDisabled, theme }) => isDisabled 
-      ? `color: ${theme.isDark ? theme.disabled : getOverlay(theme.onPrimary, theme.primary ,0.38, true)}`
-      : `color: ${theme.isDark ? theme.primary : theme.onPrimary}`
-    };
+    ${({ isDisabled, theme }) => isDisabled
+  ? `color: ${theme.isDark ? theme.disabled : getOverlay(theme.onPrimary, theme.primary, 0.38, true)}`
+  : `color: ${theme.isDark ? theme.primary : theme.onPrimary}`
+};
     
     ${props => props.isActive && `
         transition: color ${smallArea}ms;
@@ -124,7 +124,7 @@ export const SingleGenre = styled.li`
 
 export const Arrow = styled(ArrowSvg)`
   ${({ disabled, flipped, theme }) => {
-  const fillColor = theme.secondary;
+  const fillColor = theme.onSurface;
   return `
       width: 2rem;
       height: 2rem;
@@ -132,20 +132,19 @@ export const Arrow = styled(ArrowSvg)`
       min-height: 24px;
       fill: ${fillColor};
       
-      transition: all .2s;
+      transition: all .1s;
       
-      ${!disabled && 'cursor: pointer'};
+      cursor: ${disabled ? 'default' : 'pointer'};
       ${flipped && 'transform: rotate(180deg)'};
       
       &:hover {
-        ${!disabled && `
-          fill: ${fillColor}DD;
-        `}
+        fill: ${fillColor}99;
       }
       
       ${disabled && `
         fill: ${theme.disabled};
-      `}
+        pointer-events: none;
+      `};
     `;
 }};
 `;

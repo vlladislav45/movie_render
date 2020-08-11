@@ -38,6 +38,7 @@ const withRipple = Component => React.forwardRef((
     scale: 0,
   });
   
+  useEffect(() => () => clearTimeout(timeout.current))
   useEffect(() => {
     // For some reason its not working automatically
     if (autoFocus)

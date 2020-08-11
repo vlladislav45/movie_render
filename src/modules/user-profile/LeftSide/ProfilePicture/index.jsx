@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal, ProfileImage, Button } from 'components/basic';
@@ -31,13 +31,13 @@ const ProfilePicture = () => {
 
   useEffect(() => {
     if (inputRef.current)
-      inputRef.current.addEventListener('change', onUploadImage);
+      inputRef.current['addEventListener']('change', onUploadImage);
 
-    return () => inputRef.current.removeEventListener('change', onUploadImage);
+    return () => inputRef.current['removeEventListener']('change', onUploadImage);
   }, [inputRef.current]);
 
   function onUploadImage () {
-    const file = inputRef.current.files[0];
+    const file = inputRef.current['files'][0];
     setImageError(null);
     setUploadedImage(null);
 
@@ -51,7 +51,7 @@ const ProfilePicture = () => {
   }
 
   function openFileExplorer () {
-    inputRef.current.click();
+    inputRef.current['click']();
   }
 
   function uploadImage () {
@@ -82,32 +82,30 @@ const ProfilePicture = () => {
         color='secondary'
         text='update'
       />
-
-
-      {ReactDOM.createPortal(
-        <Modal isOpen={recentImagesModalOpen}
-               stateChanged={newState => setRecentImagesModalOpen(newState)}
-               closeOnClickOutside={!!imageError}
-        >
-          <>
-            <PreviewImageModal>
-              {userImages && userImages.map(({ imageName }) => (
-                <>
-                  <PreviewImage
-                    src={API_URL + 'user/' + username + '/' + imageName}
-                    alt='preview image'/>
-                </>
-              ))}
-            </PreviewImageModal>
-            <ActionsBar>
-              <Button type='text' text='cancel'
-                      onClick={() => setRecentImagesModalOpen(false)}/>
-              {/*<Button type='contained' text='confirm'*/}
-              {/*        onClick={uploadImage}/>*/}
-            </ActionsBar>
-          </>
-        </Modal>,
-        document.getElementById('modal'))}
+      {/*{ReactDOM.createPortal(*/}
+      {/*  <Modal isOpen={recentImagesModalOpen}*/}
+      {/*         stateChanged={newState => setRecentImagesModalOpen(newState)}*/}
+      {/*         closeOnClickOutside={!!imageError}*/}
+      {/*  >*/}
+      {/*    <>*/}
+      {/*      <PreviewImageModal>*/}
+      {/*        {userImages && userImages.map(({ imageName }) => (*/}
+      {/*          <Fragment key={imageName}>*/}
+      {/*            <PreviewImage*/}
+      {/*              src={API_URL + 'user/' + username + '/' + imageName}*/}
+      {/*              alt='preview image'/>*/}
+      {/*          </Fragment>*/}
+      {/*        ))}*/}
+      {/*      </PreviewImageModal>*/}
+      {/*      <ActionsBar>*/}
+      {/*        <Button type='text' text='cancel'*/}
+      {/*                onClick={() => setRecentImagesModalOpen(false)}/>*/}
+      {/*        /!*<Button type='contained' text='confirm'*!/*/}
+      {/*        /!*        onClick={uploadImage}/>*!/*/}
+      {/*      </ActionsBar>*/}
+      {/*    </>*/}
+      {/*  </Modal>,*/}
+      {/*  document.getElementById('modal'))}*/}
 
 
       {ReactDOM.createPortal(

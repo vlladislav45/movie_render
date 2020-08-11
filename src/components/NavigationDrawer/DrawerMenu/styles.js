@@ -33,6 +33,7 @@ export const StyledDropDownItem = styled(Link)`
 `;
 
 export const DropDownText = styled.span`
+  padding: 10px 0;
   padding-left: 16px;
   font-size: 1rem;
   line-height: 1.1rem;
@@ -40,6 +41,9 @@ export const DropDownText = styled.span`
   text-transform: capitalize;
   font-weight: 400;
   user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const IconContainer = styled.span`

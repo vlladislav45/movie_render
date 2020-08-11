@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { API_URL } from '../../../api/BaseAPI';
+import { API_URL } from 'api/BaseAPI';
+import ResourcesAPI from 'api/ResourcesAPI';
 
 import { StyledProfileCircle } from './styles';
 
@@ -9,16 +10,25 @@ const IMAGE_BASE_PATH = API_URL + 'user/';
 const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
   const { profileImage, username } = useSelector(
     ({ auth: { loggedInUser }, userReducer: { user } }) => ({
-      profileImage: user.userInfo.photoUrl || loggedInUser.profileImage ,
+      profileImage: user.userInfo['photoUrl']?.['imageName'] || loggedInUser.profileImage?.imageName,
       username: loggedInUser.username,
     }));
-
-
+  
+  const [imageUrl, setImageUrl] = useState(null);
+  
   const url = useMemo(() => profileImage
-    ? IMAGE_BASE_PATH + username + `/${profileImage.imageName}`
+    ? IMAGE_BASE_PATH + username + `/${profileImage}`
     : require('../../../assets/profile/blank-profile.png'), [profileImage]);
-
-
+  
+  useEffect(() => {
+    if (!profileImage) {
+      setImageUrl(url);
+      return;
+    }
+    ResourcesAPI.fetchResource(url)
+    .then(({ data }) => setImageUrl(URL.createObjectURL(data)));
+  }, [url])
+  
   const isSameWidthHeight = (typeof size === 'number');
   const width = isSameWidthHeight ? size : size.width;
   const height = isSameWidthHeight ? size : size.height;
@@ -27,7 +37,8 @@ const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
       width={width}
       height={height}
       isCircle={shape === 'circle'}
-      src={url}
+      $isLoading={imageUrl === null}
+      src={imageUrl}
       alt='Avatar'
       {...rest}
     />

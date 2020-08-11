@@ -13,6 +13,7 @@ const ExtraInfo = props => {
 
   function renderUserInfo() {
     return Object.keys(userInfo).map(key => {
+      if (typeof userInfo[key] !== 'string' && userInfo[key] !== null) return;
       function updateInfo (newValue) {
         //TODO: Request to backend
         dispatch(updateUserData(key, newValue, userId));

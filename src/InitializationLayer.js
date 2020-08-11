@@ -34,7 +34,6 @@ class InitializationLayer extends React.Component {
     }, 200);
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
-    
     document.body.style.background = this.props.themeColors.surface;
   }
   
@@ -47,7 +46,7 @@ class InitializationLayer extends React.Component {
     return (
       <ThemeProvider theme={this.props.themeColors}>
         <Router history={browserHistory}>
-          <ConnectionHandler/>
+          {/*<ConnectionHandler/>*/}
           <TopNavBar/>
           <NavigationDrawer/>
           <Prompt {...this.props.promptProps} />
