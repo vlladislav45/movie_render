@@ -1,4 +1,5 @@
 import MovieAPI from 'api/MovieAPI';
+import ReviewsAPI from 'api/ReviewsAPI';
 import { getMoviesPerPage } from 'config/MoviesConfig';
 
 //Genres
@@ -20,6 +21,7 @@ const RESET_FILTER = 'RESET_FILTER';
 
 // Rating
 const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
+const SET_REVIEWS = 'SET_REVIEWS';
 
 const GENRES_STORAGE_KEY = 'genres';
 export const fetchGenres = () => dispatch => {
@@ -118,7 +120,7 @@ export const resetFilter = () => ({
 // RATE
 export const rateMovie = (
   movieId, userId, stars, review) => dispatch => new Promise(resolve => {
-  MovieAPI.rateMovie({
+  ReviewsAPI.rateMovie({
     userId,
     movieId,
     movieRating: stars,
@@ -134,6 +136,12 @@ export const rateMovie = (
   });
 });
 
+export const getReviewsByMovie = movieId => dispatch => {
+  ReviewsAPI.getReviewsByMovie(movieId).then(({ data }) => {
+    dispatch({ type: SET_REVIEWS, payload: data })
+  })
+}
+
 const initialState = {
   genres: [],
   movies: [],
@@ -144,7 +152,7 @@ const initialState = {
   genresLoading: false,
   selectedMovie: {
     movieInfo: {},
-    rating: {},
+    reviews: [],
     isLoading: false,
   },
   filters: {
@@ -234,6 +242,14 @@ export default (state = initialState, action) => {
           },
         },
       };
+    case SET_REVIEWS:
+      return {
+        ...state,
+        selectedMovie: {
+          ...state.selectedMovie,
+          reviews: payload,
+        }
+      }
     default:
       return state;
   }

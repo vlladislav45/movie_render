@@ -9,15 +9,13 @@ import { Button, Input } from '../../../components/basic';
 import { promptUser } from '../../../reducers/uiReducer';
 import Actors from './Actors';
 import MovieSummary from './MovieSummary';
-import RatingSection from './RatingSection';
+import RatingSection from './Rating';
 import SimilarMovies from './SimilarMovies';
 import {
   MovieTitle,
   SingleMovieWrapper,
-  MovieVideoContainer,
+  MoreInfoGrid, MovieVideo,
 } from './styles';
-import MovieGenres from './MovieGenres';
-import MovieCast from './MovieCast';
 
 const MOVIE_RATIO = 16 / 10;
 const BASE_POSTER_URL = API_URL + 'movies/single/hdPoster/';
@@ -25,7 +23,8 @@ const SingleMovie = ({ match: { params }, history }) => {
   const dispatch = useDispatch();
   const { movieId } = params;
   
-  const { width: screenWidth } = useDeviceDimensions();
+  const { vmax: screenWidth } = useDeviceDimensions();
+  const [videoRef, setVideoRef] = useState();
   const [prevGenres, setPrevGenres] = useState();
   
   const { selectedMovie, previousGenres, isLoading } = useSelector(
@@ -56,60 +55,54 @@ const SingleMovie = ({ match: { params }, history }) => {
     return null;
   
   return (
-    <SingleMovieWrapper
-      fadeIn={!isLoading}
-    >
+    <>
       <Loading isLoading={isLoading}/>
-      <MovieTitle>
-        <p>{movieName}</p>
-      </MovieTitle>
-      <MovieVideoContainer>
-        <video
-          width={screenWidth / 1.5}
-          height={(screenWidth / 1.5) / MOVIE_RATIO}
+      <SingleMovieWrapper
+        fadeIn={!isLoading}
+      >
+        <MovieVideo
+          width={screenWidth / 3}
+          height={(screenWidth / 3) / MOVIE_RATIO}
+          ref={ref => setVideoRef(ref)}
           controls
           poster={BASE_POSTER_URL + posterName}
           // onCanPlay={() => forceRender(true)}
           // onLoadStart={() => console.log('ONLOAD_START')}
         >
           <source src={`${API_URL}stream/mp4/Kenpachi`} type="video/mp4"/>
-        </video>
-      </MovieVideoContainer>
-      <MovieSummary
-        summary={movieSummary}
-      />
-      <RatingSection
-        movieId={movieId}
-        movieName={movieName}
-      />
-      <MovieGenres genres={movieGenres} />
-      <MovieCast
-        actors={actorNames}
-        director={directorName}
-      />
-      {/*<MoreInfoGrid>*/}
-      {/*  <RatingSection*/}
-      {/*    movieName={movieName}*/}
-      {/*    movieId={movieId}*/}
-      {/*  />*/}
-      {/*  <span className='movieInfo views'>*/}
-      {/*    <span>{movieViews}</span>*/}
-      {/*  </span>*/}
-      {/*  <span className='movieInfoName views'>Views</span>*/}
-      {/*  <span className='movieInfoName year'>Year:</span>*/}
-      {/*  <span className='movieInfo year'>*/}
-      {/*    <span> {movieYear}</span>*/}
-      {/*  </span>*/}
-      {/*  <span className='movieInfoName director'>Director:</span>*/}
-      {/*  <span className='movieInfo director'>*/}
-      {/*    <span>{directorName}</span>*/}
-      {/*  </span>*/}
-      {/*  <Actors actors={actorNames}/>*/}
-      {/*</MoreInfoGrid>*/}
-      <SimilarMovies
-        movieId={movieId}
-      />
-    </SingleMovieWrapper>
+        </MovieVideo>
+        <MovieTitle>
+          <p>{movieName}</p>
+        </MovieTitle>
+        <MovieSummary
+          videoRef={videoRef}
+          summary={movieSummary}
+          movieId={movieId}
+        />
+        <MoreInfoGrid>
+          <RatingSection
+            movieName={movieName}
+            movieId={movieId}
+          />
+          <span className='movieInfo views'>
+          <span>{movieViews}</span>
+        </span>
+          <span className='movieInfoName views'>Views</span>
+          <span className='movieInfoName year'>Year:</span>
+          <span className='movieInfo year'>
+          <span> {movieYear}</span>
+        </span>
+          <span className='movieInfoName director'>Director:</span>
+          <span className='movieInfo director'>
+          <span>{directorName}</span>
+        </span>
+          <Actors actors={actorNames}/>
+        </MoreInfoGrid>
+        <SimilarMovies
+          movieId={movieId}
+        />
+      </SingleMovieWrapper>
+    </>
   );
 };
 

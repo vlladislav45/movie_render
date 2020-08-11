@@ -92,6 +92,7 @@ const AllMovies = () => {
         >
           <MoviesGrid
             key={'grid_' + location.key}
+            moviesPerPage={moviesPerPage}
             isLoading={isLoading}
             movies={movies}
             posters={posters}

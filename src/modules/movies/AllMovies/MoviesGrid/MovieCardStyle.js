@@ -4,6 +4,7 @@ import { Rating } from 'components';
 import { Button } from 'components/basic';
 import { transitionDurations, transitionFunctions } from 'config/animationConstants';
 import { ReactComponent as BookMarkIcon } from 'assets/icons/bookmark.svg';
+import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
 
 const { largeExpand, largeCollapsing } = transitionDurations;
 const { standardEasing, deceleratedEasing, acceleratedEasing } = transitionFunctions;
@@ -12,6 +13,7 @@ export const SingleMovieLink = styled.div`${props => {
   const { isDark, surface, secondary } = theme;
   
   return `
+    // background: red;
     position: relative;
     overflow: hidden;
     width: 280px;
@@ -22,18 +24,8 @@ export const SingleMovieLink = styled.div`${props => {
     ${isDark && `
           box-shadow: ${applyShadow(4)},
                       inset 0 0 0 2000px rgba(255,255,255,
-                      ${calcDarkThemeOverlay(2)});
+                      ${calcDarkThemeOverlay(4)});
     `};
-    // transition: all 0.3s ${standardEasing};
-    // &:hover {
-    //   cursor: pointer;
-    //   box-shadow: ${applyShadow(6)};
-    //   ${isDark && `
-    //       box-shadow: ${applyShadow(6)},
-    //                   inset 0 0 0 2000px rgba(255,255,255,
-    //                   ${calcDarkThemeOverlay(4)});
-    //   `};
-    // }
   `;
 }
 }
@@ -203,11 +195,4 @@ export const MovieRating = styled(Rating)`
     width: 1.1rem;
     height: 1.1rem;
   }
-`;
-
-export const Views = styled.p`
-  font-weight: bold;
-  color: ${props => props.theme.secondary};
-  font-size: .8rem;
-  margin-left: auto;
 `;

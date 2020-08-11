@@ -1,17 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CogWheel, LoadingInner, LoadingOuter } from './styles';
 
+// TODO: Why did i do this?? (the commented part)
 const Loading = ({ isLoading = true, elevation = 0 }, ref) => {
-  const timeout = useRef(0);
-  const [render, toggleRender] = useState(true);
-  useEffect(() => () => clearTimeout(timeout.current), [])
-  useEffect(() => {
-    if(!isLoading)
-      timeout.current = setTimeout(() => toggleRender(false), 700) // Loading fade out delay
-  }, [isLoading])
+  // const timeout = useRef(0);
+  // const [render, toggleRender] = useState(true);
+  // useEffect(() => () => clearTimeout(timeout.current), [])
+  // useEffect(() => {
+  //   console.group('isLoading')
+  //   console.log(isLoading)
+  //   console.groupEnd()
+  //   // if(!isLoading)
+  //   //   timeout.current = setTimeout(() => toggleRender(false), 700) // Loading fade out delay
+  // }, [isLoading])
   
-  if (!render)
-    return null;
+  // if (!render)
+  //   return null;
+  
   function renderLoading () {
     return (
         <LoadingOuter

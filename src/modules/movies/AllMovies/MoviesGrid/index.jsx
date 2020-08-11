@@ -1,15 +1,17 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { MaterialSurface } from 'components/basic';
-import { Loading } from 'components';
 import { addBookmark, removeBookmark } from 'reducers/userReducer';
+import { Loading } from 'components';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import MovieCard from './MovieCard';
 import { StyledMoviesGrid, Wrapper, } from './styles';
 
-const MoviesGrid = ({ isLoading, movies, posters }) => {
+const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  
+  const { device } = useDeviceDimensions();
   
   const { bookmarks, bookmarksLoading, userId, isLoggedIn } = useSelector(({ userReducer, auth }) => ({
     bookmarks: userReducer.bookmarks,
@@ -32,7 +34,8 @@ const MoviesGrid = ({ isLoading, movies, posters }) => {
   }
   
   function renderMovies() {
-    return movies.map(movie => {
+    return movies.map((movie, index) => {
+        if (!movie) return <MovieCard key={`movie_${index}`} isEmpty={true}/>
         const url = posters[movie.id];
         const isBookmarked = bookmarks.some(bookmark => bookmark.movieId === movie.id && bookmark.movieName === movie.movieName)
         return (
@@ -56,8 +59,9 @@ const MoviesGrid = ({ isLoading, movies, posters }) => {
     <Wrapper>
       <Loading isLoading={isLoading} key='loading'/>
       <StyledMoviesGrid
+        $device={device}
         fadeIn={!isLoading}
-        moviesPerPage={movies.length}
+        moviesPerPage={moviesPerPage}
       >
         {renderMovies()}
       </StyledMoviesGrid>

@@ -34,13 +34,15 @@ export const ChipContainer = styled.div`
 `;
 
 export const OutlinedChip = styled(BaseChip)`
-  ${({ theme, color: chipColor }) => {
+  ${({ theme, color: chipColor, $selectable }) => {
     const { surface, contrast } = theme;
     const color = chipColor 
       ? theme[chipColor]
       : getOverlay(surface, contrast, 0.54);
     return`
+      ${!$selectable && 'user-select: none'};
        border: 1px solid ${color};
+       color: ${color};
        & > svg {
         fill: ${color}!important;
        }
@@ -49,7 +51,8 @@ export const OutlinedChip = styled(BaseChip)`
 `;
 
 export const FilledChip = styled(BaseChip)`
-  ${({ theme, color }) => `
+  ${({ theme, color, $selectable }) => `
+    ${!$selectable && 'user-select: none'};
     background: ${theme[color]+'99' || getOverlay(theme.surface, theme.contrast, 0.12)};
   `};
 `;

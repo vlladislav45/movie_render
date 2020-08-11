@@ -1,21 +1,21 @@
 import styled from 'styled-components';
-import { Rating } from 'components';
 import { transitionFunctions, transitionDurations } from 'config/animationConstants';
-import { applyShadow, calcDarkThemeOverlay } from 'utils/colorUtils';
+import { SM, XS_SM, M, L } from 'utils/mediaUtils';
 
 const { largeExpand, largeCollapsing } = transitionDurations;
 const { standardEasing, deceleratedEasing, acceleratedEasing } = transitionFunctions;
-const MAX_COLUMNS = 3;
+
 export const StyledMoviesGrid = styled.div`${props => {
-  const { fadeIn, moviesPerPage } = props;
-  const COLUMNS = Math.min(moviesPerPage, MAX_COLUMNS);
-  const ROWS = Math.ceil(moviesPerPage / COLUMNS);
+  const { fadeIn, moviesPerPage, $device } = props;
+  
+  const columns = getColumns($device);
+  const rows = Math.ceil(moviesPerPage / columns);
   return `
     display: grid;
-    grid-template-columns: repeat(${COLUMNS}, 1fr);
-    grid-template-rows: repeat(${ROWS}, auto);
+    grid-template-columns: repeat(${columns}, 1fr);
+    grid-template-rows: repeat(${rows}, auto);
     grid-auto-rows: min-content;
-    grid-column-gap: 30px;
+    grid-column-gap: 10px;
     grid-row-gap: 10px;
     
     width: 100%;
@@ -71,3 +71,16 @@ export const Wrapper = styled.div`
     transition: transform ${largeCollapsing}ms ${deceleratedEasing};
   }
 `;
+
+function getColumns(device) {
+  switch (device) {
+    case XS_SM:
+    case SM:
+      return 1
+    case M:
+    case L:
+      return 2
+    default :
+      return 3;
+  }
+}

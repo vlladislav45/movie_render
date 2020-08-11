@@ -5,13 +5,13 @@ import { applyShadow, getOverlay } from 'utils/colorUtils';
 const { SMALL_RIPPLE_DURATION } = rippleConstants;
 
 export const LeadingIcon = styled.span`
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 24px;
+  height: 24px;
   margin-right: 8px;
   
   & > svg {
-    width: 1.2rem;
-    height: 1.2rem;  
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -148,6 +148,9 @@ export const TextButton = styled(BaseButton)`${props => {
   const textColor = theme[themeColor];
   
   return `
+    & svg {
+      fill: ${textColor};
+    };
     
     color: ${textColor};
     position: relative;

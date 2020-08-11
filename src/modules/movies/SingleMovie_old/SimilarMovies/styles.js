@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const SimilarMoviesContainer = styled.div`
-  flex: 1 1 100%;
+  grid-area: m;
   overflow: hidden;
   color: ${props => props.theme.onSurface};
 `;
