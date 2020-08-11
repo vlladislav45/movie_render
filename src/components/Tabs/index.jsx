@@ -40,7 +40,7 @@ const Tabs = props => {
       for (let tabsKey in tabs) {
         const { isActive, tabName } = tabs[tabsKey];
 
-        // TODO: Check for performance overhead
+        
         if (isActive && tabs[tabsKey].ref.current !== null) {
           setActiveTab({ ...tabs[tabsKey].ref, tabName: tabName });
         }

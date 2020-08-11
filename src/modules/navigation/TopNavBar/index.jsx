@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toggleNavigationDrawer } from 'reducers/uiReducer';
 import { Loading } from 'components';
@@ -14,36 +14,22 @@ import {
   TopNavTitle
 } from './styles';
 
-
+const NAVBAR_EXTENDED_STATE = 'NAVBAR_EXTENDED_STATE';
 const TopNavBar = () => {
   const dispatch = useDispatch();
   const { device, width } = useDeviceDimensions();
   
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   
+  useEffect(() => {
+    setIsExpanded(JSON.parse(localStorage.getItem(NAVBAR_EXTENDED_STATE)));
+  }, [])
   
-  // TODO: Do i need this functionality?
-  // When scrolled top bar can be hidden or shrunk
-  // function handleScroll() {
-  //   let lastScroll = 0;
-  //
-  //   return () => {
-  //     const scroll = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
-  //     if (scroll > lastScroll) {
-  //       setIsScrolled(true)
-  //     } else {
-  //       setIsScrolled(false)
-  //     }
-  //     lastScroll = scroll <= 0 ? 0 : scroll; // For Mobile or negative scrolling
-  //   }
-  // }
-  //
-  // useEffect(() => {
-  //   window.addEventListener('scroll', handleScroll());
-  //   return () => window.removeEventListener('scroll', handleScroll());
-  // }, [])
-  //
+  function toggleExtendedNavbar() {
+    setIsExpanded(isExpanded => !isExpanded);
+    localStorage.setItem(NAVBAR_EXTENDED_STATE, JSON.stringify(!isExpanded));
+  }
+  
   function toggleDrawer() {
     dispatch(toggleNavigationDrawer())
   }
@@ -54,17 +40,20 @@ const TopNavBar = () => {
       id='top-nav'
       device={device}
       isExtended={isExpanded}
-      isScrolled={isScrolled}
     >
       {!!device
         ? (
           <TopNavInner>
             <TopNavRow>
-              <TopNavMenu onClick={toggleDrawer}/>
+              <TopNavMenu
+                className='navbar-action'
+                onClick={toggleDrawer}
+              />
               <TopNavTitle $deviceWidth={width}/>
               <TopNavSearch/>
               <TopNavExpand
-                onClick={() => setIsExpanded(isExtended => !isExtended)}
+                onClick={toggleExtendedNavbar}
+                className='navbar-action'
                 $isExpanded={isExpanded}
               />
             </TopNavRow>

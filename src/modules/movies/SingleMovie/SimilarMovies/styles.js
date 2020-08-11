@@ -28,4 +28,7 @@ export const MovieName = styled.h4`
   margin: 5px 0;
 `;
 
-export const MoviePoster = styled.img``;
+export const MoviePoster = styled.img`
+  width: 300px;
+  height: 300px;
+`;

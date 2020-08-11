@@ -1,4 +1,5 @@
 import Loading from './Loading';
+import SuspenseLoading from './Loading/SuspenseLoading';
 import Genres from './Genres';
 import ProfileButton from './ProfileButton';
 import Rating from './Rating';
@@ -21,5 +22,6 @@ export {
   ConnectionHandler,
   Prompt,
   NavigationDrawer,
+  SuspenseLoading,
   ErrorBoundary,
 };

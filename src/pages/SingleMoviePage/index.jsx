@@ -3,9 +3,9 @@ import SingleMovie from 'modules/movies/SingleMovie';
 import styled from 'styled-components';
 
 const SingleMoviePage = () => (
-  <FadePage>
+  // <FadePage>
     <SingleMovie />
-  </FadePage>
+  // </FadePage>
 );
 
 export default SingleMoviePage;

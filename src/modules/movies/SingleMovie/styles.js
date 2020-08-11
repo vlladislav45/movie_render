@@ -48,7 +48,12 @@ export const SingleMovieWrapper = styled.div`
   grid-column-gap: ${GRID_COLUMN_GAP}px;
   grid-row-gap: ${GRID_ROW_GAP}px;
   grid-auto-flow: row;
-   
+  
+  opacity: 0;
+  ${props => props.fadeIn && `
+    opacity: 1;
+    transition: opacity 200ms;
+  `}
 `;
 
 export const BackArrowWrapper = styled(Button)`

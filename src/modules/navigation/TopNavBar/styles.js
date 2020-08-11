@@ -25,6 +25,7 @@ export const StyledTopNav = styled.div`
     // We dont need anything positioned right below it
     margin-bottom: 30px;
     
+    // TODO: Maybe dark theme overlay is too much
     box-shadow: ${applyShadow(16)};
     ${isDark && `
       box-shadow: ${applyShadow(16)},
@@ -38,12 +39,6 @@ export const StyledTopNav = styled.div`
     ${isExtended && `
       height: 128px;
     `};
-    
-    // I may reconsider this
-    // ${isScrolled && `
-    //   transform: translateY(-56px);
-    // `};
-    
 `;
 }}`;
 
@@ -58,7 +53,7 @@ export const TopNavInner = styled.div`
     padding-top: 16px;
   }
   
-  & svg {
+  & svg.navbar-action {
     width: 24px;
     height: 24px;
     cursor: pointer;

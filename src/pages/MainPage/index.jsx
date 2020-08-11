@@ -1,12 +1,10 @@
 import React from 'react';
-import MoviesContainer from 'modules/movies/MoviesContainer/MoviesContainer';
+import AllMovies from 'modules/movies/AllMovies';
 
 const MainPage = () => {
-
+  
   return (
-    <>
-      <MoviesContainer/>
-    </>
+    <AllMovies/>
   );
 };
 
