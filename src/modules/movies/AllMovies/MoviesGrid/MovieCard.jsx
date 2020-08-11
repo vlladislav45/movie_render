@@ -1,5 +1,6 @@
 import React from 'react';
-import withRipple from 'HOC/withRipple';
+import { ReactComponent as BookMarkIcon } from 'assets/icons/bookmark.svg';
+import { ReactComponent as RemoveBookmark } from 'assets/icons/remove_bookmark.svg';
 import {
   CardLowerSection,
   MovieTitle,
@@ -21,7 +22,7 @@ import {
 
 const MovieCard = ({
                      movie: { id, year, movieName, movieRating, movieViews, summary, actors, genres },
-                     poster, onClick, onBookMarkClick
+                     poster, onClick, onBookMarkClick, isBookmarked, showBookmark, isLoading
                    }) => {
   
   function handleClick() {
@@ -35,20 +36,25 @@ const MovieCard = ({
   
   
   return (
-    <SingleMovieLink
-      // onClick={handleClick}
-    >
+    <SingleMovieLink>
       <MoviePoster
         fadeIn={!!poster}
         alt={poster ? `Movie poster ${movieName}` : ''}
         src={poster}
       />
-      <BookMarkFAB
-        onClick={bookmarkMovie}
-        title='Bookmark movie'
-      >
-        <BookMark/>
-      </BookMarkFAB>
+      {showBookmark && (
+        <BookMarkFAB
+          onClick={bookmarkMovie}
+          title={isBookmarked ? 'Remove bookmark' : 'Bookmark movie'}
+          $disabled={isLoading}
+          $isLoading={isLoading}
+        >
+          <BookMark
+            as={isBookmarked ? RemoveBookmark : BookMarkIcon}
+            $isLoading={isLoading}
+          />
+        </BookMarkFAB>
+      )}
       <CardLowerSection>
         <MovieTitle>
           {movieName}

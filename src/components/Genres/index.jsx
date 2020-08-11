@@ -190,7 +190,7 @@ const Genres = props => {
       <Arrow
         flipped={'true'}
         ref={leftArrowRef}
-        disabled={leftEnd}
+        disabled={leftEnd || browserHistory.location.pathname !== '/'}
         onClick={slideLeft}
       />
       }
@@ -204,7 +204,7 @@ const Genres = props => {
       {isOverflow &&
       <Arrow
         ref={rightArrowRef}
-        disabled={rightEnd}
+        disabled={rightEnd || browserHistory.location.pathname !== '/'}
         onClickCapture={slideRight}
       />
       }

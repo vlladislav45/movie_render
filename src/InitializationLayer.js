@@ -34,7 +34,6 @@ class InitializationLayer extends React.Component {
     }, 200);
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
-    
     document.body.style.background = this.props.themeColors.surface;
   }
   

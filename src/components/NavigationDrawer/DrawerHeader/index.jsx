@@ -22,12 +22,30 @@ const DrawerHeader = () => {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   
-  const { isLoggedIn, redirectToLogin, isLoading, isDark } = useSelector(({ auth, themeReducer: { themeColors } }) => ({
+  const {
+    isLoggedIn,
+    redirectToLogin,
+    isLoading,
+    isDark,
+    loginModal,
+    registerModal,
+  } = useSelector(({ auth, themeReducer: { themeColors } }) => ({
     isLoggedIn: auth.isLoggedIn,
     redirectToLogin: auth.redirectToLogin,
     isLoading: auth.isLoading,
     isDark: themeColors.isDark,
+    loginModal: auth.modalsOpen.login,
+    registerModal: auth.modalsOpen.register,
   }));
+  
+  useEffect(() => {
+    if (loginModal !== loginModalOpen) {
+      setLoginModalOpen(loginModal);
+    }
+    if (registerModal !== registerModalOpen) {
+      setRegisterModalOpen(registerModal);
+    }
+  }, [loginModal, registerModal])
   
   useEffect(() => {
     if (redirectToLogin) {
@@ -38,7 +56,7 @@ const DrawerHeader = () => {
   }, [redirectToLogin]);
   
   function toggleTheme() {
-    dispatch(isDark ? setBaseTheme : setDarkTheme);
+    dispatch(isDark ? setBaseTheme() : setDarkTheme());
   }
   
   

@@ -107,7 +107,9 @@ const SingleMovie = ({ match: { params }, history }) => {
         </span>
           <Actors actors={actorNames}/>
         </MoreInfoGrid>
-        <SimilarMovies/>
+        <SimilarMovies
+          movieId={movieId}
+        />
       </SingleMovieWrapper>
     </>
   );

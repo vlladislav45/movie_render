@@ -148,7 +148,7 @@ const initialState = {
     isLoading: false,
   },
   filters: {
-    search: '',
+    searchMovie: '',
     genres: [],
   },
 };

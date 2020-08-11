@@ -77,10 +77,48 @@ export const BookMarkFAB = styled.div`
     transform: scale(1.06);
     box-shadow: ${applyShadow(4)};
   }
+  
+  ${props => props.$disabled && `
+    pointer-events: none;
+    background: ${props.theme.disabled};
+    box-shadow: none;
+  `};
+  
+  ${props => props.$isLoading && `
+    &:after {
+      position: absolute;
+      content: '';
+      width: 80%;
+      height: 80%;
+      border-radius: 50%;
+      border-top: 2px solid ${props.theme.overlay};
+      animation: rotate 1s infinite ${standardEasing};
+    }
+    
+    @keyframes rotate {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  `};
 `;
 
 export const BookMark = styled(BookMarkIcon)`
   fill: ${props => props.theme.onSecondary};
+  & .sign-stroke {
+    stroke: ${props => props.theme.onSecondary};
+  }
+  & .sign-circle {
+    stroke: ${props => props.theme.onSecondary};
+    fill: ${props => props.theme.contrast};
+  }
+  transition: opacity 0.5s;
+  ${props => props.$isLoading && `
+  
+  `};
 `;
 
 

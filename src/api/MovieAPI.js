@@ -11,6 +11,10 @@ class MovieAPI extends BaseAPI {
   getByPage = (page, size, filter) => this.post(`/movies?size=${size}&page=${page}`, filter);
 
   rateMovie = data => this.post(`movies/single/rating`, data);
+  
+  addOrRemoveBookmark = data => this.post('user/userInfo/bookmark', data);
+  
+  getSimilarMovies = (movieId, page, pageSize) => this.get(`movies/similar?id=${movieId}&page=${page}&size=${pageSize}`);
 }
 
 export default new MovieAPI();

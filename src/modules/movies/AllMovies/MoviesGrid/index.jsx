@@ -1,55 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { Loading, Rating } from 'components';
-import {
-  MovieNameText,
-  MoviePoster,
-  Wrapper,
-  PosterContainer,
-  Views,
-  Year,
-  StyledMoviesGrid,
-} from './styles';
-import MovieCard from './MovieCard';
-import { MaterialSurface } from 'components/basic';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { StyledMoviesContainer } from '../styles';
-import { bookmark } from '../../../../reducers/bookmarksReducer';
-import { useDispatch } from 'react-redux';
-import { enqueueSnackbarMessage } from '../../../../reducers/uiReducer';
+import { MaterialSurface } from 'components/basic';
+import { Loading } from 'components';
+import { addBookmark, removeBookmark } from 'reducers/userReducer';
+import MovieCard from './MovieCard';
+import { StyledMoviesGrid, Wrapper, } from './styles';
 
 const MoviesGrid = ({ isLoading, movies, posters }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  
+  const { bookmarks, bookmarksLoading, userId, isLoggedIn } = useSelector(({ userReducer, auth }) => ({
+    bookmarks: userReducer.bookmarks,
+    userId: auth.loggedInUser.userId,
+    isLoggedIn: auth.isLoggedIn,
+    bookmarksLoading: userReducer.bookmarksLoading,
+  }))
   
   function openMovie(movieId) {
     history.push('/movie/' + movieId);
   }
   
   function bookmarkMovie(movieId, movieName) {
-    dispatch(enqueueSnackbarMessage(`${movieName} bookmarked successfully`, {
-      ['Dismiss']: () => {
-      }
-    }, { closeOnAction: 'Dismiss' }))
-    // TODO: Bookmark it
+    const isAdded = bookmarks.some(bookmark => bookmark.movieId === movieId && bookmark.movieName === movieName);
+    
+    if (!isAdded)
+      dispatch(addBookmark(movieId, userId, movieName))
+    else
+      dispatch(removeBookmark(movieId, userId, movieName))
   }
   
   function renderMovies() {
     return movies.map(movie => {
-        let url = posters[movie.id];
+        const url = posters[movie.id];
+        const isBookmarked = bookmarks.some(bookmark => bookmark.movieId === movie.id && bookmark.movieName === movie.movieName)
         return (
-          <MovieCard // This is withRipple HOC so i need to simulate it as material surface
+          <MovieCard
             key={movie.id}
             onClick={openMovie}
+            showBookmark={isLoggedIn}
             onBookMarkClick={bookmarkMovie}
+            isBookmarked={isBookmarked}
+            isLoading={bookmarksLoading[movie.id]}
             movie={movie}
             poster={url}
-            hocProps={{
-              size: 's',
-              elevation: 7,
-              shouldElevateWhenHover: true,
-            }}
-            tag={MaterialSurface}
           />
         );
       },
