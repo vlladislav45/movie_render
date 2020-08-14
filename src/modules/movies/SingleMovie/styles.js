@@ -7,30 +7,30 @@ import {
 } from 'config/animationConstants';
 import { applyShadow } from 'utils/colorUtils';
 import { Card } from 'components';
+import { func } from 'prop-types';
+import { SM, XS_SM } from '../../../utils/mediaUtils';
 
 
 export const SingleMovieWrapper = styled.div`
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 100%;
+  display: grid;
+  grid-template-columns: ${({ $oneColumn }) => $oneColumn ? `auto` : 'minmax(280px, 30%) auto'};
+  grid-template-rows: min-content min-content;
+  grid-auto-rows: min-content;
+  grid-gap: 20px;
   
-  padding: 0 40px 20px;
+  width: ${({ $oneColumn }) => $oneColumn ? 'min-content' : '95vw'};
+  margin: auto;
   
   opacity: 0;
   ${props => props.fadeIn && `
     opacity: 1;
     transition: opacity 200ms;
   `}
-  
-  & > *:not(:first-child), & > *:not(:last-child) {
-    margin: 20px;
-  }
 `;
 
 export const MovieTitle = styled.div`
-  flex: 1 1 100%;
+  grid-area: 1 / 1 / 1 / -1;
   text-align: center;
   font-family: 'Marck script', cursive;
   font-size: 2rem;
@@ -40,22 +40,32 @@ export const MovieTitle = styled.div`
   
   color: ${props => props.theme.onSurface};
   margin-bottom: 20px;
+  ${props => props.$oneColumn && `
+    font-size: 1.8rem;
+  `};
 `;
 
 export const MovieVideoContainer = styled.div`
-  flex: 1 1 100%;
+  grid-area: 2 / 2 / 3 / -1;
+  ${props => props.$oneColumn && `
+    grid-area: 2 / 1 / 3 / -1;
+  `};
   text-align: center;
   
+  max-width: 100%;
   & > video {
     object-fit: fill;
   }
 `;
 
 export const StyledMovieSummary = styled.div`
+  grid-area: 3 / 1 / 4 / -1;
+  ${({ $oneColumn }) => $oneColumn && `
+    grid-area: 4 / 1 / 5 / -1;
+  `};
   position: relative;
-  flex: 1 1 380px;
-  height: 300px;
-  padding: 5px;
+  width: 100%;
+  max-height: 300px;
   margin: 10px 0;
   font-family: 'Roboto', sans-serif;
 `;
@@ -67,99 +77,13 @@ export const CardTitle = styled.h3`
   font-size: 1.1rem;
 `;
 
-export const TextWrapper = styled(Card)`
+export const SummaryCard = styled(Card)`
   position: relative;
   text-align: justify;
   font-size: 1rem;
   letter-spacing: .6px;
   line-height: 1.4rem;
+  max-height: 280px;
   
   color: ${props => props.theme.onSurfaceMD};
-`;
-
-export const MoreInfoGrid = styled.div`
-  grid-area: i;
-  max-width: 100%;
-  display: grid;
-  grid-column-gap: 30px; // There is padding-right in .movieInfo
-  grid-row-gap: 15px;
-  grid-template-columns: repeat(4, minmax(min-content, max-content));
-  grid-template-areas: "nr ir nv iv ."
-                       "ny iy nd id ."
-                       "na ia ia ia ia";
-                       
-  align-items: center;                 
-                       
-                       
-  & .movieInfo {
-    white-space: nowrap;
-    color: ${props => props.theme.onSurface};
-    font-size: 1.1rem;
-    padding-right: 20px; //This may cause problems
-  }
-  
-  & .movieInfoName {
-    white-space: nowrap;
-    font-size: 1.1rem;
-    color: ${props => props.theme.onSurfaceMD};
-  }
-                         
-  & > .movieInfoName.rating {
-    grid-area: nr;
-  }
-  
-  & > .movieInfo.rating {
-    grid-area: ir;
-    margin-left: -5px; // little hack to compensate for star svg white space
-    & > #movieRating {
-      justify-content: unset;
-    }
-  }
-  
-  & > .movieInfoName.views {
-    grid-area: nv;
-  }
-  
-  & > .movieInfo.views {
-    grid-area: iv;
-  }
-  
-    & > .movieInfoName.director {
-    grid-area: nd;
-  }
-  
-  & > .movieInfo.director {
-    grid-area: id;
-  }
-  
-  & > .movieInfoName.year {
-    grid-area: ny;
-  }
-  
-  & > .movieInfo.year {
-    grid-area: iy;
-  }
-  
-  & > .movieInfoName.actors {
-    grid-area: na;
-  }
-  
-  & > .movieInfo.actors {
-    grid-area: ia;
-    & > ul {
-      display: flex;
-      flex-wrap: wrap;
-      & > li.actor {
-        &:not(:first-child):not(:last-child) {
-          margin: 0 6px;
-        }
-        &:first-child {
-          margin-right: 6px;
-        }
-        &:last-child {
-          margin-left: 6px;
-        }
-      }
-    }
-  }
 `;

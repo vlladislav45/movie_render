@@ -73,8 +73,4 @@ export const SearchInput = styled(Input)`
 	& > div {
 		height: 48px;
 	}
-	
-	& label {
-		height: unset;
-	}
 `;

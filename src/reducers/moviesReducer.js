@@ -23,6 +23,9 @@ const RESET_FILTER = 'RESET_FILTER';
 const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
 const SET_REVIEWS = 'SET_REVIEWS';
 
+const CLEAR_SINGLE = 'CLEAR_SINGLE';
+
+
 const GENRES_STORAGE_KEY = 'genres';
 export const fetchGenres = () => dispatch => {
   const cachedGenres = localStorage.getItem(GENRES_STORAGE_KEY);
@@ -142,6 +145,10 @@ export const getReviewsByMovie = movieId => dispatch => {
   })
 }
 
+export const clearSingleMovie = () => ({
+  type: CLEAR_SINGLE,
+})
+
 const initialState = {
   genres: [],
   movies: [],
@@ -250,6 +257,11 @@ export default (state = initialState, action) => {
           reviews: payload,
         }
       }
+    case CLEAR_SINGLE:
+      return {
+        ...state,
+        selectedMovie: initialState.selectedMovie,
+      };
     default:
       return state;
   }

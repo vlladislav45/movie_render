@@ -3,9 +3,11 @@ import { GenresCard, GenresContainer } from './styles';
 import { Chip } from 'components/basic';
 import { CardTitle } from '../styles';
 
-const MovieGenres = ({ genres = [] }) => {
+const MovieGenres = ({ genres = [], oneColumn }) => {
   return (
-    <GenresContainer>
+    <GenresContainer
+      $oneColumn={oneColumn}
+    >
       <CardTitle>Genres</CardTitle>
       <GenresCard>
         {genres.map((genre, index) => (

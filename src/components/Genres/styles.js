@@ -18,7 +18,7 @@ export const GenresContainer = styled.div`
     align-items: center;
     
     // If is overflow === null then calculations have not yet been made
-    transition: opacity 150ms linear;
+    transition: opacity 100ms linear;
     opacity: 1;
     ${props => props.isLoading && 'opacity: 0'};
 `;

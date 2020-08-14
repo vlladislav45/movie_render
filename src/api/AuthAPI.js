@@ -21,7 +21,7 @@ class AuthAPI extends BaseAPI {
   usernameAvailable = username => this.get(
     '/register/userAvailable/' + username);
   
-  checkToken = token => this.post('user_me', { jwt: token });
+  checkToken = () => this.get('user_me');
 }
 
 export default new AuthAPI();

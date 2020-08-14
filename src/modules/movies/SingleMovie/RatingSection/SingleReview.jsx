@@ -1,20 +1,37 @@
 import React from 'react';
-import { ReviewAuthor, ReviewContent, ReviewRating, StyledSingleReview } from './styles';
+import {
+  AuthorImage,
+  AuthorsName,
+  ReviewContent,
+  ReviewRating,
+  StyledSingleReview
+} from './SingleReviewStyles';
 
-const SingleReview = ({ review: { comment, movieRating, username } }) => {
+const SingleReview = ({ review: { comment, movieRating, username }, isOwn }) => {
+  
+  function openProfile() {
+  
+  }
   
   return (
-    <StyledSingleReview>
-      <ReviewAuthor>
-        <img src='https://picsum.photos/50' alt={'image'}/>
-        <p>{username}</p>
-      </ReviewAuthor>
+    <StyledSingleReview
+      $isOwn={isOwn}
+    >
+      <AuthorsName
+        title='View profile'
+        onClick={openProfile}
+      >{username}</AuthorsName>
+      <AuthorImage
+        src='https://picsum.photos/50'
+        alt={'image'}
+      />
       <ReviewContent>
         {comment}
       </ReviewContent>
       <ReviewRating
         rating={movieRating}
         maxStars={5}
+        starSize='18px'
         color='onSurface'
       />
     </StyledSingleReview>

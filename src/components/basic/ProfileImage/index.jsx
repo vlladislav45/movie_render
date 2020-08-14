@@ -16,6 +16,7 @@ const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
   
   const [imageUrl, setImageUrl] = useState(null);
   
+  //TODO:
   const url = useMemo(() => profileImage
     ? IMAGE_BASE_PATH + username + `/${profileImage}`
     : require('../../../assets/profile/blank-profile.png'), [profileImage]);
@@ -26,7 +27,8 @@ const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
       return;
     }
     ResourcesAPI.fetchResource(url)
-    .then(({ data }) => setImageUrl(URL.createObjectURL(data)));
+    .then(({ data }) => setImageUrl(URL.createObjectURL(data)))
+    .catch(err => setImageUrl(require('../../../assets/profile/blank-profile.png')));
   }, [url])
   
   const isSameWidthHeight = (typeof size === 'number');

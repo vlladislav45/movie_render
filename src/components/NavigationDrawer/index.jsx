@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { closeNavigationDrawer } from 'reducers/uiReducer';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import DrawerHeader from './DrawerHeader';
 import DrawerMenu from './DrawerMenu';
 import { Drawer, DrawerDivider, Overlay } from './styles';
 
-const NavigationDrawer = props => {
+const NavigationDrawer = () => {
   const dispatch = useDispatch();
   const drawerRef = useRef();
   
@@ -15,38 +14,46 @@ const NavigationDrawer = props => {
     drawerOpen: uiReducer.drawerOpen,
   }))
   const { device, width } = useDeviceDimensions();
+  const [drawerTranslate, setDrawerTranslate] = useState(0);
   
-  //Close drawer on swipe left https://stackoverflow.com/a/23230280
-  // TODO: Make it on scroll left also
-  // TODO: Make it slide a little bit and close after a certain threshold is reached
+  const CLOSE_THRESHOLD = useMemo(
+    () => drawerRef.current ? drawerRef.current.offsetWidth / 2 : 150,
+    [drawerRef, width]);
+  
+  useEffect(() => {
+    if (drawerTranslate > CLOSE_THRESHOLD)
+      dispatch(closeNavigationDrawer());
+  }, [drawerTranslate])
+  
+  // Close drawer on swipe left https://stackoverflow.com/a/23230280
   useEffect(() => {
     if (!drawerOpen || !drawerRef.current) return;
+    setDrawerTranslate(0);
+    drawerRef.current.addEventListener('touchstart', handleTouchStart, false);
+    drawerRef.current.addEventListener('touchmove', handleTouchMove, false);
+    drawerRef.current.addEventListener('touchend', handleTouchEnd, false);
     
-    drawerRef.current.addEventListener('touchstart', handleTouchStart, false)
-    drawerRef.current.addEventListener('touchmove', handleTouchMove, false)
-    
-    let xDown = null;
+    let xLeft = null;
     
     function handleTouchStart(evt) {
       if (!evt.touches) return;
       const firstTouch = evt.touches[0];
-      xDown = firstTouch.clientX;
+      xLeft = firstTouch.clientX;
     }
     
     function handleTouchMove(evt) {
-      if (!xDown || !evt.touches) {
+      if (!xLeft || !evt.touches) {
         return;
       }
       
-      let xUp = evt.touches[0].clientX;
-      let xDiff = xDown - xUp;
+      let xRight = evt.touches[0].clientX;
+      let xDiff = xLeft - xRight;
       
-      if (xDiff > 0) {
-        /* left swipe or scroll */
-        dispatch(closeNavigationDrawer())
-      }
-      /* reset values */
-      xDown = null;
+      setDrawerTranslate(xDiff);
+    }
+    
+    function handleTouchEnd(e) {
+      setDrawerTranslate(translate => translate < CLOSE_THRESHOLD ? 0 : translate);
     }
   }, [drawerOpen])
   
@@ -63,6 +70,7 @@ const NavigationDrawer = props => {
     >
       <Drawer
         ref={drawerRef}
+        $translate={drawerTranslate}
         responsive={{
           device, width
         }}
@@ -77,7 +85,5 @@ const NavigationDrawer = props => {
     </Overlay>
   );
 };
-
-NavigationDrawer.propTypes = {};
 
 export default NavigationDrawer;

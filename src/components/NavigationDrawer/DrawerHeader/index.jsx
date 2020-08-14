@@ -9,8 +9,11 @@ import RegisterForm from 'modules/authentication/RegisterForm';
 import LoginForm from 'modules/authentication/LoginForm';
 import {
   DarkModeToggle,
-  HeaderPrimaryText, HeaderSecondaryText,
-  LoginButton, MoonIcon,
+  DrawerLogo,
+  HeaderPrimaryText,
+  HeaderSecondaryText,
+  LoginButton,
+  MoonIcon,
   ProfilePhoto,
   RegisterButton,
   StyledDrawerHeader
@@ -24,6 +27,7 @@ const DrawerHeader = () => {
   
   const {
     isLoggedIn,
+    loggedInUser,
     redirectToLogin,
     isLoading,
     isDark,
@@ -31,6 +35,7 @@ const DrawerHeader = () => {
     registerModal,
   } = useSelector(({ auth, themeReducer: { themeColors } }) => ({
     isLoggedIn: auth.isLoggedIn,
+    loggedInUser: auth.loggedInUser,
     redirectToLogin: auth.redirectToLogin,
     isLoading: auth.isLoading,
     isDark: themeColors.isDark,
@@ -63,12 +68,12 @@ const DrawerHeader = () => {
   function renderAnonymousHeader() {
     return (
       <>
-        <HeaderPrimaryText>
-          You are not logged in
-        </HeaderPrimaryText>
-        <HeaderSecondaryText>
-          Register to unlock better features
-        </HeaderSecondaryText>
+        {/*<HeaderPrimaryText>*/}
+        {/*  You are not logged in*/}
+        {/*</HeaderPrimaryText>*/}
+        {/*<HeaderSecondaryText>*/}
+        {/*  Register to unlock better features*/}
+        {/*</HeaderSecondaryText>*/}
         <LoginButton
           type='text'
           text='login'
@@ -102,8 +107,8 @@ const DrawerHeader = () => {
     return (
       <>
         <ProfilePhoto/>
-        <HeaderPrimaryText>Stefan</HeaderPrimaryText>
-        <HeaderSecondaryText>kopa4a</HeaderSecondaryText>
+        <HeaderPrimaryText>{loggedInUser.username}</HeaderPrimaryText>
+        <HeaderSecondaryText>{loggedInUser.email}</HeaderSecondaryText>
       </>
     )
   }
@@ -112,6 +117,9 @@ const DrawerHeader = () => {
     <StyledDrawerHeader>
       {isLoading && <Loading/>}
       {isLoggedIn ? renderAuthenticatedHeader() : renderAnonymousHeader()}
+      <DrawerLogo
+        textColor='onSurface' robotColor='onSurface' $isLoggedIn={isLoggedIn}
+      />
       <DarkModeToggle>
         <MoonIcon
           $isDark={isDark}

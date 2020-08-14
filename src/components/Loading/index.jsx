@@ -1,41 +1,58 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CogWheel, LoadingInner, LoadingOuter } from './styles';
+import {
+  CogWheel,
+  CogWheelContainer,
+  LoadingInner,
+  LoadingLogo,
+  LoadingOuter,
+  LogoAndAnimationContainer
+} from './styles';
+import { useSelector } from 'react-redux';
+import { DARK_THEME } from '../../utils/themes';
 
-// TODO: Why did i do this?? (the commented part)
-const Loading = ({ isLoading = true, elevation = 0 }, ref) => {
-  // const timeout = useRef(0);
-  // const [render, toggleRender] = useState(true);
-  // useEffect(() => () => clearTimeout(timeout.current), [])
-  // useEffect(() => {
-  //   console.group('isLoading')
-  //   console.log(isLoading)
-  //   console.groupEnd()
-  //   // if(!isLoading)
-  //   //   timeout.current = setTimeout(() => toggleRender(false), 700) // Loading fade out delay
-  // }, [isLoading])
+const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }, ref) => {
+  const { selectedTheme } = useSelector(({ themeReducer }) => ({
+    selectedTheme: themeReducer.themeName,
+  }))
   
-  // if (!render)
-  //   return null;
-  
-  function renderLoading () {
+  function renderLoading() {
     return (
-        <LoadingOuter
-          ref={ref}
-          className='loading'
+      <LoadingOuter
+        ref={ref}
+        className='loading'
+        elevation={elevation}
+      >
+        <LoadingInner
           elevation={elevation}
+          $loading={isLoading}
         >
-          <LoadingInner
-            elevation={elevation}
-            $loading={isLoading}
-          >
-            <CogWheel className="first"/>
-            <CogWheel className="second"/>
-            <CogWheel className="third"/>
-          </LoadingInner>
-        </LoadingOuter>
+          {!onlyCogWheel
+            ? (
+              <LogoAndAnimationContainer>
+                <LoadingLogo
+                  textColor={selectedTheme === DARK_THEME ? 'primary' : 'secondary'}
+                  robotColor={selectedTheme === DARK_THEME ? 'primary' : 'secondary'}
+                />
+                <CogWheelContainer>
+                  <CogWheel className="first"/>
+                  <CogWheel className="second"/>
+                  <CogWheel className="third"/>
+                </CogWheelContainer>
+              </LogoAndAnimationContainer>
+            )
+            : (
+              <CogWheelContainer>
+                <CogWheel $onlyCogWheel={onlyCogWheel} className="first"/>
+                <CogWheel $onlyCogWheel={onlyCogWheel} className="second"/>
+                <CogWheel $onlyCogWheel={onlyCogWheel} className="third"/>
+              </CogWheelContainer>
+            )
+          }
+        </LoadingInner>
+      </LoadingOuter>
     );
   }
-
+  
   return (
     renderLoading()
   );

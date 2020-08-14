@@ -13,10 +13,9 @@ export const SingleMovieLink = styled.div`${props => {
   const { isDark, surface, secondary } = theme;
   
   return `
-    // background: red;
     position: relative;
     overflow: hidden;
-    width: 280px;
+    width: 260px;
     height: 450px;
     border-radius: 4px;
     margin: 0 auto;

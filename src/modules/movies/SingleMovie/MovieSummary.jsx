@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
-import { TextWrapper, StyledMovieSummary, CardTitle } from './styles';
+import { SummaryCard, StyledMovieSummary, CardTitle } from './styles';
 
 const BIG_SUMMARY_THRESHOLD = 600;
 const DEFAULT_TEXT = 'No summary available';
-export default ({ summary = '' }) => {
+export default ({ summary = '', oneColumn }) => {
   
   const isEmpty = summary.length === 0;
 
   return (
     <StyledMovieSummary
+      $oneColumn={oneColumn}
     >
       <CardTitle>{isEmpty ? DEFAULT_TEXT : `Summary:`}</CardTitle>
-      <TextWrapper>
+      <SummaryCard>
         {summary}
-      </TextWrapper>
+      </SummaryCard>
     </StyledMovieSummary>
   );
 }
