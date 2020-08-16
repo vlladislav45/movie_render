@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { applyShadow } from '../../utils/colorUtils';
+import { MaterialSurface } from '../basic';
 
-export const CardWrapper = styled.div`
-  max-width: 100%;
-  max-height: 100%;
-  box-shadow: ${applyShadow(6)};
+export const CardWrapper = styled(MaterialSurface)`
+  // max-width: 100%;
+  // max-height: 100%;
   border-radius: 6px;
   padding: 20px;
   

@@ -87,8 +87,8 @@ export const DrawerLogo = styled(Logo)`
   position: absolute;
   top: 12px;
   right: 16px;
-  width: 70%;
-  height: 50%;
+  width: 65%;
+  height: 45%;
   ${({ $isLoggedIn }) => !$isLoggedIn && `
     top: 0;
     left: 0;

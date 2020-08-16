@@ -3,21 +3,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { enqueueSnackbarMessage, promptUser } from 'reducers/uiReducer';
 import { getReviewsByMovie, rateMovie } from 'reducers/moviesReducer';
 import SingleReview from './SingleReview';
-import { RateMovieBtn, ReviewsContainer, StyledRatingSection } from './styles';
+import { NoReviewsText, RateMovieBtn, ReviewsContainer, StyledRatingSection } from './styles';
 import { CardTitle } from '../styles';
+import Loading from '../../../../components/Loading';
 
 const RatingSection = ({ movieName, movieId, oneColumn }) => {
   const dispatch = useDispatch();
   
-  const { movieRating, userId, username, reviews } = useSelector(
+  const { movieRating, userId, username, reviews, reviewsLoading } = useSelector(
     ({
-       moviesReducer: { selectedMovie: { movieInfo, reviews } },
+       moviesReducer: { selectedMovie: { movieInfo, reviews, reviewsLoading } },
        auth: { loggedInUser },
      }) => ({
       movieRating: movieInfo.movieRating,
       userId: loggedInUser.userId,
       username: loggedInUser.username,
-      reviews,
+      reviews, reviewsLoading,
     }));
   
   const [sortedReviews, setSortedReviews] = useState([]);
@@ -72,6 +73,7 @@ const RatingSection = ({ movieName, movieId, oneColumn }) => {
     <StyledRatingSection
       $oneColumn={oneColumn}
     >
+      <Loading isLoading={reviewsLoading} />
       <CardTitle>
         Reviews:
       </CardTitle>
@@ -85,6 +87,7 @@ const RatingSection = ({ movieName, movieId, oneColumn }) => {
           rating={movieRating}
           color={isUserRated ? 'onSurface' : 'primary'}
         />
+        {!reviewsLoading && reviews.length === 0 && <NoReviewsText>Be the first to leave a review</NoReviewsText>}
         {sortedReviews.map((review, index) => (
           <SingleReview
             key={`review_${index}`}

@@ -22,6 +22,7 @@ const RESET_FILTER = 'RESET_FILTER';
 // Rating
 const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
 const SET_REVIEWS = 'SET_REVIEWS';
+const REVIEW_LOADING = 'REVIEW_LOADING';
 
 const CLEAR_SINGLE = 'CLEAR_SINGLE';
 
@@ -107,7 +108,7 @@ export const changeSelectedPage = newPage => ({
 
 export const changeMoviesPerPage = moviesPerPage => ({
   type: CHANGE_MOVIES_PER_PAGE,
-  payload: moviesPerPage || getMoviesPerPage,
+  payload: moviesPerPage || getMoviesPerPage(),
 });
 
 // FILTER
@@ -121,8 +122,7 @@ export const resetFilter = () => ({
 });
 
 // RATE
-export const rateMovie = (
-  movieId, userId, stars, review) => dispatch => new Promise(resolve => {
+export const rateMovie = (movieId, userId, stars, review) => dispatch => new Promise(resolve => {
   ReviewsAPI.rateMovie({
     userId,
     movieId,
@@ -140,6 +140,7 @@ export const rateMovie = (
 });
 
 export const getReviewsByMovie = movieId => dispatch => {
+  dispatch({ type: REVIEW_LOADING });
   ReviewsAPI.getReviewsByMovie(movieId).then(({ data }) => {
     dispatch({ type: SET_REVIEWS, payload: data })
   })
@@ -160,6 +161,7 @@ const initialState = {
   selectedMovie: {
     movieInfo: {},
     reviews: [],
+    reviewsLoading: false,
     isLoading: false,
   },
   filters: {
@@ -255,6 +257,7 @@ export default (state = initialState, action) => {
         selectedMovie: {
           ...state.selectedMovie,
           reviews: payload,
+          reviewsLoading: false,
         }
       }
     case CLEAR_SINGLE:
@@ -262,6 +265,14 @@ export default (state = initialState, action) => {
         ...state,
         selectedMovie: initialState.selectedMovie,
       };
+    case REVIEW_LOADING:
+      return {
+        ...state,
+        selectedMovie: {
+          ...state.selectedMovie,
+          reviewsLoading: true,
+        }
+      }
     default:
       return state;
   }

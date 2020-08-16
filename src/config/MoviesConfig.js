@@ -2,7 +2,6 @@ import { checkMedia, XS_SM, SM, lessThen, greaterThen, M, L, XL, FULL_HD } from 
 
 export const getMoviesPerPage = () => {
   const media = checkMedia();
-  console.log(media)
   switch (media) {
     case XS_SM:
     case SM:

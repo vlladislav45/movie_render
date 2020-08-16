@@ -21,10 +21,11 @@ const MOVIE_RATIO = 16 / 10;
 const BASE_POSTER_URL = API_URL + 'movies/single/hdPoster/';
 const SingleMovie = ({ match: { params }, history }) => {
   const dispatch = useDispatch();
+  // Ref of the previous filtered genres, to restore after unmunting
+  const prevGenres = React.useRef({ current: [] });
   const { movieId } = params;
   
   const { width: screenWidth, device } = useDeviceDimensions();
-  const [prevGenres, setPrevGenres] = useState();
   const isSingleColumn = useMemo(() => lessThen(device, L), [screenWidth]);
   
   const { selectedMovie, previousGenres, isLoading } = useSelector(
@@ -33,6 +34,12 @@ const SingleMovie = ({ match: { params }, history }) => {
       previousGenres: genres,
       isLoading: selectedMovie.isLoading,
     }));
+  
+  useEffect(() => {
+    prevGenres.current = previousGenres;
+    dispatch(updateFilter({ genres: movieGenres }));
+    return () => dispatch(updateFilter({ genres: prevGenres.current }));
+  }, []);
   
   useEffect(() => {
     dispatch(clearSingleMovie())
@@ -45,12 +52,6 @@ const SingleMovie = ({ match: { params }, history }) => {
     actorNames = [], movieYear, movieViews,
     movieName, movieGenres,
   } = selectedMovie;
-  
-  useEffect(() => {
-    setPrevGenres(previousGenres);
-    dispatch(updateFilter({ genres: movieGenres }));
-    return () => dispatch(updateFilter({ genres: prevGenres }));
-  }, [movieGenres]);
   
   
   return (

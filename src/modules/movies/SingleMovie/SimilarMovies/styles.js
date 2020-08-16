@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Card } from 'components';
 
-export const SimilarMoviesContainer = styled.div`
+export const SimilarMoviesContainer = styled(Card)`
   grid-area: 5 / 1 / 5 / -1;
   ${({ $oneColumn }) => $oneColumn && `
     grid-area: 7 / 1 / 8 / -1;
@@ -10,6 +11,7 @@ export const SimilarMoviesContainer = styled.div`
   height: 400px;
   overflow: hidden;
   color: ${props => props.theme.onSurface};
+  padding: 10px 10px 0;
 `;
 
 export const MoreMoviesTitle = styled.h3`

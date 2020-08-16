@@ -26,7 +26,7 @@ import {
 let isSliding = false;
 const { smallArea } = transitionDurations;
 
-const Genres = props => {
+const Genres = ({ onFinishLoading, ...props }) => {
   const dispatch = useDispatch();
   const {
     genres = [],
@@ -120,7 +120,7 @@ const Genres = props => {
     if (!isLeft) genresRefsArray = genresRefsArray.reverse();
     
     const firstHidden = getLastInvisible(genresRefsArray);
-    
+
     // The first hidden is the first element, now we slide it, next time we are the the end
     if (firstHidden === genresRefsArray[0].current) {
       isLeft ? setLeftEnd(true) : setRightEnd(true);
@@ -128,7 +128,7 @@ const Genres = props => {
     
     const slideArrow = isLeft ? leftArrowRef.current : rightArrowRef.current;
     const offsetToBeVisible = calcOffset(firstHidden, slideArrow, isLeft);
-    
+
     const newOffset = isLeft
       ? Math.min(0, offset + offsetToBeVisible)
       : offset - offsetToBeVisible;
@@ -165,9 +165,10 @@ const Genres = props => {
           id={id}
           key={id}
           ref={genresRef[name]}
+          className='genre'
           isDisabled={isDisabled}
           isActive={selectedGenres.includes(name)}
-          onClick={() => genreClicked(genre)}
+          onClick={() => isDisabled ? {} : genreClicked(genre)}
         >
           <p>
             {name}
@@ -178,7 +179,7 @@ const Genres = props => {
   
   useEffect(() => {
     if (!(isOverflow === null || isLoading))
-      props.onFinishLoading();
+      onFinishLoading();
   }, [isOverflow, isLoading])
   
   //TODO: rework loading logic
@@ -192,7 +193,7 @@ const Genres = props => {
       <Arrow
         flipped={'true'}
         ref={leftArrowRef}
-        disabled={leftEnd || browserHistory.location.pathname !== '/'}
+        disabled={leftEnd}
         onClick={slideLeft}
       />
       }
@@ -206,7 +207,7 @@ const Genres = props => {
       {isOverflow &&
       <Arrow
         ref={rightArrowRef}
-        disabled={rightEnd || browserHistory.location.pathname !== '/'}
+        disabled={rightEnd}
         onClickCapture={slideRight}
       />
       }

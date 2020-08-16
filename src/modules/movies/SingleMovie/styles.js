@@ -7,8 +7,6 @@ import {
 } from 'config/animationConstants';
 import { applyShadow } from 'utils/colorUtils';
 import { Card } from 'components';
-import { func } from 'prop-types';
-import { SM, XS_SM } from '../../../utils/mediaUtils';
 
 
 export const SingleMovieWrapper = styled.div`
@@ -21,6 +19,7 @@ export const SingleMovieWrapper = styled.div`
   
   width: ${({ $oneColumn }) => $oneColumn ? 'min-content' : '95vw'};
   margin: auto;
+  padding-bottom: 50px;
   
   opacity: 0;
   ${props => props.fadeIn && `

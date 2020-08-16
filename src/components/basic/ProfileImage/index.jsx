@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { API_URL } from 'api/BaseAPI';
 import ResourcesAPI from 'api/ResourcesAPI';
-
+import useFakePromise from 'hooks/useFakePromise';
 import { StyledProfileCircle } from './styles';
 
-const IMAGE_BASE_PATH = API_URL + 'user/';
+export const IMAGE_BASE_PATH = API_URL + 'user/';
 const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
+  const fakePromise = useFakePromise();
   const { profileImage, username } = useSelector(
     ({ auth: { loggedInUser }, userReducer: { user } }) => ({
       profileImage: user.userInfo['photoUrl']?.['imageName'] || loggedInUser.profileImage?.imageName,
@@ -16,24 +17,27 @@ const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
   
   const [imageUrl, setImageUrl] = useState(null);
   
-  //TODO:
   const url = useMemo(() => profileImage
     ? IMAGE_BASE_PATH + username + `/${profileImage}`
     : require('../../../assets/profile/blank-profile.png'), [profileImage]);
   
   useEffect(() => {
+    if (!fakePromise) return;
     if (!profileImage) {
       setImageUrl(url);
       return;
     }
-    ResourcesAPI.fetchResource(url)
-    .then(({ data }) => setImageUrl(URL.createObjectURL(data)))
-    .catch(err => setImageUrl(require('../../../assets/profile/blank-profile.png')));
-  }, [url])
+    
+    const getFetchPromise = () => ResourcesAPI.fetchResource(url);
+    Promise.race([getFetchPromise(), fakePromise])
+      .then(res => res && setImageUrl(URL.createObjectURL(res.data)))
+      .catch(err => setImageUrl(require('../../../assets/profile/blank-profile.png')));
+  }, [url, fakePromise])
   
   const isSameWidthHeight = (typeof size === 'number');
   const width = isSameWidthHeight ? size : size.width;
   const height = isSameWidthHeight ? size : size.height;
+  
   return (
     <StyledProfileCircle
       width={width}

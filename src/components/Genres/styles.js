@@ -41,11 +41,6 @@ export const GenresList = styled.ul`
 export const SingleGenre = styled.li`
     user-select: none;
     cursor: pointer;
-    ${props => props.isDisabled && `
-        cursor: default;
-        pointer-events: none;
-    `};
-    
     position: relative;
     margin: 0 5px;
     font-size: 1.1rem;
@@ -74,7 +69,10 @@ export const SingleGenre = styled.li`
         `};
      `};
      
-     
+    // SEMI COLON OMITTED ON PURPOSE
+    ${props => props.isDisabled && `
+      cursor: default;
+    `}
      
     // Hover effect
     & :before {

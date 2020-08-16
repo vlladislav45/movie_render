@@ -24,7 +24,7 @@ const MoviesPagination = ({ history, location, style, className }) => {
     }));
 
   const [currentPage, setCurrentPage] = useState(selectedPage);
-
+  
   useEffect(() => {
     const query = qs.parse(search);
     if (query.items && !isNaN(Number(query.items)) && Number(query.items) !==

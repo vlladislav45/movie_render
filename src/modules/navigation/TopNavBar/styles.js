@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { applyShadow, calcDarkThemeOverlay } from 'utils/colorUtils';
-import { transitionDurations } from 'config/animationConstants';
+import { transitionDurations, transitionFunctions } from 'config/animationConstants';
 import { VERY_HIGH_Z_INDEX } from 'config/zIndexes';
 import { Genres, Logo } from 'components';
 import { ReactComponent as MenuIcon } from 'assets/icons/menu-24px.svg';
@@ -114,11 +114,22 @@ export const NavBarLogo = styled(Logo)`
   align-self: center;
   height: 80px;
   ${props => props.$deviceWidth < 360 && 'padding-left: 12px'};
-  // position: absolute;
-  // width: 200px;
-  // height: 90px;
-  // left: 0;
-  // right: 0;
-  // margin: auto;
-  // top: -10px;
+  cursor: pointer;
+  & g#robotLayer > .fill, & g#robotLayer > .stroke {
+    transition: all .5s ${transitionFunctions.standardEasing};
+  }
+  &:hover {
+    & g#robotLayer > rect {
+      transform: matrix(1,0,0.32557287,0.94551695,-15,0);
+      fill: ${props => props.theme.primary}!important;
+    }
+    & g#robotLayer > .fill:not(rect) {
+      fill: ${props => props.theme.primary}!important;
+      transform: translateX(-15px);
+    }
+    & g#robotLayer > .stroke:not(rect) {
+      stroke: ${props => props.theme.primary}!important;
+      transform: translateX(-15px);
+    }
+  }
 `;

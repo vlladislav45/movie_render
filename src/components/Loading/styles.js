@@ -28,17 +28,17 @@ export const LoadingInner = styled.div`
   position: relative;
   // Even above modals
   z-index: ${props => MAX_Z_INDEX - 1 + props.elevation};
-  backdrop-filter: blur(4px);
   min-width: 100px;
   min-height: 50px;
   width: 100%;
   height: 100%;
-  // display: flex;
-  // align-items: center;
+  
+  backdrop-filter: blur(4px);
   opacity: 1;
   ${props => !props.$loading && `
     transition: opacity .8s;
     opacity: 0;
+    backdrop-filter: none;
   `};
 `;
 

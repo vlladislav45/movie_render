@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toggleNavigationDrawer } from 'reducers/uiReducer';
-import { Loading, Logo } from 'components';
+import { Loading } from 'components';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
+import browserHistory from 'utils/browserHistory';
 import {
   NavBarLogo,
   StyledTopNav,
@@ -51,7 +52,7 @@ const TopNavBar = () => {
               className='navbar-action'
               onClick={toggleDrawer}
             />
-            <NavBarLogo textColor='transparent'/>
+            <NavBarLogo onClick={() => browserHistory.push('/')} textColor='transparent'/>
             {/*<TopNavTitle $deviceWidth={width}/>*/}
             <TopNavSearch/>
             <TopNavExpand

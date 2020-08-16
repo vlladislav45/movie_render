@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Rating } from 'components';
-import { ReactComponent as OpenIcon } from 'assets/icons/open.svg';
+import { ProfileImage } from 'components/basic';
 
 
 export const StyledSingleReview = styled.div`
@@ -16,28 +16,16 @@ export const StyledSingleReview = styled.div`
     &:last-child {
       border-bottom: 1px solid ${props.theme.disabled}38;
     }
-    color: ${props.$isOwn ? props.theme.primary : props.theme.onSurface};
-    
-    ${props.$isOwn && `
-      box-shadow: 0px 0px 10px ${props.theme.primary};
-    `};
   `};
 `;
-
-export const AuthorImage = styled.img`
-  position: absolute;
-  top: var(--padding);
-  width: 50px;
-  max-width: 50px;
-  height: 50px;
-  max-height: 50px;
-`
 
 export const AuthorsName = styled.p`
   position: absolute;
   left: 0;
   bottom: var(--padding);
   font-size: 0.9rem;
+  color: ${props => props.theme.onSurface};
+  
   transition: transform 100ms;
   &:hover {
     transform: scale(1.05);
@@ -48,10 +36,11 @@ export const AuthorsName = styled.p`
 export const ReviewContent = styled.p`
   position: absolute;
   left: 60px;
+  top: calc(var(--padding) - 5px);
   width: auto;
-  height: calc(100% - (var(--padding) * 2));
-  font-size: 0.75rem;
-  line-height: 1.15rem;
+  height: calc(100% - (var(--padding) * 3) + 5px);
+  font-size: 0.70rem;
+  line-height: 1.05rem;
   color: ${props => props.theme.onSurfaceMD};
   
   overflow-y: scroll;
@@ -63,34 +52,29 @@ export const ReviewContent = styled.p`
   }
 `;
 
-export const OpenButton = styled(OpenIcon)`
-  position: absolute;
-  left: max(15%, 70px);
-  bottom: 0;
-`;
-
 export const ReviewRating = styled(Rating)`
   position: absolute;
   bottom: var(--padding);
   right: 0;
-  background: ${props => props.theme.surface};
 `;
 
-export const TestBorder = styled.div`
+const BaseImageStyle = css`
   position: absolute;
-  left: 0;
-  bottom: var(--padding);
-  width: 100%;
-  height: 2px;
-  background: red;
-`;
-
-export const TestBorder2 = styled.div`
-  position: absolute;
-  left: 0;
   top: var(--padding);
-  width: 100%;
-  height: 2px;
-  background: red;
-`;
+  width: 50px;
+  max-width: 50px;
+  height: 50px;
+  max-height: 50px;
+  outline: 1px solid #E4E6E7;
+`
+export const AuthorImage = styled.img`
+  ${BaseImageStyle};
+  
+  transition: opacity 100ms;
+  opacity: 0;
+  ${props => props.$fadeIn && 'opacity: 1'};
+`
 
+export const OwnImage = styled(ProfileImage)`
+  ${BaseImageStyle};
+`;

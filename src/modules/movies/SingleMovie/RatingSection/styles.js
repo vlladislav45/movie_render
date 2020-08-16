@@ -25,7 +25,13 @@ export const RateMovieBtn = styled(Rating)`
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: -20px; // Counter the padding
-  background: ${props => props.theme.surface};
   margin-bottom: 15px;
+`;
+
+export const NoReviewsText = styled.p`
+  width: 100%;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: ${props => props.theme.onSurface};
 `;
 

@@ -7,8 +7,9 @@ export const StyledProfileCircle = styled.img`
     height: ${props => props.height}px;
     
     transition: opacity 0.2s;
-    ${props => props.$isLoading && `
-        opacity: 0;
+    opacity: 0;
+    ${props => !props.$isLoading && `
+      opacity: 1;
     `};
 `;
 

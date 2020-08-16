@@ -112,10 +112,10 @@ const DrawerHeader = () => {
       </>
     )
   }
-  
+
   return (
     <StyledDrawerHeader>
-      {isLoading && <Loading/>}
+      <Loading isLoading={isLoading} />
       {isLoggedIn ? renderAuthenticatedHeader() : renderAnonymousHeader()}
       <DrawerLogo
         textColor='onSurface' robotColor='onSurface' $isLoggedIn={isLoggedIn}
