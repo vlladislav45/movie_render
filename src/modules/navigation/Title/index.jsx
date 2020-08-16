@@ -11,7 +11,8 @@ const Title = props => {
 				device={device}
 				onClick={() => browserHistory.push('/')}
 			>
-				Гледайте онлайн филми
+				Omega Twenty One
+				{/*Гледайте онлайн филми*/}
 			</StyledTitle>
 		</div>
 	);

@@ -6,7 +6,6 @@ export const RegisterForm = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 450px;
   
   & > .register-input {
     width: 100%;

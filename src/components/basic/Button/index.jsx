@@ -101,6 +101,10 @@ const Button = React.forwardRef((
       <TextButton
         {...buttonProps}
       >
+        {Icon &&
+        <LeadingIcon>
+          <Icon/>
+        </LeadingIcon>}
         {text || children}
       </TextButton>
       }

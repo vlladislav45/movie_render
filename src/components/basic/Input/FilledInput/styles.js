@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { getOverlay } from 'utils/colorUtils';
+import { lessThen, M } from 'utils/mediaUtils';
 import {
   transitionDurations,
 } from 'config/animationConstants';
-import { BaseLabel } from '../baseStyles';
-import { BaseInput } from '../baseStyles.js';
+import { BaseLabel, BaseInput } from '../baseStyles';
 
 export const StyledFilledInputContainer = styled.div`${props => {
   const { theme, focused, error, isOnPrimary, disabled: isDisabled } = props;
@@ -26,7 +26,7 @@ export const StyledFilledInputContainer = styled.div`${props => {
     position: relative;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
-    font-size: 1rem;
+    font-size: 1em;
     border-bottom: 1px solid ${borderColor};
     background: ${background};
     
@@ -65,9 +65,14 @@ export const StyledFilledInputContainer = styled.div`${props => {
 }}`;
 
 export const InputLabel = styled(BaseLabel)`
-  top: 50%;
-  ${props => !props.elevated && `
-    transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  ${({ elevated, $device }) => elevated && `
+    ${lessThen($device, M)
+      ? `transform: translateY(-50%) scale(0.75)`
+      : `transform: translateY(-37%) scale(0.75)`
+    };
   `};
 `;
 

@@ -9,6 +9,8 @@ import Tabs from './Tabs';
 import ConnectionHandler from './ConnectionHandler';
 import Prompt from './Prompt';
 import NavigationDrawer from './NavigationDrawer';
+import Card from './Card';
+import Logo from './Logo';
 import ErrorBoundary from './ErrorBoundary';
 
 export {
@@ -23,5 +25,7 @@ export {
   Prompt,
   NavigationDrawer,
   SuspenseLoading,
+  Logo,
+  Card,
   ErrorBoundary,
 };

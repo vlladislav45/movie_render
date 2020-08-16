@@ -43,7 +43,10 @@ export const removeBookmark = (movieId, userId, movieName, showUndo = true) => d
       {
         ['Undo']: () => dispatch(addBookmark(movieId, userId, movieName, false)),
       },
-      { closeOnAction: ['Undo'] })
+      {
+        closeOnAction: ['Undo'],
+        autoCloseAfter: 1500,
+      })
     )
   })
 }
@@ -57,7 +60,10 @@ export const addBookmark = (movieId, userId, movieName, showUndo = true) => disp
       {
         ['Undo']: () => dispatch(removeBookmark(movieId, userId, movieName, false)),
       },
-      { closeOnAction: ['Undo'] }
+      {
+        closeOnAction: ['Undo'],
+        autoCloseAfter: 1500,
+      }
       )
     )
   })

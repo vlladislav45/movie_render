@@ -10,8 +10,9 @@ export const StyledTitle = styled.h1`
       margin-top: -5px;
     `};
     font-family: 'Roboto', sans-serif;
+    font-family: 'Marck script', cursive;
     letter-spacing: -1.5px;
-    font-weight: 300;
+    // font-weight: 300;
     white-space: nowrap;
     color: ${props => props.theme.onSurface};
     

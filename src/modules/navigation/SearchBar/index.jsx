@@ -62,6 +62,7 @@ const SearchBar = props => {
       >
         <SearchInput
           autoFocus={extendedState === EXTENDED}
+          autoFocusDelay={250}
           disabled={browserHistory.location.pathname !== '/'}
           onPrimary
           onChange={handleChange}

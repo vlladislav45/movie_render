@@ -182,6 +182,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: false,
+        isLoading: false,
         loggedInUser: {},
       };
     case CHANGE_MODAL_STATE:

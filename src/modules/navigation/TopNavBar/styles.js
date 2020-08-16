@@ -1,10 +1,8 @@
 import styled from 'styled-components';
-import { applyShadow } from 'utils/colorUtils';
-import { FULL_HD, L, M, SM, XL, XS_SM } from 'utils/mediaUtils';
-import { transitionDurations } from 'config/animationConstants';
+import { applyShadow, calcDarkThemeOverlay } from 'utils/colorUtils';
+import { transitionDurations, transitionFunctions } from 'config/animationConstants';
 import { VERY_HIGH_Z_INDEX } from 'config/zIndexes';
-import { calcDarkThemeOverlay } from 'utils/colorUtils';
-import { Genres } from 'components';
+import { Genres, Logo } from 'components';
 import { ReactComponent as MenuIcon } from 'assets/icons/menu-24px.svg';
 import { ReactComponent as ExpandIcon } from 'assets/icons/expand.svg';
 import Title from '../Title';
@@ -39,6 +37,12 @@ export const StyledTopNav = styled.div`
     ${isExtended && `
       height: 128px;
     `};
+    
+    & > .loading {
+      top: 0;
+      bottom: 0;
+      margin: auto;
+    }
 `;
 }}`;
 
@@ -54,6 +58,8 @@ export const TopNavInner = styled.div`
   }
   
   & svg.navbar-action {
+    min-width: 24px;
+    min-height: 24px;
     width: 24px;
     height: 24px;
     cursor: pointer;
@@ -100,4 +106,30 @@ export const TopNavSearch = styled(SearchBar)`
 export const TopNavGenres = styled(Genres)`
   align-self: center;
   margin: 0 auto;
+`;
+
+export const NavBarLogo = styled(Logo)`
+  flex: 1 1 auto;
+  padding-left: 32px;
+  align-self: center;
+  height: 80px;
+  ${props => props.$deviceWidth < 360 && 'padding-left: 12px'};
+  cursor: pointer;
+  & g#robotLayer > .fill, & g#robotLayer > .stroke {
+    transition: all .5s ${transitionFunctions.standardEasing};
+  }
+  &:hover {
+    & g#robotLayer > rect {
+      transform: matrix(1,0,0.32557287,0.94551695,-15,0);
+      fill: ${props => props.theme.primary}!important;
+    }
+    & g#robotLayer > .fill:not(rect) {
+      fill: ${props => props.theme.primary}!important;
+      transform: translateX(-15px);
+    }
+    & g#robotLayer > .stroke:not(rect) {
+      stroke: ${props => props.theme.primary}!important;
+      transform: translateX(-15px);
+    }
+  }
 `;

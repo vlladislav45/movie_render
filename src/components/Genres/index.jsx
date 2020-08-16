@@ -26,7 +26,7 @@ import {
 let isSliding = false;
 const { smallArea } = transitionDurations;
 
-const Genres = props => {
+const Genres = ({ onFinishLoading, ...props }) => {
   const dispatch = useDispatch();
   const {
     genres = [],
@@ -40,74 +40,71 @@ const Genres = props => {
     }));
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
-
+  
   // Object with keys the genre name and value its ref
   const [genresRef, setGenresRef] = useState(null);
   // If genres overflow their container, render arrows
   const [isOverflow, setIsOverflow] = useState(null);
-
+  
   // current arrow offset
   const [offset, setOffset] = useState(0);
   // is the left or right arrow disabled
   const [leftEnd, setLeftEnd] = useState(true);
   const [rightEnd, setRightEnd] = useState(false);
-
+  
   const { width: screenWidth } = useDeviceDimensions();
-
+  
   useEffect(() => {
     dispatch(fetchGenres());
   }, []);
-
+  
   useEffect(() => {
     const refs = {};
     genres.forEach(genre => refs[genre['movieGenreName']] = createRef());
     setGenresRef(refs);
   }, [genres.length]);
-
+  
   useEffect(() => {
     setOffset(0);
     setLeftEnd(true);
     setRightEnd(false);
   }, [isOverflow]);
-
+  
   useLayoutEffect(checkIfOverflows, [genresRef, screenWidth]);
-
-  //TODO: Currently we hide the arrows, scroll to left and then check if we need to
-  // remove the arrows (in setTimeout)
-  // if this is slow, we need to rework it
-  function checkIfOverflows () {
+  
+  function checkIfOverflows() {
     // Refs still not attached
-    if (genresRef === null ||  genresRef[genres[0]]?.current === null)
+    if (genresRef === null || genresRef[genres[0]]?.current === null)
       return;
-
+    
     const GENRE_MARGIN = 10;
     const width = Object.values(genresRef).reduce((initial, ref) => (initial += ref.current.clientWidth + GENRE_MARGIN), 0);
-
+    
     
     if (width > screenWidth)
       setIsOverflow(true);
     else
       setIsOverflow(false)
   }
-
-  function slideLeft () {
+  
+  function slideLeft() {
     // Do nothing if we are at the left end or sliding
     if (leftEnd || isSliding) return;
-
+    
     slide('left');
     isSliding = true;
     setTimeout(() => isSliding = false, smallArea);
   }
-
-  function slideRight () {
+  
+  function slideRight() {
     // Do nothing if we are at the right end or sliding
     if (rightEnd || isSliding) return;
-
+    
     slide('right');
     isSliding = true;
     setTimeout(() => isSliding = false, smallArea);
   }
-
+  
   /**
    * Calculate and change the {@Link offset} of the carousel
    * based on the direction
@@ -115,51 +112,51 @@ const Genres = props => {
    */
   const slide = direction => {
     const isLeft = direction === 'left';
-
+    
     // we slided, so we are not at the end
     isLeft ? setRightEnd(false) : setLeftEnd(false);
-
+    
     let genresRefsArray = Object.values(genresRef);
     if (!isLeft) genresRefsArray = genresRefsArray.reverse();
-
+    
     const firstHidden = getLastInvisible(genresRefsArray);
 
     // The first hidden is the first element, now we slide it, next time we are the the end
     if (firstHidden === genresRefsArray[0].current) {
       isLeft ? setLeftEnd(true) : setRightEnd(true);
     }
-
+    
     const slideArrow = isLeft ? leftArrowRef.current : rightArrowRef.current;
     const offsetToBeVisible = calcOffset(firstHidden, slideArrow, isLeft);
 
     const newOffset = isLeft
       ? Math.min(0, offset + offsetToBeVisible)
       : offset - offsetToBeVisible;
-
+    
     setOffset(newOffset);
   };
-
+  
   // Add/remove the genre from the filter
-  function genreClicked (genre) {
+  function genreClicked(genre) {
     const { movieGenreName } = genre;
     const genreRef = genresRef[movieGenreName];
-
+    
     // If the genre is not 100% visible, slide
     if (!isVisible(genreRef.current, 'left'))
       slideLeft();
     else if (!isVisible(genreRef.current, 'right'))
       slideRight();
-
+    
     let newGenres;
     if (selectedGenres.includes(movieGenreName))
       newGenres = selectedGenres.filter(g => g !== movieGenreName);
     else
       newGenres = selectedGenres.concat(movieGenreName);
-
+    
     dispatch(updateFilter({ genres: newGenres }));
   }
-
-  function renderGenres () {
+  
+  function renderGenres() {
     return genres.map(genre => {
       const { genreId: id, movieGenreName: name } = genre;
       const isDisabled = browserHistory.location.pathname !== '/';
@@ -168,9 +165,10 @@ const Genres = props => {
           id={id}
           key={id}
           ref={genresRef[name]}
+          className='genre'
           isDisabled={isDisabled}
           isActive={selectedGenres.includes(name)}
-          onClick={() => genreClicked(genre)}
+          onClick={() => isDisabled ? {} : genreClicked(genre)}
         >
           <p>
             {name}
@@ -178,7 +176,12 @@ const Genres = props => {
         </SingleGenre>);
     });
   }
-
+  
+  useEffect(() => {
+    if (!(isOverflow === null || isLoading))
+      onFinishLoading();
+  }, [isOverflow, isLoading])
+  
   //TODO: rework loading logic
   return (
     <GenresContainer
@@ -190,7 +193,7 @@ const Genres = props => {
       <Arrow
         flipped={'true'}
         ref={leftArrowRef}
-        disabled={leftEnd || browserHistory.location.pathname !== '/'}
+        disabled={leftEnd}
         onClick={slideLeft}
       />
       }
@@ -204,7 +207,7 @@ const Genres = props => {
       {isOverflow &&
       <Arrow
         ref={rightArrowRef}
-        disabled={rightEnd || browserHistory.location.pathname !== '/'}
+        disabled={rightEnd}
         onClickCapture={slideRight}
       />
       }
@@ -213,30 +216,3 @@ const Genres = props => {
 };
 
 export default Genres;
-
-
-/**
- * function checkIfOverflows () {
-    const first = Object.values(genresRef)[0]?.current;
-    const last = Object.values(genresRef).reverse()[0]?.current;
-
-
-    if (!first || !last)
-      return;
-
-    // setIsOverflow(false);
-    // Set offset to 0 when resizing, to calculate properly
-    if (!leftEnd && !isVisible(first)) {
-      setOffset(0);
-    }
-
-    // TODO: this is just a hack, rework logic
-    setTimeout(() => {
-      if (!isVisible(first, 'left') || !isVisible(last, 'right')) {
-        setIsOverflow(true);
-      } else
-        setIsOverflow(false);
-    });
-
-  }
- */

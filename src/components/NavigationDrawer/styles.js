@@ -34,24 +34,40 @@ export const Drawer = styled(MaterialSurface)`
   border-top-left-radius: 0!important;
   border-bottom-left-radius: 0!important;
   
-  transition: transform 300ms;
-  transform: translateX(-100%);
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Disable scrollbar Chrome/Safari/Webkit */
+  }
   
-  ${props => props.isOpen && `
-    transform: translateX(0);
-  `};
+  transition: transform 300ms;
+
+  // transform: translateX(-100%);
+  
+  // ${props => props.isOpen && `
+  //   transform: translateX(0);
+  // `};
   
   ${props => {
-    const { responsive: { device, width } } = props;
-    const FREE_SPACE_ON_MOBILE = 56;
-    return `
-      ${lessThen(device, SM) && `
-        width: ${width - FREE_SPACE_ON_MOBILE}px;
-        max-width: 300px;
-      `}
+  const { responsive: { device, width }, $translate, isOpen } = props;
+  const FREE_SPACE_ON_MOBILE = 56;
+  return `
+    ${isOpen
+    ? `
+      transform: translateX(-${$translate}px);
+      transition: none;
     `
-    }
-  }
+    : 'transform: translateX(-100%);'}
+    
+    ${lessThen(device, SM) && `
+      width: ${width - FREE_SPACE_ON_MOBILE}px;
+      max-width: 300px;
+    `}
+  `
+}
+}
 `;
 
 

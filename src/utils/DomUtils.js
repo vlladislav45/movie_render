@@ -70,7 +70,6 @@ export function getLastInvisible(arr) {
 export function calcOffset(elem, nextElement, isLeft = true) {
   const { x, width, right } = elem.getBoundingClientRect();
   const rect = nextElement.getBoundingClientRect();
-
   const newX = isLeft ? right - rect.right : rect.x - width;
   // 20 is the extra margin around element
   const offset = isLeft ? width - newX + 20 : x - newX + 20;

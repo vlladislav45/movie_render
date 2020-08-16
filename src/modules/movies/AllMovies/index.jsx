@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import { NoMovies, StyledMoviesContainer } from './styles';
 const AllMovies = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const isMounted = useRef(true);
   
   const {
     movies = [],
@@ -35,6 +36,7 @@ const AllMovies = () => {
     [selectedPage]);
   
   const imagesReceived = useCallback(msg => {
+    if (!isMounted.current) return;
     const { data: { id, imageData } } = msg;
     setPosters(p => ({ ...p, [id]: imageData }));
   }, [imageWorker, posters]);
@@ -42,9 +44,13 @@ const AllMovies = () => {
   
   useEffect(() => {
     const worker = new ImageWorker();
+    isMounted.current = true;
     worker.onmessage = imagesReceived;
     setImageWorker(worker);
-    return () => setImageWorker(null);
+    return () => {
+      isMounted.current = false;
+      setImageWorker(null);
+    }
   }, []);
   
   useEffect(() => {
@@ -92,6 +98,7 @@ const AllMovies = () => {
         >
           <MoviesGrid
             key={'grid_' + location.key}
+            moviesPerPage={moviesPerPage}
             isLoading={isLoading}
             movies={movies}
             posters={posters}

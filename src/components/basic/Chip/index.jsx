@@ -10,13 +10,15 @@ const Chip = props => {
     closeable = true,
     onClose = () => {},
     leadingIcon: LeadingIcon,
-    color,
+    color = 'primary',
     editable = false,
+    selectable = true,
   } = props;
 
   const chipProps = {
     closeable,
     color,
+    $selectable: selectable,
     leadingIcon: !!LeadingIcon,
     contentEditable: editable,
   };
@@ -71,6 +73,7 @@ Chip.propTypes = {
     })
   ]),
   editable: PropTypes.bool, // Can the chip be editable
+  selectable: PropTypes.bool, // Can the chip text be selected
 };
 
 export default Chip;

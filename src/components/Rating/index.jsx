@@ -5,7 +5,6 @@ import themes, { BASE_THEME } from '../../utils/themes';
 import Star from './Star';
 import { StarContainer, StyledRating } from './styles';
 
-let index = 0;
 const DEFAULT_STARS = 5;
 const Rating = ({
   maxStars = DEFAULT_STARS,
@@ -13,12 +12,14 @@ const Rating = ({
   color = 'secondary',
   rateable = false,
   onRate = () => {},
+  starSize = '24px',
   ...rest
 }) => {
   const starProps = {
     color,
     rateable,
     onRate,
+    starSize,
   };
 
   function renderRating () {
@@ -92,6 +93,7 @@ Rating.propTypes = {
   color: PropTypes.oneOf(Object.keys(themes[BASE_THEME])),
   rateable: PropTypes.bool,
   onRate: PropTypes.func,
+  starSize: PropTypes.string, // the css value of size (same for width and height), can be used with rem px pt etc etc
 };
 
 export default Rating;

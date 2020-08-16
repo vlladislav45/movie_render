@@ -1,4 +1,5 @@
 import MovieAPI from 'api/MovieAPI';
+import ReviewsAPI from 'api/ReviewsAPI';
 import { getMoviesPerPage } from 'config/MoviesConfig';
 
 //Genres
@@ -20,6 +21,11 @@ const RESET_FILTER = 'RESET_FILTER';
 
 // Rating
 const RATE_MOVE_SUCCESS = 'RATE_MOVE_SUCCESS';
+const SET_REVIEWS = 'SET_REVIEWS';
+const REVIEW_LOADING = 'REVIEW_LOADING';
+
+const CLEAR_SINGLE = 'CLEAR_SINGLE';
+
 
 const GENRES_STORAGE_KEY = 'genres';
 export const fetchGenres = () => dispatch => {
@@ -102,7 +108,7 @@ export const changeSelectedPage = newPage => ({
 
 export const changeMoviesPerPage = moviesPerPage => ({
   type: CHANGE_MOVIES_PER_PAGE,
-  payload: moviesPerPage || getMoviesPerPage,
+  payload: moviesPerPage || getMoviesPerPage(),
 });
 
 // FILTER
@@ -116,9 +122,8 @@ export const resetFilter = () => ({
 });
 
 // RATE
-export const rateMovie = (
-  movieId, userId, stars, review) => dispatch => new Promise(resolve => {
-  MovieAPI.rateMovie({
+export const rateMovie = (movieId, userId, stars, review) => dispatch => new Promise(resolve => {
+  ReviewsAPI.rateMovie({
     userId,
     movieId,
     movieRating: stars,
@@ -134,6 +139,17 @@ export const rateMovie = (
   });
 });
 
+export const getReviewsByMovie = movieId => dispatch => {
+  dispatch({ type: REVIEW_LOADING });
+  ReviewsAPI.getReviewsByMovie(movieId).then(({ data }) => {
+    dispatch({ type: SET_REVIEWS, payload: data })
+  })
+}
+
+export const clearSingleMovie = () => ({
+  type: CLEAR_SINGLE,
+})
+
 const initialState = {
   genres: [],
   movies: [],
@@ -144,7 +160,8 @@ const initialState = {
   genresLoading: false,
   selectedMovie: {
     movieInfo: {},
-    rating: {},
+    reviews: [],
+    reviewsLoading: false,
     isLoading: false,
   },
   filters: {
@@ -234,6 +251,28 @@ export default (state = initialState, action) => {
           },
         },
       };
+    case SET_REVIEWS:
+      return {
+        ...state,
+        selectedMovie: {
+          ...state.selectedMovie,
+          reviews: payload,
+          reviewsLoading: false,
+        }
+      }
+    case CLEAR_SINGLE:
+      return {
+        ...state,
+        selectedMovie: initialState.selectedMovie,
+      };
+    case REVIEW_LOADING:
+      return {
+        ...state,
+        selectedMovie: {
+          ...state.selectedMovie,
+          reviewsLoading: true,
+        }
+      }
     default:
       return state;
   }
