@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { finishRedirect } from 'reducers/auth';
 import { setBaseTheme, setDarkTheme } from 'reducers/themeReducer';
+import { createSelector } from 'reselect';
 import { Modal, Switch } from 'components/basic';
 import { Loading } from 'components';
 import RegisterForm from 'modules/authentication/RegisterForm';
@@ -19,6 +20,20 @@ import {
   StyledDrawerHeader
 } from './styles';
 
+const selector = createSelector(
+  store => store.auth,
+  store => store.themeReducer.themeColors,
+  (auth, { isDark }) => ({
+    isLoggedIn: auth.isLoggedIn,
+    loggedInUser: auth.loggedInUser,
+    redirectToLogin: auth.redirectToLogin,
+    isLoading: auth.isLoading,
+    loginModal: auth.modalsOpen.login,
+    registerModal: auth.modalsOpen.register,
+    isDark,
+  })
+)
+
 
 const DrawerHeader = () => {
   const dispatch = useDispatch();
@@ -26,22 +41,9 @@ const DrawerHeader = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   
   const {
-    isLoggedIn,
-    loggedInUser,
-    redirectToLogin,
-    isLoading,
-    isDark,
-    loginModal,
-    registerModal,
-  } = useSelector(({ auth, themeReducer: { themeColors } }) => ({
-    isLoggedIn: auth.isLoggedIn,
-    loggedInUser: auth.loggedInUser,
-    redirectToLogin: auth.redirectToLogin,
-    isLoading: auth.isLoading,
-    isDark: themeColors.isDark,
-    loginModal: auth.modalsOpen.login,
-    registerModal: auth.modalsOpen.register,
-  }));
+    isLoggedIn, loggedInUser, redirectToLogin,
+    isLoading, isDark, loginModal, registerModal,
+  } = useSelector(selector);
   
   useEffect(() => {
     if (loginModal !== loginModalOpen) {
@@ -64,37 +66,36 @@ const DrawerHeader = () => {
     dispatch(isDark ? setBaseTheme() : setDarkTheme());
   }
   
+  // If passed a new state update it, else just toggle
+  const toggleLoginModal = useCallback( () => setLoginModalOpen(isOpen => !isOpen), [])
+  const toggleRegisterModal = useCallback(() => setRegisterModalOpen(isOpen => !isOpen), [])
+  const loginStateChange = useCallback(nextState => setLoginModalOpen(nextState), []);
+  const registerStateChange = useCallback(nextState => setRegisterModalOpen(nextState), []);
   
   function renderAnonymousHeader() {
     return (
       <>
-        {/*<HeaderPrimaryText>*/}
-        {/*  You are not logged in*/}
-        {/*</HeaderPrimaryText>*/}
-        {/*<HeaderSecondaryText>*/}
-        {/*  Register to unlock better features*/}
-        {/*</HeaderSecondaryText>*/}
         <LoginButton
           type='text'
           text='login'
           color='secondary'
-          onClick={() => setLoginModalOpen(!loginModalOpen)}
+          onClickCapture={toggleLoginModal}
         />
         <RegisterButton
           type='text'
           text='register'
           color='secondary'
-          onClickCapture={() => setRegisterModalOpen(!registerModalOpen)}
+          onClickCapture={toggleRegisterModal}
         />
         {ReactDOM.createPortal(
           <Modal isOpen={registerModalOpen}
-                 stateChanged={newState => setRegisterModalOpen(newState)}>
+                 stateChanged={registerStateChange}>
             <RegisterForm/>
           </Modal>,
           document.getElementById('modal'))}
         {ReactDOM.createPortal(
           <Modal isOpen={loginModalOpen}
-                 stateChanged={newState => setLoginModalOpen(newState)}
+                 stateChanged={loginStateChange}
           >
             <LoginForm/>
           </Modal>,
@@ -112,10 +113,10 @@ const DrawerHeader = () => {
       </>
     )
   }
-
+  
   return (
     <StyledDrawerHeader>
-      <Loading isLoading={isLoading} />
+      <Loading isLoading={isLoading}/>
       {isLoggedIn ? renderAuthenticatedHeader() : renderAnonymousHeader()}
       <DrawerLogo
         textColor='onSurface' robotColor='onSurface' $isLoggedIn={isLoggedIn}
@@ -130,4 +131,4 @@ const DrawerHeader = () => {
   );
 };
 
-export default DrawerHeader;
+export default React.memo(DrawerHeader);

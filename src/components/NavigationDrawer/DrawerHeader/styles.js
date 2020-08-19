@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import React from 'react';
 import { Button, ProfileImage } from 'components/basic';
 import Logo from 'components/Logo';
 import { ReactComponent as DarkModeIcon } from 'assets/icons/moon.svg';
@@ -58,7 +59,7 @@ export const HeaderSecondaryText = styled.p`
   color: ${props => props.theme.onSurfaceMD};
 `;
 
-export const MoonIcon = styled(DarkModeIcon)`
+export const MoonIcon = React.memo(styled(DarkModeIcon)`
   width: 24px;
   height: 24px;
   
@@ -81,7 +82,7 @@ export const MoonIcon = styled(DarkModeIcon)`
       }
     }
   `};
-`;
+`);
 
 export const DrawerLogo = styled(Logo)`
   position: absolute;

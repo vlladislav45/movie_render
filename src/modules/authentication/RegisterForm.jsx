@@ -17,7 +17,7 @@ function validateEmail (email) {
   return re.test(email);
 }
 
-export default () => {
+export default React.memo(() => {
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState('');
@@ -133,5 +133,5 @@ export default () => {
       />
     </RegisterForm>
   );
-}
+});
 

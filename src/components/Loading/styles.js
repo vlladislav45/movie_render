@@ -5,7 +5,6 @@ import Logo from '../Logo';
 
 // Position was changed to absolute, this means this should only be used inside
 //  relative positioned parent
-const cogWheel = require('../../assets/loading/loading-img.png');
 export const LoadingOuter = styled.div`
   position: absolute;
   top: 0;
@@ -23,6 +22,8 @@ export const LoadingOuter = styled.div`
   --logoHeight: 150px;
   pointer-events: none;
 `;
+LoadingOuter.displayName = 'LoadingBlur';
+
 // Check if the zIndex works properly in modals
 export const LoadingInner = styled.div`
   position: relative;
@@ -41,6 +42,7 @@ export const LoadingInner = styled.div`
     backdrop-filter: none;
   `};
 `;
+LoadingInner.displayName = 'LoadingInner';
 
 export const LogoAndAnimationContainer = styled.div`
   position: relative;
@@ -88,8 +90,7 @@ export const CogWheel = styled(CogWheelSVG)`
   & .fill {
     fill: ${({ theme }) => theme.isDark ? theme.primary : theme.secondary};
   }
-  // background: url("${cogWheel}") no-repeat;
-  // background-size: contain;
+ 
   
   &.first {
       left: calc(40% - var(--firstWidth));

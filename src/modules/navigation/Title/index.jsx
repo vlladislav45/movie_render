@@ -4,7 +4,7 @@ import browserHistory from 'utils/browserHistory';
 import { StyledSubTitle, StyledTitle, TitleContainer } from './styles';
 
 const Title = props => {
-	const { device } = useDeviceDimensions();
+	const { device } = useDeviceDimensions('Title');
 	return (
 		<div {...props}>
 			<StyledTitle

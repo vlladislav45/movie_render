@@ -10,7 +10,7 @@ export const getMoviesPerPage = () => {
     case L:
       return 3;
     case XL:
-      return 6;
+      return 3;
     case FULL_HD:
       return 9;
     default:

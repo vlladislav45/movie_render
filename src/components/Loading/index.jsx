@@ -1,4 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { DARK_THEME } from 'utils/themes';
+import { createSelector } from 'reselect';
 import {
   CogWheel,
   CogWheelContainer,
@@ -7,18 +10,18 @@ import {
   LoadingOuter,
   LogoAndAnimationContainer
 } from './styles';
-import { useSelector } from 'react-redux';
-import { DARK_THEME } from '../../utils/themes';
 
-const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }, ref) => {
-  const { selectedTheme } = useSelector(({ themeReducer }) => ({
-    selectedTheme: themeReducer.themeName,
-  }))
+const selector = createSelector(
+  ({ themeReducer }) => themeReducer.themeName,
+  themeName => ({ selectedTheme: themeName }),
+);
+
+const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }) => {
+  const { selectedTheme } = useSelector(selector);
   
   function renderLoading() {
     return (
       <LoadingOuter
-        ref={ref}
         className='loading'
         elevation={elevation}
       >
@@ -58,4 +61,4 @@ const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }, ref)
   );
 };
 
-export default React.forwardRef(Loading);
+export default React.memo(Loading);

@@ -6,7 +6,7 @@ import { Input, Button } from 'components/basic';
 import { attemptLogin } from 'reducers/auth';
 import { ErrorMessage, FormTitle, LoginContainer, LoginForm } from './styles';
 
-export default () => {
+export default React.memo(() => {
   const dispatch = useDispatch();
   const { isLoading, loginError } = useSelector(({ auth, connectionReducer }) => ({
     isLoading: auth.isLoading,
@@ -59,5 +59,5 @@ export default () => {
       />
     </LoginForm>
   );
-}
+})
 

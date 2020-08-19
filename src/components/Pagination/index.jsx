@@ -27,7 +27,7 @@ function getMaxPages(device) {
 
 const Pagination = ({ itemsCount, onPageChange, currentPage = 0,
                       itemsPerPage = DEFAULT_ITEMS_PER_PAGE, ...rest }) => {
-  const { device } = useDeviceDimensions();
+  const { device } = useDeviceDimensions('Pagination');
   const maxPages = getMaxPages(device);
   const [totalPages, setTotalPages] = useState(maxPages);
   const [selectedPage, changeSelectedPage] = useState(currentPage);

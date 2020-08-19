@@ -38,7 +38,7 @@ export const GenresList = styled.ul`
     `}
 `;
 
-export const SingleGenre = styled.li`
+export const StyledSingleGenre = styled.li`
     user-select: none;
     cursor: pointer;
     position: relative;

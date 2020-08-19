@@ -74,4 +74,4 @@ Switch.propTypes = {
   onCheckedStateChange: PropTypes.func,
 };
 
-export default Switch;
+export default React.memo(Switch);

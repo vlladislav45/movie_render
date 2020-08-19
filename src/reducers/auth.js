@@ -101,8 +101,8 @@ export const tokenExpired = () => dispatch => {
   dispatch(enqueueSnackbarMessage(
     'Session expired, please login again',
     {
-      ['Login']: () => dispatch(changeModalState({ login: true, register: false })),
-      ['Cancel']: () => {
+      'Login': () => dispatch(changeModalState({ login: true, register: false })),
+      'Cancel': () => {
       }
     },
     {

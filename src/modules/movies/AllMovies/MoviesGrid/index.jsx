@@ -11,7 +11,7 @@ const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   
-  const { device } = useDeviceDimensions();
+  const { device } = useDeviceDimensions('MoviesGrid');
   
   const { bookmarks, bookmarksLoading, userId, isLoggedIn } = useSelector(({ userReducer, auth }) => ({
     bookmarks: userReducer.bookmarks,

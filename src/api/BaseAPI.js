@@ -12,7 +12,8 @@ import {
 } from 'utils/apiUtils';
 import { JWT_TOKEN } from 'config/authConstants';
 
-const API_SERVER = 'http://localhost';
+// const API_SERVER = 'http://localhost';
+const API_SERVER = 'http://192.168.0.105';
 // const API_SERVER = 'http://192.168.0.104';
 const API_PORT = '8080';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
@@ -50,7 +51,7 @@ class BaseAPI {
         const jwt = localStorage.getItem(JWT_TOKEN);
         if (jwt)
           req.headers['Authorization'] = `Bearer ${jwt}`;
-        reduxStore.dispatch(initiatedRequest(req));
+        // reduxStore.dispatch(initiatedRequest(req));
         return req;
       });
       
@@ -73,7 +74,7 @@ class BaseAPI {
   post = (url, data, options) => this.api.post(url, data, options);
   
   responseSuccessInterceptor = (response, reduxStore) => {
-    reduxStore.dispatch(finishedRequest(response.config));
+    // reduxStore.dispatch(finishedRequest(response.config));
     return Promise.resolve(response);
   };
   

@@ -1,17 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { debounce } from 'lodash';
 import { updateFilter } from 'reducers/moviesReducer';
 import browserHistory from 'utils/browserHistory';
 import { ReactComponent as SearchIcon } from 'assets/icons/search-24px.svg';
-import {
-  EXTEND_STATES,
-  SearchInput,
-  SearchInputContainer,
-  StyledSearchBar,
-  ToggleButton
-} from './styles';
+import { EXTEND_STATES, SearchInput, SearchInputContainer, StyledSearchBar, ToggleButton } from './styles';
 
+
+const selector = createSelector(
+  ({ moviesReducer: { filters } }) => filters,
+  filters => ({ search: filters.searchMovie }));
 /**
  * Expandable searchbar
  * Idea about 3 values extended state https://stackoverflow.com/a/50428572
@@ -42,37 +41,47 @@ const SearchBar = props => {
     return () => window.removeEventListener('click', click);
   }, [extendedState])
   
-  const { search = '' } = useSelector(({ moviesReducer: { filters } }) => ({
-    search: filters.searchMovie,
-  }));
+  const { search = '' }  = useSelector(selector);
   
+  const toggleExtendedState = useCallback(() => setExtendedState(isExtended => isExtended % 2 + 1), []);
   
-  return (
+  const MemoizedSearchBarInput = useMemo(() => (
+    <SearchInputContainer
+      extendedstate={extendedState}
+    >
+      <SearchInput
+        autoFocus={extendedState === EXTENDED}
+        autoFocusDelay={250}
+        disabled={browserHistory.location.pathname !== '/'}
+        onPrimary
+        onChange={handleChange}
+        value={search}
+        leadingIcon={SearchIcon}
+        label='Search'
+      />
+    </SearchInputContainer>
+  ), [extendedState, browserHistory.location.pathname, search])
+  
+  const MemoizedToggleButton = useMemo(() => (
+    <ToggleButton
+      className='navbar-action'
+      onClick={toggleExtendedState}
+      extendedstate={extendedState}
+    />
+  ), [extendedState]);
+  
+  /**
+   * Memoize the render method also
+   */
+  return useMemo(() => (
     <StyledSearchBar
       id='search-container'
       {...props}
     >
-      <ToggleButton
-        className='navbar-action'
-        onClick={() => setExtendedState(isExtended => isExtended % 2 + 1)}
-        extendedstate={extendedState}
-      />
-      <SearchInputContainer
-        extendedstate={extendedState}
-      >
-        <SearchInput
-          autoFocus={extendedState === EXTENDED}
-          autoFocusDelay={250}
-          disabled={browserHistory.location.pathname !== '/'}
-          onPrimary
-          onChange={handleChange}
-          value={search}
-          leadingIcon={SearchIcon}
-          label='Search'
-        />
-      </SearchInputContainer>
+      {MemoizedToggleButton}
+      {MemoizedSearchBarInput}
     </StyledSearchBar>
-  );
+  ), [MemoizedToggleButton, MemoizedSearchBarInput]);
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);

@@ -15,7 +15,7 @@ const Tabs = props => {
     const [tabs, setTabs] = useState({});
     const [activeTab, setActiveTab] = useState(null);
     // used to force render when changing dimensions
-    const ignored = useDeviceDimensions();
+    const ignored = useDeviceDimensions('Tabs');
 
     // Map all the tabs from props to state
     useEffect(() => {

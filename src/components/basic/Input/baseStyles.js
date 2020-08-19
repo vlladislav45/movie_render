@@ -54,6 +54,7 @@ export const OuterContainer = styled.div`
     letter-spacing: 0.03em;
   }
 `;
+OuterContainer.displayName = 'InputOuterContainer';
 
 export const BaseInput = styled.input`
   width: 100%;
@@ -73,9 +74,8 @@ export const BaseLabel = styled.label`${props => {
     position: absolute;
     left: 16px;
     top: 20px;
-    height: 20px;
-    height: min-content;
     font-size: 1em;
+    height: 1em;
     font-family: 'Roboto', sans-serif;
     line-height: 1.15em;
     user-select: none;
@@ -131,10 +131,12 @@ export const CharacterCount = styled.p`
 export const HelperText = styled.p`
   color: ${props => props.theme.onSurfaceMD};
 `;
+HelperText.displayName = 'InputHelperText';
 
 export const ErrorText = styled.p`
   color: ${props => props.theme.error}!important;
 `;
+ErrorText.displayName = 'InputErrorText';
 
 export const ErrorIcon = styled(ErrorSvg)`
   position: absolute;
@@ -189,3 +191,4 @@ export const RippleElem = styled.span`
     }
   }
 `;
+RippleElem.displayName = 'InputRipple';
