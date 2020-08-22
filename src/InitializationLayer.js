@@ -48,12 +48,6 @@ class InitializationLayer extends React.Component {
     window.removeEventListener('resize', this.getWindowDimensions);
   }
   
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    console.group('UPDATED INITIALIZATION LAYER');
-    console.log();
-    console.groupEnd();
-  }
-  
   render() {
     return (
       <ThemeProvider theme={this.props.themeColors}>

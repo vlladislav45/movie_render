@@ -1,24 +1,33 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { useHistory } from 'react-router';
 import { addBookmark, removeBookmark } from 'reducers/userReducer';
 import { Loading } from 'components';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
+import { isVisible } from 'utils/DomUtils';
 import MovieCard from './MovieCard';
 import { StyledMoviesGrid, Wrapper, } from './styles';
 
-const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage }) => {
+const selector = createSelector(
+  store => store.userReducer,
+  store => store.auth,
+  store => store.moviesReducer,
+  (userReducer, auth, moviesReducer) => ({
+    bookmarks: userReducer.bookmarks,
+    userId: auth.loggedInUser.userId,
+    isLoggedIn: auth.isLoggedIn,
+    bookmarksLoading: userReducer.bookmarksLoading,
+    selectedPage: moviesReducer.selectedPage,
+  }))
+
+const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage, className }, ref) => {
   const dispatch = useDispatch();
   const history = useHistory();
   
   const { device } = useDeviceDimensions('MoviesGrid');
   
-  const { bookmarks, bookmarksLoading, userId, isLoggedIn } = useSelector(({ userReducer, auth }) => ({
-    bookmarks: userReducer.bookmarks,
-    userId: auth.loggedInUser.userId,
-    isLoggedIn: auth.isLoggedIn,
-    bookmarksLoading: userReducer.bookmarksLoading,
-  }))
+  const { bookmarks, bookmarksLoading, userId, isLoggedIn, selectedPage } = useSelector(selector)
   
   function openMovie(movieId) {
     history.push('/movie/' + movieId);
@@ -54,9 +63,8 @@ const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage }) => {
     );
   }
   
-  
   return (
-    <Wrapper>
+    <Wrapper className={className} ref={ref}>
       <Loading isLoading={isLoading} key='loading'/>
       <StyledMoviesGrid
         $device={device}
@@ -70,4 +78,4 @@ const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage }) => {
   );
 };
 
-export default MoviesGrid;
+export default React.forwardRef(MoviesGrid);

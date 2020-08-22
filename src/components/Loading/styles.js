@@ -20,7 +20,7 @@ export const LoadingOuter = styled.div`
   --thirdHeight: max(3.5%, 55px);
   --logoWidth: max(40%, 250px);
   --logoHeight: 150px;
-  pointer-events: none;
+  ${props => !props.$loading && `pointer-events: none;`};
 `;
 LoadingOuter.displayName = 'LoadingBlur';
 

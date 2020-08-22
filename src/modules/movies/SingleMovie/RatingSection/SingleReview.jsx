@@ -1,57 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { last } from 'lodash';
-import UserAPI from 'api/UserAPI';
 import ResourcesAPI from 'api/ResourcesAPI';
 import { IMAGE_BASE_PATH } from 'components/basic/ProfileImage';
 import useFakePromise from 'hooks/useFakePromise';
 import {
   AuthorImage,
-  AuthorsName, OwnImage,
+  AuthorsName, DateCreated, OwnImage,
   ReviewContent,
   ReviewRating,
   StyledSingleReview
 } from './SingleReviewStyles';
 
 
-const SingleReview = ({ review: { comment, movieRating, username }, isOwn }) => {
+const SingleReview = ({ review: { comment, userRating, username, profileImage, createdTime }, isOwn }) => {
   const fakePromise = useFakePromise();
-  const [userData, setUserData] = useState({});
-  
-  
+  const [userImage, setUserImage] = useState(null);
+
   // TODO: Open profile page
   function openProfile() {
   
   }
   
   useEffect(() => {
-    if (isOwn || !fakePromise) return;
-    const getUserPromise = () => UserAPI.getByUsername(username);
-    const getResourcePromise = userImages => ResourcesAPI.fetchResource(IMAGE_BASE_PATH + username + '/' + last(userImages).imageName);
-    Promise.race([fakePromise, getUserPromise()])
-    .then(res => {
+  }, [userImage])
+  
+  useEffect(() => {
+    if (!fakePromise || isOwn) return;
+    if (!profileImage) {
+      const img = require('assets/profile/blank-profile.png');
+      setUserImage(img);
+      return;
+    }
+    const getResourcePromise = profileImage => ResourcesAPI.fetchResource(IMAGE_BASE_PATH + username + '/' + profileImage);
+    Promise.race([fakePromise, getResourcePromise(profileImage)]).then(res => {
+      console.group('gotcha');
+      console.log(res);
+      console.groupEnd();
       if (!res) return;
       const { data } = res;
-      const { userImages, id } = data.userInfo;
-      setUserData({
-        ...userData,
-        id,
-      });
-      if (userImages.length > 0) {
-        Promise.race([fakePromise, getResourcePromise(userImages)])
-        .then(res => {
-          if (!res) return;
-          const { data: image } = res;
-          setUserData({
-            ...userData,
-            userImage: URL.createObjectURL(image)
-          })
-        })
-      } else {
-        setUserData({
-          ...userData,
-          userImage: require('assets/profile/blank-profile.png')
-        })
-      }
+      setUserImage(data);
     })
   }, [fakePromise])
   
@@ -65,8 +51,8 @@ const SingleReview = ({ review: { comment, movieRating, username }, isOwn }) => 
       {isOwn
         ? <OwnImage shape='rectangle'/>
         : <AuthorImage
-          $fadeIn={!!userData.userImage}
-          src={userData.userImage}
+          $fadeIn={!!userImage}
+          src={userImage}
           alt={`profile image of ${username}`}
         />
       }
@@ -74,11 +60,13 @@ const SingleReview = ({ review: { comment, movieRating, username }, isOwn }) => 
         {comment}
       </ReviewContent>
       <ReviewRating
-        rating={movieRating}
+        rating={userRating}
         maxStars={5}
         starSize='18px'
         color='onSurface'
       />
+      {/*TODO: Recreate this */}
+      <DateCreated>{new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(createdTime)}</DateCreated>
     </StyledSingleReview>
   );
 };

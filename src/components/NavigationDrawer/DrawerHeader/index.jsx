@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { finishRedirect } from 'reducers/auth';
@@ -20,6 +20,8 @@ import {
   StyledDrawerHeader
 } from './styles';
 
+
+const modalsContainer = document.getElementById('modal');
 const selector = createSelector(
   store => store.auth,
   store => store.themeReducer.themeColors,
@@ -33,7 +35,6 @@ const selector = createSelector(
     isDark,
   })
 )
-
 
 const DrawerHeader = () => {
   const dispatch = useDispatch();
@@ -62,12 +63,10 @@ const DrawerHeader = () => {
     }
   }, [redirectToLogin]);
   
-  function toggleTheme() {
-    dispatch(isDark ? setBaseTheme() : setDarkTheme());
-  }
   
+  const toggleTheme = useCallback(() => dispatch(isDark ? setBaseTheme() : setDarkTheme()), [isDark])
   // If passed a new state update it, else just toggle
-  const toggleLoginModal = useCallback( () => setLoginModalOpen(isOpen => !isOpen), [])
+  const toggleLoginModal = useCallback(() => setLoginModalOpen(isOpen => !isOpen), [])
   const toggleRegisterModal = useCallback(() => setRegisterModalOpen(isOpen => !isOpen), [])
   const loginStateChange = useCallback(nextState => setLoginModalOpen(nextState), []);
   const registerStateChange = useCallback(nextState => setRegisterModalOpen(nextState), []);
@@ -87,19 +86,6 @@ const DrawerHeader = () => {
           color='secondary'
           onClickCapture={toggleRegisterModal}
         />
-        {ReactDOM.createPortal(
-          <Modal isOpen={registerModalOpen}
-                 stateChanged={registerStateChange}>
-            <RegisterForm/>
-          </Modal>,
-          document.getElementById('modal'))}
-        {ReactDOM.createPortal(
-          <Modal isOpen={loginModalOpen}
-                 stateChanged={loginStateChange}
-          >
-            <LoginForm/>
-          </Modal>,
-          document.getElementById('modal'))}
       </>
     )
   }
@@ -114,10 +100,27 @@ const DrawerHeader = () => {
     )
   }
   
+  const LoginModal = useMemo(() => (
+    <Modal isOpen={loginModalOpen}
+           stateChanged={loginStateChange}>
+      <LoginForm/>
+    </Modal>
+  ), [loginModalOpen])
+  const RegisterModal = useMemo(() => (
+    <Modal isOpen={registerModalOpen}
+           stateChanged={registerStateChange}>
+      <RegisterForm/>
+    </Modal>
+  ), [registerModalOpen])
+  
   return (
     <StyledDrawerHeader>
       <Loading isLoading={isLoading}/>
-      {isLoggedIn ? renderAuthenticatedHeader() : renderAnonymousHeader()}
+      {!isLoggedIn && ReactDOM.createPortal(LoginModal, modalsContainer)}
+      {!isLoggedIn && ReactDOM.createPortal(RegisterModal, modalsContainer)}
+      {isLoggedIn
+        ? renderAuthenticatedHeader()
+        : renderAnonymousHeader()}
       <DrawerLogo
         textColor='onSurface' robotColor='onSurface' $isLoggedIn={isLoggedIn}
       />

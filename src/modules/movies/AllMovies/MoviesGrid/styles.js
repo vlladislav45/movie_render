@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { transitionFunctions, transitionDurations } from 'config/animationConstants';
 import { SM, XS_SM, M, L } from 'utils/mediaUtils';
 
-const { largeExpand, largeCollapsing } = transitionDurations;
+const { mediumExpand, mediumCollapsing } = transitionDurations;
 const { standardEasing, deceleratedEasing, acceleratedEasing } = transitionFunctions;
 
 export const StyledMoviesGrid = styled.div`${props => {
@@ -21,7 +21,7 @@ export const StyledMoviesGrid = styled.div`${props => {
     width: 100%;
     height: 100%;
     position: relative;
-    opacity: 0;
+    opacity: 1;
     ${fadeIn && `
       transition: opacity 500ms;
       opacity: 1
@@ -41,17 +41,17 @@ export const Wrapper = styled.div`
   }
   &.page-transition-prev-enter-active, &.page-transition-prev-enter-done {
     transform: translateX(0);
-    transition: transform ${largeExpand}ms ${acceleratedEasing};
+    transition: transform ${mediumExpand}ms ${acceleratedEasing};
   }
-  
+
   &.page-transition-prev-exit {
     transform: translateX(0);
-
   }
+  
   &.page-transition-prev-exit-active, &.page-transition-prev-exit-done {
-    filter: blur(10px);
+    // filter: blur(10px);
     transform: translateX(120%);
-    transition: transform ${largeCollapsing}ms ${deceleratedEasing};
+    transition: transform ${mediumCollapsing}ms ${deceleratedEasing};
   }
   
   &.page-transition-next-enter {
@@ -59,16 +59,16 @@ export const Wrapper = styled.div`
   }
   &.page-transition-next-enter-active, &.page-transition-next-enter-done {
     transform: translateX(0);
-    transition: transform ${largeExpand}ms ${acceleratedEasing};
+    transition: transform ${mediumExpand}ms ${acceleratedEasing};
   }
-  
+
   &.page-transition-next-exit {
     transform: translateX(0);
   }
   &.page-transition-next-exit-active, &.page-transition-next-exit-done {
-    filter: blur(10px);
+    // filter: blur(10px);
     transform: translateX(-120%);
-    transition: transform ${largeCollapsing}ms ${deceleratedEasing};
+    transition: transform ${mediumCollapsing}ms ${deceleratedEasing};
   }
 `;
 

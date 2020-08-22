@@ -47,7 +47,7 @@ export const Drawer = styled(MaterialSurface)`
   
   
   ${props => {
-    const { responsive: { device, width }, $isDragging, isOpen } = props;
+    const { $device, $width, $isDragging, isOpen } = props;
     
     return `
       transition: transform ${transitionDurations.largeCollapsing}ms ${transitionFunctions.deceleratedEasing};
@@ -61,8 +61,8 @@ export const Drawer = styled(MaterialSurface)`
         transition: none;
       `};
       
-      ${lessThen(device, SM) && `
-        width: ${width - FREE_SPACE_ON_MOBILE}px;
+      ${lessThen($device, SM) && `
+        width: ${$width - FREE_SPACE_ON_MOBILE}px;
         max-width: 300px;
       `}
     `

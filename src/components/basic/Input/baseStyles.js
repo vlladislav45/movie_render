@@ -51,7 +51,7 @@ export const OuterContainer = styled.div`
     padding-left: 16px;
     height: var(--belowHeight);
     font-size: 0.75em;
-    letter-spacing: 0.03em;
+    white-space: nowrap;
   }
 `;
 OuterContainer.displayName = 'InputOuterContainer';
@@ -108,13 +108,13 @@ export const BaseLabel = styled.label`${props => {
       
       @keyframes shake {
         0% {
-          transform: translateY(-90%) scale(0.75) translateX(0);
+          transform: translateY(-55%) scale(0.75) translateX(0);
         }
         50% {
-          transform: translateY(-90%) scale(0.75) translateX(-15px);
+          transform: translateY(-55%) scale(0.75) translateX(-15px);
         }
         100% {
-          transform: translateY(-90%) scale(0.75) translateX(15px);
+          transform: translateY(-55%) scale(0.75) translateX(15px);
         }
       }
       

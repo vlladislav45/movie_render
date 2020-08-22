@@ -7,7 +7,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { createSelector } from 'reselect';
 import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
@@ -23,6 +23,11 @@ import {
 } from './styles';
 
 
+/**
+ * Arrows rerender when sliding because we need to remake the slide function
+ * when offset changes, maybe in the future the logic can be tweaked a little
+ * */
+
 // If the carousel is sliding, user should not be able to initiate another slide
 // because offset will be calculated wrong
 let isSliding = false;
@@ -31,30 +36,23 @@ const { smallArea } = transitionDurations;
 const selector = createSelector(
   state => state.moviesReducer,
   state => state.auth,
-  ({ filters, genresLoading, genres }, { isLoading } ) => {
-    return {
-      selectedGenres: filters.genres,
-      isLoading: genresLoading || isLoading,
-      genres: genres,
-    }
-  },
+  (movies, auth) => ({
+    selectedGenres: movies.filters.genres,
+    isLoading: movies.genresLoading || auth.isLoading,
+    genres: movies.genres,
+  })
 )
 
-const Genres = ({ onFinishLoading, className, ...rest }) => {
+const Genres = ({ onFinishLoading, className }) => {
   const dispatch = useDispatch();
+  const store = useSelector(selector, shallowEqual);
   const {
     genres = [],
     selectedGenres = [],
     isLoading = false,
-  } = useSelector(selector);
+  } = store;
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
-  
-  useEffect(() => {
-    console.group('STORE UPDATE');
-    console.log(selectedGenres);
-    console.groupEnd();
-  }, [genres, selectedGenres, isLoading])
   
   // Object with keys the genre name and value its ref
   const [genresRef, setGenresRef] = useState(null);
@@ -75,9 +73,9 @@ const Genres = ({ onFinishLoading, className, ...rest }) => {
   
   useEffect(() => {
     const refs = {};
-    genres.forEach(genre => refs[genre['movieGenreName']] = createRef());
+    genres.forEach(genre => refs[genre] = createRef());
     setGenresRef(refs);
-  }, [genres.length]);
+  }, [genres]);
   
   useEffect(() => {
     if (isOverflow !== null || !isLoading)
@@ -114,7 +112,7 @@ const Genres = ({ onFinishLoading, className, ...rest }) => {
     const isLeft = direction === 'left';
     
     // we slided, so we are not at the end
-    isLeft ? setRightEnd(prev => false) : setLeftEnd(prev => false);
+    isLeft ? setRightEnd(false) : setLeftEnd(false);
     
     let genresRefsArray = Object.values(genresRef);
     if (!isLeft) genresRefsArray = genresRefsArray.reverse();
@@ -123,7 +121,7 @@ const Genres = ({ onFinishLoading, className, ...rest }) => {
     
     // The first hidden is the first element, now we slide it, next time we are the the end
     if (firstHidden === genresRefsArray[0].current) {
-      isLeft ? setLeftEnd(prev => true) : setRightEnd(prev => true);
+      isLeft ? setLeftEnd(true) : setRightEnd(true);
     }
     
     const slideArrow = isLeft ? leftArrowRef.current : rightArrowRef.current;
@@ -133,8 +131,8 @@ const Genres = ({ onFinishLoading, className, ...rest }) => {
       ? Math.min(0, offset + offsetToBeVisible)
       : offset - offsetToBeVisible;
     
-    setOffset(offset => newOffset);
-  },[genresRef, offset]);
+    setOffset(newOffset);
+  }, [genresRef, offset]);
   
   const slideLeft = useCallback(() => {
     // Do nothing if we are at the left end or sliding
@@ -155,9 +153,8 @@ const Genres = ({ onFinishLoading, className, ...rest }) => {
   }, [slide])
   
   // Add/remove the genre from the filter
-  const genreClicked = useCallback((genre) => {
-    const { movieGenreName } = genre;
-    const genreRef = genresRef[movieGenreName];
+  const genreClicked = useCallback(genre => {
+    const genreRef = genresRef[genre];
     
     // If the genre is not 100% visible, slide
     if (!isVisible(genreRef.current, 'left'))
@@ -166,30 +163,29 @@ const Genres = ({ onFinishLoading, className, ...rest }) => {
       slideRight();
     
     let newGenres;
-    if (selectedGenres.includes(movieGenreName))
-      newGenres = selectedGenres.filter(g => g !== movieGenreName);
+    if (selectedGenres.includes(genre))
+      newGenres = selectedGenres.filter(g => g !== genre);
     else
-      newGenres = selectedGenres.concat(movieGenreName);
+      newGenres = selectedGenres.concat(genre);
     
     dispatch(updateFilter({ genres: newGenres }));
   }, [genresRef, selectedGenres])
   
   const renderGenres = useCallback(() => {
     return genres.map(genre => {
-      const { genreId: id, movieGenreName: name } = genre;
       const isDisabled = browserHistory.location.pathname !== '/';
-
+      
       return (
         <SingleGenre
           genre={genre}
           onClick={genreClicked}
-          key={id}
-          ref={genresRef[name]}
+          key={genre}
+          ref={genresRef[genre]}
           className='genre'
           isDisabled={isDisabled}
-          isActive={selectedGenres.includes(name)}
+          isActive={selectedGenres.includes(genre)}
         />
-        );
+      );
     });
   }, [genres, genresRef, selectedGenres])
   
@@ -204,7 +200,7 @@ const Genres = ({ onFinishLoading, className, ...rest }) => {
     ref={rightArrowRef}
     disabled={rightEnd}
     onClickCapture={slideRight}
-  />) : null, [leftArrowRef, leftEnd, slideLeft, isOverflow])
+  />) : null, [rightArrowRef, leftEnd, slideRight, isOverflow])
   
   const MemoizedGenresCarousel = useMemo(() => (
     <Carousel>

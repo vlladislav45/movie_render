@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { rippleConstants } from 'config/animationConstants';
 import {
@@ -8,69 +8,59 @@ import {
   LeadingIcon,
 } from './styles';
 
+export const ACTIVE_RIPPLE_CLASS = 'activeRipple';
 const { SMALL_RIPPLE_DURATION } = rippleConstants;
 const Button = React.forwardRef((
   props,
   ref) => {
-
-  const timeout = React.useRef(0);
-  const time = React.useRef(0);
+  
+  const pressedTime = useRef();
   const {
     type = 'contained', color = 'primary', disabled = false,
     Icon, text, children, onClick, onClickCapture, ...rest
   } = props;
-
-  const [isPressed, setIsPressed] = useState(false);
-  const [coordinates, setCoordinates] = useState();
-
-  // Clear ripple timeout when unmounting
-  useEffect(() => () => clearTimeout(timeout.current), []);
-
-  useEffect(() => {
-    if (isPressed)
-      time.current = Date.now();
-  }, [isPressed]);
-
-  function mouseDown (evt) {
-    const x = evt.clientX - evt.target.getBoundingClientRect().left;
-    const y = evt.clientY - evt.target.getBoundingClientRect().top;
-    // noinspection JSCheckFunctionSignatures
-    setCoordinates({ x, y });
-    setIsPressed(true);
-  }
-
-  function mouseUp (e) {
-    if (!isPressed) return;
-    cancelRipple();
-  }
-
-  function hoverOut () {
-    if (!isPressed) return;
-    cancelRipple();
-  }
-
-  function buttonClicked (e) {
-    cancelRipple();
-
+  
+  const mouseDown = useCallback((evt) => {
+    const button = evt.target;
+    const rect = button.getBoundingClientRect();
+    const x = evt.clientX - rect.left;
+    const y = evt.clientY - rect.top;
+    
+    pressedTime.current = Date.now();
+    button.style.setProperty('--tx', `${x}px`);
+    button.style.setProperty('--ty', `${y}px`);
+    button.classList.add(ACTIVE_RIPPLE_CLASS);
+    
+  }, [])
+  
+  const mouseUp = useCallback((evt) => {
+    const timeElapsed = Date.now() - pressedTime.current
+    const button = evt.target;
+    setTimeout(() => {
+      button.classList.remove(ACTIVE_RIPPLE_CLASS);
+    }, 1.8 * SMALL_RIPPLE_DURATION - timeElapsed);
+  }, [])
+  
+  const hoverOut = useCallback((evt) => {
+    const timeElapsed = Date.now() - pressedTime.current
+    const button = evt.target;
+    setTimeout(() => {
+      button.classList.remove(ACTIVE_RIPPLE_CLASS);
+    }, 1.8 * SMALL_RIPPLE_DURATION - timeElapsed);
+  }, [])
+  
+  // TODO: Should i keep this?
+  const buttonClicked = useCallback((e) => {
     if (onClick)
       onClick(e);
     if (onClickCapture)
       onClickCapture(e);
-
+    
     e.stopPropagation();
-  }
-
-  function cancelRipple () {
-    const timeLeft = Date.now() - time.current;
-    clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => {
-      setIsPressed(false);
-    }, SMALL_RIPPLE_DURATION - timeLeft);
-  }
-
+  }, [onClick, onClickCapture])
+  
+  
   const buttonProps = {
-    isActive: isPressed,
-    coordinates: coordinates,
     onMouseDownCapture: mouseDown,
     onMouseUpCapture: mouseUp,
     onMouseOut: hoverOut,
@@ -79,13 +69,13 @@ const Button = React.forwardRef((
     color: color,
     withIcon: !!Icon,
   };
-
+  
   return (
     <ButtonWrapper
       ref={ref}
       {...rest}
     >
-
+      
       {type === 'contained' &&
       <ContainedButton
         {...buttonProps}

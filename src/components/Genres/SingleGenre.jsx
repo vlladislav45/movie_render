@@ -4,7 +4,6 @@ import { StyledSingleGenre } from './styles';
 
 const SingleGenre = (props, ref) => {
   const { genre, isActive, isDisabled, onClick } = props;
-  const { genreId: id, movieGenreName: name } = genre
   
   function handleClick() {
     if (!isDisabled && typeof onClick === 'function')
@@ -13,13 +12,13 @@ const SingleGenre = (props, ref) => {
   
   return (
     <StyledSingleGenre
-      id={id}
+      id={genre}
       onClick={handleClick}
       isDisabled={isDisabled}
       isActive={isActive}
       ref={ref}
     >
-      <p>{name}</p>
+      <p>{genre}</p>
     </StyledSingleGenre>
   );
 };

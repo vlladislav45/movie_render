@@ -70,6 +70,12 @@ const NavigationDrawer = () => {
         dispatch(closeNavigationDrawer());
       drawer.style.transform = '';
     }
+    
+    return () => {
+      drawer.removeEventListener('touchstart', handleTouchStart, false);
+      drawer.removeEventListener('touchmove', handleTouchMove, false);
+      drawer.removeEventListener('touchend', handleTouchEnd, false);
+    }
   }, [drawerOpen])
   
   function handleClick(e) {
@@ -89,9 +95,8 @@ const NavigationDrawer = () => {
       <Drawer
         ref={drawerRef}
         $isDragging={isDragging}
-        responsive={{
-          device, width
-        }}
+        $width={width}
+        $device={device}
         isOpen={drawerOpen}
         id='navigation-drawer'
         elevation={16}

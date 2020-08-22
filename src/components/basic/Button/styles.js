@@ -1,6 +1,7 @@
 import { rippleConstants } from 'config/animationConstants';
 import styled from 'styled-components';
 import { applyShadow, getOverlay } from 'utils/colorUtils';
+import { ACTIVE_RIPPLE_CLASS } from './index';
 
 const { SMALL_RIPPLE_DURATION } = rippleConstants;
 
@@ -25,8 +26,7 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const BaseButton = styled.button`${props => {
-  const { isActive, withIcon, coordinates = {} } = props;
-  const { x, y } = coordinates;
+  const { withIcon } = props;
   return `
     transition: all .3s ease;
     display: flex;
@@ -54,21 +54,33 @@ export const BaseButton = styled.button`${props => {
     
     // RIPPLE
     &:after {
-     transition: all .3s ease;
      position: absolute;
      content: "";
-     width: 5px;
-     height: 5px;
-     left: ${x}px;
-     top: ${y}px;
+     width: 0px;
+     height: 0px;
+     left: 0;
+     top: 0;
      border-radius: 50%;
      opacity: 0;
      pointer-events: none;
-     ${isActive && `
-       animation: doRipple ${SMALL_RIPPLE_DURATION + 20}ms linear forwards;
-       opacity: 0.12;
-     `};
+     transition: none;
    }
+   
+   // tx and ty come from javascript
+   &.${ACTIVE_RIPPLE_CLASS}:after {
+      width: 1px;
+      height: 1px;
+      animation: doRipple ${SMALL_RIPPLE_DURATION}ms linear forwards;
+      opacity: 0.12;
+   }
+    @keyframes doRipple {
+      from {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+      }
+      to {
+        transform: translate(var(--tx), var(--ty)) scale(250);
+      }
+    };
    
    // HOVER override :before background color property and opacity on hover to use
    &:before {
@@ -84,26 +96,17 @@ export const BaseButton = styled.button`${props => {
     outline: none;
     border: none;
    }
-   
-   @keyframes doRipple {
-     from {
-      transform: scale(0);
-     }
-     to {
-       transform: scale(60);
-     }
-   }
-
   `;
 }}
 `;
+BaseButton.dispalyName = 'BaseButton';
 
 export const ContainedButton = styled(BaseButton)`${props => {
-  const { theme, color, disabled, isActive } = props;
+  const { theme, color, disabled } = props;
   const textColor = theme[`on${color.charAt(0).toUpperCase() +
   color.slice(1)}`];
   const backgroundColor = theme[color];
-
+  
   return `
     box-shadow: ${applyShadow(2)};
     background: ${backgroundColor};
@@ -133,15 +136,16 @@ export const ContainedButton = styled(BaseButton)`${props => {
         cursor: default;
     `};
     
-    ${isActive && `
-        box-shadow: ${applyShadow(4)};
-     `};
+    &.${ACTIVE_RIPPLE_CLASS} {
+        box-shadow: ${applyShadow(6)};
+    };
     
     & svg {
       fill: ${textColor};
     }
 `;
 }}`;
+ContainedButton.displayName = 'ContainedButton';
 
 export const TextButton = styled(BaseButton)`${props => {
   const { color: themeColor = 'primary', theme, disabled } = props;
@@ -180,3 +184,4 @@ export const TextButton = styled(BaseButton)`${props => {
   `;
 }}
 `;
+TextButton.dispalyName = 'TextButton';

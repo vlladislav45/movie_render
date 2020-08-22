@@ -12,7 +12,7 @@ const Input = React.forwardRef((props, ref) => {
     inputType, label, helperText, errorText,
     placeholder, onPrimary, withIconOnError,
     onChange, onChangeCapture, disabled, loading,
-    autoFocus, autoFocusDelay,
+    autoFocus, autoFocusDelay, type,
     withCharacterCount, maxCharacterCount, ...rest
   } = props;
   
@@ -88,8 +88,8 @@ const Input = React.forwardRef((props, ref) => {
     onChange: textChanges,
     inputId, disabled, isFocused, label, LeadingIcon,
     withIconOnError, placeholder, value, onPrimary,
-    device,
-  }), [error, LeadingIcon, isFocused, inputId, disabled, label, withIconOnError, placeholder, value, onPrimary, device])
+    device, type,
+  }), [error, LeadingIcon, isFocused, inputId, disabled, label, withIconOnError, placeholder, value, onPrimary, device, type])
   
   return (
     <OuterContainer

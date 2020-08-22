@@ -5,7 +5,7 @@ class ReviewsAPI extends BaseAPI {
   
   getReviewsByAuthor = authorId => this.get(`user/userInfo/reviewsByAuthor?userId=${authorId}`);
   
-  getReviewsByMovie = movieId => this.get(`/movies/single/reviewsByMovie?movieId=${movieId}`);
+  getReviewsByMovie = (movieId, page = 0, size = 5) => this.get(`/movies/single/reviewsByMovie?movieId=${movieId}&page=${page}&size=${size}`);
   
   getReviewsByAuthorAndMovie = (authorId, movieId) => this.get(`/movies/single/reviewByAuthorAndMovie?userId=${authorId}&movieId=${movieId}`);
 }

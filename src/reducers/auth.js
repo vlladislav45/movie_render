@@ -77,6 +77,7 @@ export const attemptRegister = credentials => dispatch => {
     if (data.error)
       dispatch({
         type: REGISTER_FAILED,
+        payload: data.error,
       });
     else
       dispatch({

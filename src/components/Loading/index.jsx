@@ -24,6 +24,7 @@ const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }) => {
       <LoadingOuter
         className='loading'
         elevation={elevation}
+        $loading={isLoading}
       >
         <LoadingInner
           elevation={elevation}
