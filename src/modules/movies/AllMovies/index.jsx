@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
-import { useHistory, useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { changeSelectedPage, fetchMovies, getMoviesCount, resetFilter } from 'reducers/moviesReducer';
+import moviesReducer, { changePage, fetchMovies, getMoviesCount, resetFilter } from 'reducers/moviesReducer';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import ImageWorker from 'service-workers/imageLoader.worker';
 import { API_URL } from 'api/BaseAPI';
 import { Button } from 'components/basic';
+import { transitionFunctions } from 'config/animationConstants';
+import { addHorizontalDrag } from 'utils/DomUtils';
 import MoviesPagination from './MoviesPagination';
 import MoviesGrid from './MoviesGrid';
 import { NoMovies, StyledMoviesContainer } from './styles';
@@ -15,54 +16,44 @@ import { Wrapper } from './MoviesGrid/styles';
 
 const DEFAULT_THRESHOLD = 300;
 const selector = createSelector(
-  store => store.moviesReducer,
-  ({ movies, selectedPage, moviesPerPage, isLoading, count }) => ({
+  store => store.moviesReducer.movies,
+  store => store.moviesReducer.isLoading,
+  (movies, isLoading ) => ({
     movies,
-    selectedPage,
-    moviesPerPage,
     isLoading,
-    count,
   })
 )
 const AllMovies = () => {
   const dispatch = useDispatch();
+  // Static fields
+  // Is mounted
   const isMounted = useRef(true);
-  const prevPage = useRef(0);
+  // Needed to calculate the swipe distance
+  const prevDragX = useRef(0);
+  // Ref to the MoviesGrid component (attached manually in useEffect)
+  const gridRef = useRef();
+  // Flag isDragging
+  const isDragging = useRef();
   const containerRef = useRef();
-  const store = useSelector(selector);
-  const { width: screenWidth } = useDeviceDimensions();
   
-  const {
-    movies = [], moviesPerPage, selectedPage, isLoading, count
-  } = store;
-  const [gridRef, setGridRef] = useState();
+  const { width: screenWidth } = useDeviceDimensions();
+  const { movies = [], isLoading } = useSelector(selector);
+  
   const [posters, setPosters] = useState({});
   const [imageWorker, setImageWorker] = useState(null);
-  const swipeThreshold = useMemo(() => screenWidth / 2 || DEFAULT_THRESHOLD);
   
-  
-  const classNames = useMemo(
-    () => `page-transition-${selectedPage > prevPage.current ? 'next' : 'prev'}`,
-    [selectedPage]);
+  const [classNames, setClassNames] = useState('page-transition-prev');
+  const [transitionKey, setTransitionKey] = useState('');
+  const pageChanged = useCallback((current, previous) => {
+    setClassNames(() => `page-transition-${current > previous ? 'next' : 'prev'}`);
+    setTransitionKey(Math.random());
+  }, [])
   
   const imagesReceived = useCallback(msg => {
     if (!isMounted.current) return;
     const { data: { id, imageData } } = msg;
     setPosters(p => ({ ...p, [id]: imageData }));
   }, [imageWorker]);
-  
-  // useEffect(() => {
-  //   console.group('HOOK CHANGE');
-  //   console.log(store);
-  //   console.log(Object.keys(posters).length);
-  //   console.groupEnd();
-  // }, [store, posters, classNames, dispatch, imageWorker, imagesReceived])
-  //
-  // useEffect(() => {
-  //   console.group('DID UPDATE');
-  //   console.log();
-  //   console.groupEnd();
-  // })
   
   useEffect(() => {
     const worker = new ImageWorker();
@@ -75,7 +66,6 @@ const AllMovies = () => {
     }
   }, []);
   
-  
   useEffect(() => {
     if (movies.length === 0 || !imageWorker)
       return;
@@ -86,98 +76,70 @@ const AllMovies = () => {
         url: `${API_URL}movies/poster/${posterName}`,
       });
     });
-    
   }, [movies, imageWorker]);
   
-  useLayoutEffect(() => {
-    if (selectedPage !== prevPage.current) {
-      prevPage.current = selectedPage;
+  const swipeThreshold = useMemo(() => screenWidth / 2 || DEFAULT_THRESHOLD, [screenWidth]);
+
+  const onDragStart = useCallback(e => {
+    if (e.target.closest('.pagination') !== null) {
+      // Ignore if we click pagination
+      isDragging.current = false;
+      return;
     }
-  }, [selectedPage]);
+
+    isDragging.current = true;
+    gridRef.current = document.querySelector('.movies_grid');
+    prevDragX.current = 0;
+    gridRef.current.style.transition = 'none';
+  }, [])
+  
+  const onDrag = useCallback((e, xDiff) => {
+    if (!isDragging.current) return;
+    prevDragX.current = xDiff;
+    if (Math.abs(xDiff) > swipeThreshold) return;
+    gridRef.current.style.transform = 'translateX(' + (-xDiff) + 'px)';
+    gridRef.current.style.filter = 'blur(' + Math.abs(xDiff / 100) + 'px)';
+  }, [swipeThreshold])
+  
+  const onDragEnd = useCallback(() => {
+    if (!isDragging.current) return;
+    const grid = gridRef.current;
+    const dragAmount = prevDragX.current;
+    
+    grid.style.filter = null;
+    const transitionDuration = 200;
+    grid.style.transition = `all ${transitionDuration}ms ${transitionFunctions.standardEasing}`;
+    
+    if (Math.abs(dragAmount) >= swipeThreshold) {
+      dispatch(changePage(dragAmount < 0 ? 'prev' : 'next')).then(isSamePage => {
+        if (isSamePage) {
+          grid.style.transform = 'translateX(0)';
+          setTimeout(() => grid.style.transition = null, transitionDuration);
+        } else {
+          grid.style.opacity = 0;
+          grid.style.transform = `translateX(${dragAmount > 0 ? '-120%' : '120%'})`;
+        }
+      });
+    } else {
+      grid.style.transform = 'translateX(0)';
+      setTimeout(() => grid.style.transition = null, transitionDuration)
+    }
+    prevDragX.current = 0;
+  }, [swipeThreshold])
   
   useEffect(() => {
-    dispatch(fetchMovies(selectedPage, moviesPerPage));
-    dispatch(getMoviesCount());
-  }, [])
+    if (!containerRef.current) return;
+    const drag = addHorizontalDrag(containerRef.current, onDragStart, onDrag, onDragEnd);
+    return () => drag.dispose()
+  }, [containerRef, onDrag, onDragEnd])
   
   function dispatchResetFilter() {
     dispatch(resetFilter());
   }
   
-  // swipe
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    container.addEventListener('touchstart', handleTouchStart, false);
-    container.addEventListener('touchmove', handleTouchMove, false);
-    container.addEventListener('touchend', handleTouchEnd, false);
-    
-    // const grid = document.querySelector('.movies_grid');
-    // const gridAll = document.querySelectorAll('.movies_grid');
-    let xStartTouch = null;
-    let prevXDiff = 0;
-    
-    const grid = gridRef || document.querySelector('.movies_grid');
-
-    
-    function handleTouchStart(evt) {
-      if (!evt.touches) return;
-      const firstTouch = evt.touches[0];
-      xStartTouch = firstTouch.clientX;
-      prevXDiff = 0;
-      grid.style.transition = 'none';
-    }
-    
-    function handleTouchMove(evt) {
-      if (!xStartTouch || !evt.touches) {
-        return;
-      }
-      
-      let xCurrentFingerLocation = evt.touches[0].clientX;
-      let xDiff = xStartTouch - xCurrentFingerLocation;
-      // xDiff positive -> LEFT
-      // xDiff negative -> RIGHT
-      prevXDiff = xDiff;
-      
-      const blur = Math.ceil(Math.abs(xDiff / 100));
-      grid.style.transform = 'translateX(' + (-xDiff) + 'px)';
-      grid.style.filter = 'blur(' + blur + 'px)';
-    }
-    
-    function handleTouchEnd() {
-      grid.style.filter = null;
-      if (Math.abs(prevXDiff) >= swipeThreshold) {
-        const nextPage = prevXDiff < 0
-          ? Math.max(selectedPage - 1, 0)
-          : Math.min(Math.ceil(count / moviesPerPage) - 1, selectedPage + 1)
-        if (nextPage !== selectedPage) {
-          grid.style.transform = 'translateX(' + (prevXDiff < 0 ? -200 : 200) + '%)!important';
-          grid.style.opacity = 0;
-          dispatch(changeSelectedPage(nextPage))
-        } else {
-          grid.style.transform = 'translateX(0)';
-        }
-      } else {
-        grid.style.transform = 'translateX(0)';
-      }
-      grid.style.transition = null;
-      
-      prevXDiff = 0;
-    }
-    
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart, false);
-      container.removeEventListener('touchmove', handleTouchMove, false);
-      container.removeEventListener('touchend', handleTouchEnd, false);
-    }
-  }, [gridRef, selectedPage])
-  
-  
   return (
     <StyledMoviesContainer
       ref={containerRef}
-      moviesPerPage={moviesPerPage}
-      id='moviesContainer'
     >
       {!isLoading && movies.length === 0 &&
       <NoMovies>
@@ -186,21 +148,15 @@ const AllMovies = () => {
         <Button type='text' text='Reset filters' onClick={dispatchResetFilter}/>
       </NoMovies>
       }
-      <MoviesPagination/>
+      <MoviesPagination className='pagination' onPageChange={pageChanged} />
       <SwitchTransition>
         <CSSTransition
-          timeout={250}
+          timeout={200}
           classNames={classNames}
-          key={selectedPage}
-          onExit={() => {
-            setTimeout(() => {
-              setGridRef(document.querySelector('.movies_grid'));
-            }, 300)
-          }}
+          key={transitionKey}
         >
           <MoviesGrid
             className='movies_grid'
-            moviesPerPage={moviesPerPage}
             isLoading={isLoading}
             movies={movies}
             posters={posters}
@@ -212,9 +168,3 @@ const AllMovies = () => {
 };
 
 export default AllMovies;
-
-/**
- page-transition-next-exit exit-active page-transition-next-enter-active page-transition-next-exit-active
- page-transition-next-exit page-transition-next-exit-active page-transition-next-enter-active
- page-transition-next-enter exit
- */

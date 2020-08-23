@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import transformUserMiddleware from 'middlewares/transformUserMiddleware';
 import dimensionsChangedMiddleware from 'middlewares/dimensionsChangedMiddleware';
 import reducers from './reducers';
-import onPageChangeMiddleware from './modules/movies/AllMovies/onPageChangeMiddleware';
+import onPageChangeMiddleware from './modules/movies/AllMovies/fetchMoviesMiddleware';
 
 
 const middleware = [

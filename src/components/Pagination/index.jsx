@@ -112,6 +112,7 @@ const Pagination = ({ itemsCount, onPageChange, currentPage = 0,
       selectPage(totalPages - 1);
   }
 
+  if (!device) return null;
   return (
     <StyledPagination {...rest}>
       {totalPages > 0 &&

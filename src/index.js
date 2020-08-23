@@ -6,14 +6,14 @@ import store from './redux-store';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
-// if (process.env.NODE_ENV === 'development') {
-//   const whyDidYouRender = require('@welldone-software/why-did-you-render');
-//   whyDidYouRender(React, {
-//     logOnDifferentValues: true,
-//     trackAllPureComponents: true,
-//     trackExtraHooks: [[ReactRedux, "useSelector"], [React, 'useState']]
-//   });
-// }
+if (process.env.NODE_ENV === 'development') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  whyDidYouRender(React, {
+    // logOnDifferentValues: true,
+    trackAllPureComponents: true,
+    trackExtraHooks: [[ReactRedux, "useSelector"]]
+  });
+}
 
 const { Provider } = ReactRedux;
 ReactDOM.render(

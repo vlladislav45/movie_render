@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import { transitionFunctions, transitionDurations } from 'config/animationConstants';
 import { SM, XS_SM, M, L } from 'utils/mediaUtils';
 
-const { mediumExpand, mediumCollapsing } = transitionDurations;
+const { largeExpand, largeCollapsing } = transitionDurations;
 const { standardEasing, deceleratedEasing, acceleratedEasing } = transitionFunctions;
 
 export const StyledMoviesGrid = styled.div`${props => {
   const { fadeIn, moviesPerPage, $device } = props;
-  
-  const columns = getColumns($device);
+
+  const columns = getColumns($device, moviesPerPage);
   const rows = Math.ceil(moviesPerPage / columns);
   return `
     display: grid;
@@ -21,9 +21,9 @@ export const StyledMoviesGrid = styled.div`${props => {
     width: 100%;
     height: 100%;
     position: relative;
-    opacity: 1;
+    opacity: 0;
     ${fadeIn && `
-      transition: opacity 500ms;
+      transition: opacity 300ms;
       opacity: 1
     `};
     `;
@@ -41,7 +41,7 @@ export const Wrapper = styled.div`
   }
   &.page-transition-prev-enter-active, &.page-transition-prev-enter-done {
     transform: translateX(0);
-    transition: transform ${mediumExpand}ms ${acceleratedEasing};
+    transition: transform ${largeExpand}ms ${deceleratedEasing};
   }
 
   &.page-transition-prev-exit {
@@ -49,9 +49,8 @@ export const Wrapper = styled.div`
   }
   
   &.page-transition-prev-exit-active, &.page-transition-prev-exit-done {
-    // filter: blur(10px);
     transform: translateX(120%);
-    transition: transform ${mediumCollapsing}ms ${deceleratedEasing};
+    transition: transform ${largeCollapsing}ms ${acceleratedEasing};
   }
   
   &.page-transition-next-enter {
@@ -59,28 +58,27 @@ export const Wrapper = styled.div`
   }
   &.page-transition-next-enter-active, &.page-transition-next-enter-done {
     transform: translateX(0);
-    transition: transform ${mediumExpand}ms ${acceleratedEasing};
+    transition: transform ${largeExpand}ms ${deceleratedEasing};
   }
 
   &.page-transition-next-exit {
     transform: translateX(0);
   }
   &.page-transition-next-exit-active, &.page-transition-next-exit-done {
-    // filter: blur(10px);
     transform: translateX(-120%);
-    transition: transform ${mediumCollapsing}ms ${deceleratedEasing};
+    transition: transform ${largeCollapsing}ms ${acceleratedEasing};
   }
 `;
 
-function getColumns(device) {
+function getColumns(device, moviesPerPage) {
   switch (device) {
     case XS_SM:
     case SM:
-      return 1
+      return Math.min(1, moviesPerPage);
     case M:
     case L:
-      return 2
+      return Math.min(2, moviesPerPage);
     default :
-      return 3;
+      return Math.min(3, moviesPerPage);
   }
 }

@@ -106,6 +106,23 @@ export const changeSelectedPage = newPage => ({
   payload: newPage,
 });
 
+/**
+ * Changes the page to the next or previous and returns(through promise) whether its the same page or not
+ * @param nextOrPrev oneOf[ 'next' , 'prev' ]
+ */
+export const changePage = (nextOrPrev) =>  (dispatch, getState) => {
+  const isNext = nextOrPrev.toLowerCase() === 'next';
+  const { selectedPage, moviesPerPage, count } = getState().moviesReducer;
+  
+  const nextPage = isNext
+    ? Math.min(selectedPage + 1, Math.ceil(count / moviesPerPage) - 1)
+    : Math.max(selectedPage - 1, 0);
+  if (nextPage !== selectedPage) {
+    setTimeout(() => dispatch({ type: CHANGE_SELECTED_PAGE, payload: nextPage }), 150);
+    return Promise.resolve(false); // Not same page
+  } else return Promise.resolve(true); // Same page
+};
+
 export const changeMoviesPerPage = moviesPerPage => ({
   type: CHANGE_MOVIES_PER_PAGE,
   payload: moviesPerPage || getMoviesPerPage(),
@@ -154,9 +171,9 @@ const initialState = {
   genres: [],
   movies: [],
   count: 0,
-  selectedPage: 0,
+  selectedPage: undefined,
   moviesPerPage: getMoviesPerPage(),
-  isLoading: false,
+  isLoading: true, // Start with loading
   genresLoading: false,
   selectedMovie: {
     movieInfo: {},

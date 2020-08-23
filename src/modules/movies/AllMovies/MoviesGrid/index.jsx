@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useHistory } from 'react-router';
@@ -19,33 +19,32 @@ const selector = createSelector(
     isLoggedIn: auth.isLoggedIn,
     bookmarksLoading: userReducer.bookmarksLoading,
     selectedPage: moviesReducer.selectedPage,
+    moviesPerPage: moviesReducer.moviesPerPage,
   }))
-
-const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage, className }, ref) => {
+const MoviesGrid = ({ isLoading, movies, posters, className }, ref) => {
   const dispatch = useDispatch();
   const history = useHistory();
   
   const { device } = useDeviceDimensions('MoviesGrid');
   
-  const { bookmarks, bookmarksLoading, userId, isLoggedIn, selectedPage } = useSelector(selector)
+  const { bookmarks, bookmarksLoading, userId, isLoggedIn, selectedPage, moviesPerPage } = useSelector(selector)
   
-  function openMovie(movieId) {
+  const openMovie = useCallback(movieId => {
     history.push('/movie/' + movieId);
-  }
+  }, [history]);
   
-  function bookmarkMovie(movieId, movieName) {
+  const bookmarkMovie = useCallback((movieId, movieName) => {
     const isAdded = bookmarks.some(bookmark => bookmark.movieId === movieId && bookmark.movieName === movieName);
     
     if (!isAdded)
       dispatch(addBookmark(movieId, userId, movieName))
     else
       dispatch(removeBookmark(movieId, userId, movieName))
-  }
+  }, [bookmarks])
   
-  function renderMovies() {
+  const renderMovies = useCallback(() => {
     return movies.map((movie, index) => {
-        if (!movie) return <MovieCard key={`movie_${index}`} isEmpty={true}/>
-        const url = posters[movie.id];
+        // if (!movie) return <MovieCard key={`movie_${index}`} isEmpty={true}/>
         const isBookmarked = bookmarks.some(bookmark => bookmark.movieId === movie.id && bookmark.movieName === movie.movieName)
         return (
           <MovieCard
@@ -56,23 +55,26 @@ const MoviesGrid = ({ isLoading, movies, posters, moviesPerPage, className }, re
             isBookmarked={isBookmarked}
             isLoading={bookmarksLoading[movie.id]}
             movie={movie}
-            poster={url}
+            poster={posters[movie.id]}
           />
         );
       },
     );
-  }
+  }, [movies, posters, bookmarks, bookmarksLoading])
+  
   
   return (
     <Wrapper className={className} ref={ref}>
-      <Loading isLoading={isLoading} key='loading'/>
-      <StyledMoviesGrid
-        $device={device}
-        fadeIn={!isLoading}
-        moviesPerPage={moviesPerPage}
-      >
-        {renderMovies()}
-      </StyledMoviesGrid>
+      <Loading isLoading={isLoading || !device} key='loading'/>
+      {!!device &&
+        <StyledMoviesGrid
+          $device={device}
+          fadeIn={!isLoading}
+          moviesPerPage={moviesPerPage}
+        >
+          {renderMovies()}
+        </StyledMoviesGrid>
+      }
     </Wrapper>
   
   );
