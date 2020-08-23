@@ -77,6 +77,7 @@ export const attemptRegister = credentials => dispatch => {
     if (data.error)
       dispatch({
         type: REGISTER_FAILED,
+        payload: data.error,
       });
     else
       dispatch({
@@ -101,8 +102,8 @@ export const tokenExpired = () => dispatch => {
   dispatch(enqueueSnackbarMessage(
     'Session expired, please login again',
     {
-      ['Login']: () => dispatch(changeModalState({ login: true, register: false })),
-      ['Cancel']: () => {
+      'Login': () => dispatch(changeModalState({ login: true, register: false })),
+      'Cancel': () => {
       }
     },
     {

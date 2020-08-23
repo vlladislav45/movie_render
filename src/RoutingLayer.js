@@ -10,7 +10,7 @@ const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));
 export default () => {
   return (
     <Inner>
-      <React.Suspense fallback={<Loading/>}>
+      <React.Suspense fallback={<Loading isLoading={false}/>}>
         <Switch>
           <Route exact path='/' component={MainPage}/>
           <Route path='/profile' component={ProfilePage}/>

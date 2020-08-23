@@ -32,7 +32,7 @@ const Prompt = props => {
   const [formFieldValue, setFormFieldValue] = useState(null);
   const [grid, setGrid] = useState(gridDimensions || getDefaultGrid(type === 'compact'));
   
-  const { device } = useDeviceDimensions();
+  const { device } = useDeviceDimensions('Prompt');
   
   useEffect(() => {
     if (isOpen !== promptOpen)

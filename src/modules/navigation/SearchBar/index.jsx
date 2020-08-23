@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { debounce } from 'lodash';
 import { updateFilter } from 'reducers/moviesReducer';
 import browserHistory from 'utils/browserHistory';
 import { ReactComponent as SearchIcon } from 'assets/icons/search-24px.svg';
-import {
-  EXTEND_STATES,
-  SearchInput,
-  SearchInputContainer,
-  StyledSearchBar,
-  ToggleButton
-} from './styles';
+import { EXTEND_STATES, SearchInput, SearchInputContainer, StyledSearchBar, ToggleButton } from './styles';
 
+
+const selector = createSelector(
+  // ({ moviesReducer: { filters } }) => filters,
+  store => store.moviesReducer.filters.search,
+  search => ({ search }));
 /**
  * Expandable searchbar
  * Idea about 3 values extended state https://stackoverflow.com/a/50428572
@@ -42,10 +42,8 @@ const SearchBar = props => {
     return () => window.removeEventListener('click', click);
   }, [extendedState])
   
-  const { search = '' } = useSelector(({ moviesReducer: { filters } }) => ({
-    search: filters.searchMovie,
-  }));
-  
+  const { search = '' } = useSelector(selector);
+  const toggleExtendedState = useCallback(() => setExtendedState(isExtended => isExtended % 2 + 1), []);
   
   return (
     <StyledSearchBar
@@ -54,7 +52,7 @@ const SearchBar = props => {
     >
       <ToggleButton
         className='navbar-action'
-        onClick={() => setExtendedState(isExtended => isExtended % 2 + 1)}
+        onClick={toggleExtendedState}
         extendedstate={extendedState}
       />
       <SearchInputContainer
@@ -62,7 +60,7 @@ const SearchBar = props => {
       >
         <SearchInput
           autoFocus={extendedState === EXTENDED}
-          autoFocusDelay={250}
+          autoFocusDelay={150}
           disabled={browserHistory.location.pathname !== '/'}
           onPrimary
           onChange={handleChange}
@@ -75,4 +73,4 @@ const SearchBar = props => {
   );
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);

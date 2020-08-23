@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 /**
  * Passes a promise to use with async function, that updates state
@@ -7,16 +7,16 @@ import React, { useEffect, useRef } from 'react';
  */
 export default function useFakePromise() {
   const fakeResolve = useRef(function(){});
-  const promise = useRef(null);
+  const [promise, setPromise] = useState(null);
   
   useEffect(() => {
     // noinspection JSValidateTypes
-    promise.current = new Promise(resolve => fakeResolve.current = resolve)
+    setPromise(new Promise(resolve => fakeResolve.current = resolve))
     return () => {
       fakeResolve.current(null);
     }
   }, []);
   
   
-  return promise.current;
+  return promise;
 }

@@ -78,3 +78,10 @@ export const AuthorImage = styled.img`
 export const OwnImage = styled(ProfileImage)`
   ${BaseImageStyle};
 `;
+
+export const DateCreated = styled.p`
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  font-size: 0.5rem;
+`;

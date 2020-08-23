@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Input, Button } from 'components/basic';
-import AuthAPI from 'api/AuthAPI';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Loading } from '../../components';
-import { attemptRegister } from '../../reducers/auth';
+import { debounce } from 'lodash';
+import { attemptRegister } from 'reducers/auth';
+import AuthAPI from 'api/AuthAPI';
+import { Input, Button } from 'components/basic';
+import { Loading } from 'components';
 import {
   ErrorMessage,
   FormTitle,
-  LoginContainer,
-  LoginForm,
-  RegisterForm,
+  StyledRegisterForm,
 } from './styles';
+import { getSelector } from './utils';
 
 function validateEmail (email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
 
-export default () => {
+const selector = getSelector('registerError');
+
+const RegisterForm = React.memo((callback, deps) => {
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState('');
@@ -30,26 +32,23 @@ export default () => {
   const [passwordError, setPasswordError] = useState(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
-  const { isLoading, registerError } = useSelector(({ auth, connectionReducer }) => ({
-    isLoading: auth.isLoading,
-    registerError: connectionReducer.isOnline && auth.registerError,
-  }));
-
-  useEffect(() => {
-    (async () => {
-      if (!username) return;
-      const { data: { isUsernameExist } } = await AuthAPI.usernameAvailable(username);
-
-      if (isUsernameExist === "true") {
-        setUsernameError('Username is already taken');
-      }
-      else if (username.length < 3 || username.length > 20) {
-        setUsernameError('Username must be between 3 and 20 symbols');
-      } else
-        setUsernameError(null);
-    })();
-  }, [username]);
-
+  const { isLoading, registerError } = useSelector(selector);
+  
+  const checkUsernameAvailability = useCallback(debounce(async e => {
+    const username = e.target.value;
+    setUsername(username);
+    if (!username) return;
+    const { data: { isUsernameExist } } = await AuthAPI.usernameAvailable(username);
+  
+    if (isUsernameExist === "true") {
+      setUsernameError('Username is already taken');
+    }
+    else if (username.length < 3 || username.length > 20) {
+      setUsernameError('Must be between 3 and 20 symbols');
+    } else
+      setUsernameError(null);
+  }, 200), [])
+  
   useEffect(() => {
     if (!email) return;
     if (!validateEmail(email)) {
@@ -66,14 +65,14 @@ export default () => {
       setPasswordError('Passwords dont match');
       setConfirmPasswordError('Passwords dont match');
     } else if (password.length < 8) {
-      setPasswordError('Password must be atleast 8 symbols');
+      setPasswordError('Password must be at least 8 symbols');
     } else {
       setPasswordError(null);
       setConfirmPasswordError(null);
     }
   }, [password, confirmPassword]);
 
-  function register (e) {
+  const register = useCallback(e => {
     e.preventDefault();
     dispatch(attemptRegister({
       username,
@@ -81,17 +80,15 @@ export default () => {
       password,
       confirmPassword,
     }));
-  }
+  }, [username, email, password, confirmPassword])
 
   const btnEnabled = (username && !usernameError) &&
     (email && !emailError) &&
     (password && !passwordError) &&
     (confirmPassword && !confirmPasswordError);
   return (
-    <RegisterForm>
-      <LoginContainer>
-        <Loading isLoading={isLoading} elevation={18}/>
-      </LoginContainer>
+    <StyledRegisterForm>
+      <Loading isLoading={isLoading} elevation={18}/>
       <FormTitle>Register</FormTitle>
       {registerError &&
         <ErrorMessage>
@@ -100,7 +97,7 @@ export default () => {
       }
       <Input
         className='register-input'
-        onChange={e => setUsername(e.target.value)}
+        onChange={checkUsernameAvailability}
         label='Username'
         helperText='Between 3 and 20 characters'
         errorText={usernameError}
@@ -116,6 +113,7 @@ export default () => {
         className='register-input'
         onChange={e => setPassword(e.target.value)}
         label='Password'
+        type='password'
         helperText='Minimum 8 characters'
         errorText={passwordError}
       />
@@ -123,6 +121,7 @@ export default () => {
         className='register-input'
         onChange={e => setConfirmPassword(e.target.value)}
         label='Confirm Password'
+        type='password'
         helperText='Repeat your password'
         errorText={confirmPasswordError}
       />
@@ -131,7 +130,8 @@ export default () => {
         onClickCapture={register}
         disabled={!btnEnabled}
       />
-    </RegisterForm>
+    </StyledRegisterForm>
   );
-}
+});
 
+export default RegisterForm;

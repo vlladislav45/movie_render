@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import { Loading } from 'components';
@@ -12,7 +12,7 @@ const Input = React.forwardRef((props, ref) => {
     inputType, label, helperText, errorText,
     placeholder, onPrimary, withIconOnError,
     onChange, onChangeCapture, disabled, loading,
-    autoFocus, autoFocusDelay,
+    autoFocus, autoFocusDelay, type,
     withCharacterCount, maxCharacterCount, ...rest
   } = props;
   
@@ -22,7 +22,8 @@ const Input = React.forwardRef((props, ref) => {
   const [error, setError] = useState(errorText);
   const [isFocused, setIsFocused] = useState(false);
   
-  const { device } = useDeviceDimensions();
+  const { device } = useDeviceDimensions('Input');
+
   
   useEffect(() => setValue(preFilledText), [preFilledText]);
   
@@ -52,7 +53,7 @@ const Input = React.forwardRef((props, ref) => {
     else return null;
   }
   
-  function textChanges(e) {
+  const textChanges = useCallback(e => {
     const { value: text } = e.target;
     if (withCharacterCount && text.length > maxCharacterCount) {
       setValue(text.slice(0, maxCharacterCount))
@@ -66,24 +67,30 @@ const Input = React.forwardRef((props, ref) => {
       onChangeCapture(e);
     
     e.persist();
-  }
+  }, [])
   
-  const inputProps = {
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+  }, [])
+  
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+  }, [])
+  
+  
+  const inputProps = useMemo(() => ({
     hasError: !!error,
     withLeadingIcon: !!LeadingIcon,
     rippleClass: isFocused ? 'activate' : '',
     shouldShowPlaceholder: isFocused || !label,
-    onBlur: () => {
-      setIsFocused(false);
-    },
-    onFocus: () => {
-      setIsFocused(true);
-    },
+    onBlur: handleBlur,
+    onFocus: handleFocus,
     onChange: textChanges,
     inputId, disabled, isFocused, label, LeadingIcon,
     withIconOnError, placeholder, value, onPrimary,
-    device,
-  };
+    device, type,
+  }), [error, LeadingIcon, isFocused, inputId, disabled, label, withIconOnError, placeholder, value, onPrimary, device, type])
+  
   return (
     <OuterContainer
       isMultiLine={inputType === 'textarea'}
@@ -92,7 +99,7 @@ const Input = React.forwardRef((props, ref) => {
       $withBelowText={!!errorText || !!helperText || !!withCharacterCount}
       {...rest}
     >
-      {loading && <Loading onlyCogWheel />}
+      {loading && <Loading onlyCogWheel/>}
       {inputType === 'filled' && (
         <FilledInput
           ref={ref}
@@ -148,4 +155,5 @@ Input.nextId = (() => {
   return () => `input_${id++}`;
 })();
 
+Input.displayName = 'Input';
 export default Input;

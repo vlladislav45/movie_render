@@ -25,7 +25,7 @@ const SingleMovie = ({ match: { params }, history }) => {
   const prevGenres = React.useRef({ current: [] });
   const { movieId } = params;
   
-  const { width: screenWidth, device } = useDeviceDimensions();
+  const { width: screenWidth, device } = useDeviceDimensions('SingleMovie');
   const isSingleColumn = useMemo(() => lessThen(device, L), [screenWidth]);
   
   const { selectedMovie, previousGenres, isLoading } = useSelector(

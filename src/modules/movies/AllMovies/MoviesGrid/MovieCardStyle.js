@@ -147,13 +147,13 @@ export const MovieSummaryContainer = styled.div`
 `;
 
 export const SummaryTitle = styled.p`
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: ${props => props.theme.onSurface};
   margin-bottom: 8px;
 `;
 
 export const Summary = styled.p`
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   color: ${props => props.theme.onSurfaceMD};
   overflow-y: scroll;
   scrollbar-width: none;

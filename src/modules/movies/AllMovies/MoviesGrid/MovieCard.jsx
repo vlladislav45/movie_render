@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { msToTime } from 'utils/DateTimeUtils';
 import { ReactComponent as BookMarkIcon } from 'assets/icons/bookmark.svg';
 import { ReactComponent as RemoveBookmark } from 'assets/icons/remove_bookmark.svg';
 import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
@@ -8,8 +9,6 @@ import {
   MoviePoster,
   SingleMovieLink,
   MovieRating,
-  Views,
-  Year,
   BookMarkFAB,
   BookMark,
   MovieSummaryContainer,
@@ -20,7 +19,6 @@ import {
   WatchButton,
   BottomBar,
 } from './MovieCardStyle';
-import { msToTime } from 'utils/DateTimeUtils';
 
 const MovieCard = ({
                      movie: { id, year, movieName, movieRating, summary, actors, genres, duration },

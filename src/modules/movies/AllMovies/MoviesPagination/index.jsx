@@ -1,48 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import qs from 'query-string';
 import { Pagination } from 'components';
 import {
   changeMoviesPerPage,
   changeSelectedPage,
+  getMoviesCount,
 } from 'reducers/moviesReducer';
 
-const MoviesPagination = ({ history, location, style, className }) => {
+const selector = createSelector(
+  store => store.moviesReducer,
+  ({ count, selectedPage, moviesPerPage }) => ({
+    count, selectedPage, moviesPerPage
+  }))
+const MoviesPagination = ({ style, className, onPageChange }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
   const { search, pathname } = location;
-
+  
   const {
     count = 0,
     selectedPage = 0,
     moviesPerPage,
-  } = useSelector(
-    ({ moviesReducer }) => ({
-      count: moviesReducer.count,
-      selectedPage: moviesReducer.selectedPage,
-      moviesPerPage: moviesReducer.moviesPerPage,
-    }));
-
+  } = useSelector(selector);
+  
   const [currentPage, setCurrentPage] = useState(selectedPage);
   
-  useEffect(() => {
+  function parseQuery() {
     const query = qs.parse(search);
-    if (query.items && !isNaN(Number(query.items)) && Number(query.items) !==
-      moviesPerPage) {
-      dispatch(changeMoviesPerPage((Number(query.items))));
+    const items = Number(query.items);
+    let page = Number(query.page);
+    if (!isNaN(items) && items !== moviesPerPage) {
+      dispatch(changeMoviesPerPage(items));
     }
-    if (query.page && !isNaN(Number(query.page)) && Number(query.page) !==
-      currentPage + 1) {
-      setCurrentPage(Number(query.page) - 1);
+    if (!isNaN(page)) {
+      if (page <= 1) dispatch(changeSelectedPage(0));
+      else if (page !== currentPage + 1) {
+        if (count > 0 && page >= Math.ceil(count / moviesPerPage)) page = Math.ceil(count / moviesPerPage)
+        setCurrentPage(page - 1);
+        dispatch(changeSelectedPage(page - 1));
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
-
-  function changePage (page) {
-    history.push(pathname + `?page=${page + 1}&items=${moviesPerPage}`);
-    dispatch(changeSelectedPage(page));
   }
-
+  
+  useEffect(() => {
+    dispatch(getMoviesCount());
+  }, [])
+  useEffect(() => {
+    if (!search) {
+      dispatch(changeSelectedPage(0));
+      return;
+    }
+    parseQuery();
+  }, [search])
+  
+  useLayoutEffect(() => {
+    if (selectedPage !== currentPage) {
+      onPageChange(selectedPage, currentPage);
+      history.push(pathname + `?page=${selectedPage + 1}&items=${moviesPerPage}`);
+      setCurrentPage(selectedPage);
+    }
+  }, [selectedPage])
+  
+  function changePage(page) {
+    if (page !== selectedPage)
+      dispatch(changeSelectedPage(page));
+  }
+  
+  if (count <= 0) return null;
   return (
     <div style={style} className={className}>
       <Pagination
@@ -53,7 +81,7 @@ const MoviesPagination = ({ history, location, style, className }) => {
       />
     </div>
   );
-
+  
 };
 
-export default withRouter(MoviesPagination);
+export default MoviesPagination;

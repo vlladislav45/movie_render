@@ -68,11 +68,8 @@ export const InputLabel = styled(BaseLabel)`
   top: 0;
   bottom: 0;
   margin: auto;
-  ${({ elevated, $device }) => elevated && `
-    ${lessThen($device, M)
-      ? `transform: translateY(-50%) scale(0.75)`
-      : `transform: translateY(-37%) scale(0.75)`
-    };
+  ${({ elevated }) => elevated && `
+   transform: translateY(-55%) scale(0.75)
   `};
 `;
 

@@ -1,46 +1,59 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { useLocation } from 'react-router';
+import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovies, getMoviesCount, resetFilter } from 'reducers/moviesReducer';
+import { createSelector } from 'reselect';
+import moviesReducer, { changePage, fetchMovies, getMoviesCount, resetFilter } from 'reducers/moviesReducer';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import ImageWorker from 'service-workers/imageLoader.worker';
 import { API_URL } from 'api/BaseAPI';
 import { Button } from 'components/basic';
+import { transitionFunctions } from 'config/animationConstants';
+import { addHorizontalDrag } from 'utils/DomUtils';
 import MoviesPagination from './MoviesPagination';
 import MoviesGrid from './MoviesGrid';
 import { NoMovies, StyledMoviesContainer } from './styles';
+import { Wrapper } from './MoviesGrid/styles';
 
+const DEFAULT_THRESHOLD = 300;
+const selector = createSelector(
+  store => store.moviesReducer.movies,
+  store => store.moviesReducer.isLoading,
+  (movies, isLoading ) => ({
+    movies,
+    isLoading,
+  })
+)
 const AllMovies = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  // Static fields
+  // Is mounted
   const isMounted = useRef(true);
+  // Needed to calculate the swipe distance
+  const prevDragX = useRef(0);
+  // Ref to the MoviesGrid component (attached manually in useEffect)
+  const gridRef = useRef();
+  // Flag isDragging
+  const isDragging = useRef();
+  const containerRef = useRef();
   
-  const {
-    movies = [],
-    moviesPerPage, selectedPage, isLoading, filters,
-  } = useSelector(
-    ({ moviesReducer }) => ({
-      movies: moviesReducer.movies,
-      selectedPage: moviesReducer.selectedPage,
-      moviesPerPage: moviesReducer.moviesPerPage,
-      filters: moviesReducer.filters,
-      isLoading: moviesReducer.isLoading,
-    }));
+  const { width: screenWidth } = useDeviceDimensions();
+  const { movies = [], isLoading } = useSelector(selector);
   
-  const [prevPage, setPrevPage] = useState(selectedPage);
   const [posters, setPosters] = useState({});
   const [imageWorker, setImageWorker] = useState(null);
   
-  const classNames = useMemo(
-    () => `page-transition-${selectedPage > prevPage ? 'next' : 'prev'}`,
-    [selectedPage]);
+  const [classNames, setClassNames] = useState('page-transition-prev');
+  const [transitionKey, setTransitionKey] = useState('');
+  const pageChanged = useCallback((current, previous) => {
+    setClassNames(() => `page-transition-${current > previous ? 'next' : 'prev'}`);
+    setTransitionKey(Math.random());
+  }, [])
   
   const imagesReceived = useCallback(msg => {
     if (!isMounted.current) return;
     const { data: { id, imageData } } = msg;
     setPosters(p => ({ ...p, [id]: imageData }));
-  }, [imageWorker, posters]);
-  
+  }, [imageWorker]);
   
   useEffect(() => {
     const worker = new ImageWorker();
@@ -63,16 +76,62 @@ const AllMovies = () => {
         url: `${API_URL}movies/poster/${posterName}`,
       });
     });
-    
   }, [movies, imageWorker]);
   
-  useLayoutEffect(() => {
-    if (selectedPage !== prevPage) {
-      setPrevPage(selectedPage);
+  const swipeThreshold = useMemo(() => screenWidth / 2 || DEFAULT_THRESHOLD, [screenWidth]);
+
+  const onDragStart = useCallback(e => {
+    if (e.target.closest('.pagination') !== null) {
+      // Ignore if we click pagination
+      isDragging.current = false;
+      return;
     }
-    dispatch(fetchMovies(selectedPage, moviesPerPage));
-    dispatch(getMoviesCount());
-  }, [selectedPage, moviesPerPage, filters]);
+
+    isDragging.current = true;
+    gridRef.current = document.querySelector('.movies_grid');
+    prevDragX.current = 0;
+    gridRef.current.style.transition = 'none';
+  }, [])
+  
+  const onDrag = useCallback((e, xDiff) => {
+    if (!isDragging.current) return;
+    prevDragX.current = xDiff;
+    if (Math.abs(xDiff) > swipeThreshold) return;
+    gridRef.current.style.transform = 'translateX(' + (-xDiff) + 'px)';
+    gridRef.current.style.filter = 'blur(' + Math.abs(xDiff / 100) + 'px)';
+  }, [swipeThreshold])
+  
+  const onDragEnd = useCallback(() => {
+    if (!isDragging.current) return;
+    const grid = gridRef.current;
+    const dragAmount = prevDragX.current;
+    
+    grid.style.filter = null;
+    const transitionDuration = 200;
+    grid.style.transition = `all ${transitionDuration}ms ${transitionFunctions.standardEasing}`;
+    
+    if (Math.abs(dragAmount) >= swipeThreshold) {
+      dispatch(changePage(dragAmount < 0 ? 'prev' : 'next')).then(isSamePage => {
+        if (isSamePage) {
+          grid.style.transform = 'translateX(0)';
+          setTimeout(() => grid.style.transition = null, transitionDuration);
+        } else {
+          grid.style.opacity = 0;
+          grid.style.transform = `translateX(${dragAmount > 0 ? '-120%' : '120%'})`;
+        }
+      });
+    } else {
+      grid.style.transform = 'translateX(0)';
+      setTimeout(() => grid.style.transition = null, transitionDuration)
+    }
+    prevDragX.current = 0;
+  }, [swipeThreshold])
+  
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const drag = addHorizontalDrag(containerRef.current, onDragStart, onDrag, onDragEnd);
+    return () => drag.dispose()
+  }, [containerRef, onDrag, onDragEnd])
   
   function dispatchResetFilter() {
     dispatch(resetFilter());
@@ -80,7 +139,7 @@ const AllMovies = () => {
   
   return (
     <StyledMoviesContainer
-      moviesPerPage={moviesPerPage}
+      ref={containerRef}
     >
       {!isLoading && movies.length === 0 &&
       <NoMovies>
@@ -89,22 +148,21 @@ const AllMovies = () => {
         <Button type='text' text='Reset filters' onClick={dispatchResetFilter}/>
       </NoMovies>
       }
-      <MoviesPagination/>
-      <TransitionGroup>
+      <MoviesPagination className='pagination' onPageChange={pageChanged} />
+      <SwitchTransition>
         <CSSTransition
-          timeout={500}
+          timeout={200}
           classNames={classNames}
-          key={location.key}
+          key={transitionKey}
         >
           <MoviesGrid
-            key={'grid_' + location.key}
-            moviesPerPage={moviesPerPage}
+            className='movies_grid'
             isLoading={isLoading}
             movies={movies}
             posters={posters}
           />
         </CSSTransition>
-      </TransitionGroup>
+      </SwitchTransition>
     </StyledMoviesContainer>
   );
 };

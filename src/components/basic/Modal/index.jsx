@@ -57,4 +57,4 @@ Modal.propTypes = {
   closeOnClickOutside: PropTypes.bool,
 };
 
-export default Modal;
+export default React.memo(Modal);

@@ -23,6 +23,8 @@
     "react-transition-group": "^4.4.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
+    "rollbar": "^2.19.2",
     "styled-components": "^5.1.1"
   },
   "scripts": {
@@ -48,7 +50,20 @@
     ]
   },
   "devDependencies": {
+    "@welldone-software/why-did-you-render": "^4.3.1",
+    "babel-plugin-styled-components": "^1.11.1",
+    "react-app-rewire-aliases": "^0.2.0",
     "react-app-rewired": "^2.1.6",
     "worker-loader": "^2.0.0"
+  },
+  "babel": {
+    "plugins": [
+      [
+        "babel-plugin-styled-components",
+        {
+          "ssr": false
+        }
+      ]
+    ]
   }
 }

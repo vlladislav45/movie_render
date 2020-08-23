@@ -10,15 +10,15 @@ import Loading from '../../../../components/Loading';
 const RatingSection = ({ movieName, movieId, oneColumn }) => {
   const dispatch = useDispatch();
   
-  const { movieRating, userId, username, reviews, reviewsLoading } = useSelector(
+  const { isLoggedIn, movieRating, userId, username, reviews, reviewsLoading } = useSelector(
     ({
        moviesReducer: { selectedMovie: { movieInfo, reviews, reviewsLoading } },
-       auth: { loggedInUser },
+       auth: { loggedInUser, isLoggedIn },
      }) => ({
       movieRating: movieInfo.movieRating,
       userId: loggedInUser.userId,
       username: loggedInUser.username,
-      reviews, reviewsLoading,
+      isLoggedIn, reviews, reviewsLoading,
     }));
   
   const [sortedReviews, setSortedReviews] = useState([]);
@@ -38,8 +38,13 @@ const RatingSection = ({ movieName, movieId, oneColumn }) => {
       setSortedReviews(reviews);
   }, [reviews])
   
-  const isUserRated = useMemo(() => reviews.some(r => r.username === username), [reviews])
+  const isUserRated = useMemo(() => isLoggedIn && reviews.some(r => r.username === username), [reviews]);
   
+  useEffect(() => {
+    console.group('isUserRated');
+    console.log(isUserRated);
+    console.groupEnd();
+  }, [isUserRated])
   async function doRate(review, rate) {
     const { error } = await dispatch(rateMovie(movieId, userId, rate, review));
     const message = error
@@ -80,12 +85,12 @@ const RatingSection = ({ movieName, movieId, oneColumn }) => {
       <ReviewsContainer>
         <RateMovieBtn
           id='movieRating'
-          title={isUserRated ? 'You already rated this movie' : 'Rate movie'}
-          rateable={!isUserRated}
+          title={isLoggedIn ? isUserRated ? 'You already rated this movie' : 'Rate movie' : 'You need to login to rate'}
+          rateable={isLoggedIn && !isUserRated}
           onRate={openRateDialog}
           maxStars={5}
           rating={movieRating}
-          color={isUserRated ? 'onSurface' : 'primary'}
+          color={(!isLoggedIn || isUserRated) ? 'disabled' : 'primary'}
         />
         {!reviewsLoading && reviews.length === 0 && <NoReviewsText>Be the first to leave a review</NoReviewsText>}
         {sortedReviews.map((review, index) => (

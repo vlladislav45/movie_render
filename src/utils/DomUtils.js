@@ -1,4 +1,7 @@
 //https://stackoverflow.com/a/41698614
+import { transitionFunctions } from '../config/animationConstants';
+import { changeSelectedPage } from '../reducers/moviesReducer';
+
 /**
  * Check if element is visible
  * @param elem the element to check
@@ -74,4 +77,44 @@ export function calcOffset(elem, nextElement, isLeft = true) {
   // 20 is the extra margin around element
   const offset = isLeft ? width - newX + 20 : x - newX + 20;
   return Math.abs(offset);
+}
+
+// TODO: Replace this in drawer component
+export function addHorizontalDrag(dragContainer, onDragStart, onDrag, onDragEnd) {
+  dragContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+  dragContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+  dragContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+  
+  let initialX = 0;
+  let xDiff = 0;
+  
+  function handleTouchStart(evt) {
+    if (!evt.touches) return;
+    const firstTouch = evt.touches[0];
+    initialX = firstTouch.clientX;
+    onDragStart(evt);
+  }
+  
+  function handleTouchMove(evt) {
+    if (!evt.touches) {
+      return;
+    }
+    
+    xDiff = initialX - evt.touches[0].clientX;
+    // xDiff positive -> LEFT
+    // xDiff negative -> RIGHT
+    onDrag(evt, xDiff);
+  }
+  
+  function handleTouchEnd(evt) {
+    onDragEnd(evt);
+  }
+  
+  return {
+    dispose: () => {
+      dragContainer.removeEventListener('touchstart', handleTouchStart);
+      dragContainer.removeEventListener('touchmove', handleTouchMove);
+      dragContainer.removeEventListener('touchend', handleTouchEnd);
+    }
+  }
 }

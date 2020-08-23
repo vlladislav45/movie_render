@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { logout } from 'reducers/auth';
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout-24px.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/profile-24px.svg';
@@ -11,20 +12,18 @@ import MenuItem from './MenuItem';
 import { MenuItems, MenuItemTitle } from './styles';
 import { DrawerDivider } from '../styles';
 
+
+const selector = createSelector(
+  store => store.userReducer.bookmarks,
+  store => store.auth.isLoggedIn,
+  store => store.moviesReducer.selectedMovie.movieInfo.selectedMovieInfo,
+  (bookmarks, isLoggedIn, selectedMovieInfo) => ({ bookmarks, isLoggedIn, selectedMovieInfo })
+);
 const DrawerMenu = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   
-  const { bookmarks, isLoggedIn, selectedMovieInfo } = useSelector(
-    ({
-       userReducer: { bookmarks },
-       auth: { isLoggedIn },
-       moviesReducer: { selectedMovie: { movieInfo: selectedMovieInfo } },
-     }) => ({
-      bookmarks,
-      isLoggedIn,
-      selectedMovieInfo,
-    }))
+  const { bookmarks, isLoggedIn, selectedMovieInfo = {} } = useSelector(selector)
   
   const shouldRenderCurrentMovie = React.useMemo(() => {
     if (!selectedMovieInfo.movieId || location.pathname.split('/')[1] !== 'movie') return false;

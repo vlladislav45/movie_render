@@ -4,40 +4,53 @@ import React, {
   useRef,
   useState,
   useLayoutEffect,
+  useCallback,
+  useMemo,
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Loading } from 'components';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { createSelector } from 'reselect';
 import { calcOffset, getLastInvisible, isVisible } from 'utils/DomUtils';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import { fetchGenres, updateFilter } from 'reducers/moviesReducer';
 import { transitionDurations } from 'config/animationConstants';
 import browserHistory from 'utils/browserHistory';
-
+import SingleGenre from './SingleGenre';
 import {
   Arrow,
   Carousel,
   GenresContainer,
   GenresList,
-  SingleGenre,
 } from './styles';
+
+
+/**
+ * Arrows rerender when sliding because we need to remake the slide function
+ * when offset changes, maybe in the future the logic can be tweaked a little
+ * */
 
 // If the carousel is sliding, user should not be able to initiate another slide
 // because offset will be calculated wrong
 let isSliding = false;
 const { smallArea } = transitionDurations;
 
-const Genres = ({ onFinishLoading, ...props }) => {
+const selector = createSelector(
+  state => state.moviesReducer,
+  state => state.auth,
+  (movies, auth) => ({
+    selectedGenres: movies.filters.genres,
+    isLoading: movies.genresLoading || auth.isLoading,
+    genres: movies.genres,
+  })
+)
+
+const Genres = ({ onFinishLoading, className }) => {
   const dispatch = useDispatch();
+  const store = useSelector(selector, shallowEqual);
   const {
     genres = [],
     selectedGenres = [],
     isLoading = false,
-  } = useSelector(
-    ({ moviesReducer: { filters, genres, genresLoading }, auth: { isLoading } }) => ({
-      selectedGenres: filters.genres,
-      genres,
-      isLoading: genresLoading || isLoading, // If auth is loading so width can be calculated properly
-    }));
+  } = store;
   const leftArrowRef = useRef();
   const rightArrowRef = useRef();
   
@@ -52,7 +65,7 @@ const Genres = ({ onFinishLoading, ...props }) => {
   const [leftEnd, setLeftEnd] = useState(true);
   const [rightEnd, setRightEnd] = useState(false);
   
-  const { width: screenWidth } = useDeviceDimensions();
+  const { width: screenWidth } = useDeviceDimensions('Genres');
   
   useEffect(() => {
     dispatch(fetchGenres());
@@ -60,15 +73,18 @@ const Genres = ({ onFinishLoading, ...props }) => {
   
   useEffect(() => {
     const refs = {};
-    genres.forEach(genre => refs[genre['movieGenreName']] = createRef());
+    genres.forEach(genre => refs[genre] = createRef());
     setGenresRef(refs);
-  }, [genres.length]);
+  }, [genres]);
   
   useEffect(() => {
+    if (isOverflow !== null || !isLoading)
+      onFinishLoading();
+    
     setOffset(0);
     setLeftEnd(true);
     setRightEnd(false);
-  }, [isOverflow]);
+  }, [isOverflow, isLoading]);
   
   useLayoutEffect(checkIfOverflows, [genresRef, screenWidth]);
   
@@ -87,30 +103,12 @@ const Genres = ({ onFinishLoading, ...props }) => {
       setIsOverflow(false)
   }
   
-  function slideLeft() {
-    // Do nothing if we are at the left end or sliding
-    if (leftEnd || isSliding) return;
-    
-    slide('left');
-    isSliding = true;
-    setTimeout(() => isSliding = false, smallArea);
-  }
-  
-  function slideRight() {
-    // Do nothing if we are at the right end or sliding
-    if (rightEnd || isSliding) return;
-    
-    slide('right');
-    isSliding = true;
-    setTimeout(() => isSliding = false, smallArea);
-  }
-  
   /**
-   * Calculate and change the {@Link offset} of the carousel
+   * Calculate and change the {@link offset} of the carousel
    * based on the direction
    * @param direction oneOf([ 'left', 'right' ])
    */
-  const slide = direction => {
+  const slide = useCallback(direction => {
     const isLeft = direction === 'left';
     
     // we slided, so we are not at the end
@@ -120,7 +118,7 @@ const Genres = ({ onFinishLoading, ...props }) => {
     if (!isLeft) genresRefsArray = genresRefsArray.reverse();
     
     const firstHidden = getLastInvisible(genresRefsArray);
-
+    
     // The first hidden is the first element, now we slide it, next time we are the the end
     if (firstHidden === genresRefsArray[0].current) {
       isLeft ? setLeftEnd(true) : setRightEnd(true);
@@ -128,18 +126,35 @@ const Genres = ({ onFinishLoading, ...props }) => {
     
     const slideArrow = isLeft ? leftArrowRef.current : rightArrowRef.current;
     const offsetToBeVisible = calcOffset(firstHidden, slideArrow, isLeft);
-
+    
     const newOffset = isLeft
       ? Math.min(0, offset + offsetToBeVisible)
       : offset - offsetToBeVisible;
     
     setOffset(newOffset);
-  };
+  }, [genresRef, offset]);
+  
+  const slideLeft = useCallback(() => {
+    // Do nothing if we are at the left end or sliding
+    if (leftEnd || isSliding) return;
+    
+    slide('left');
+    isSliding = true;
+    setTimeout(() => isSliding = false, smallArea);
+  }, [slide])
+  
+  const slideRight = useCallback(() => {
+    // Do nothing if we are at the right end or sliding
+    if (rightEnd || isSliding) return;
+    
+    slide('right');
+    isSliding = true;
+    setTimeout(() => isSliding = false, smallArea);
+  }, [slide])
   
   // Add/remove the genre from the filter
-  function genreClicked(genre) {
-    const { movieGenreName } = genre;
-    const genreRef = genresRef[movieGenreName];
+  const genreClicked = useCallback(genre => {
+    const genreRef = genresRef[genre];
     
     // If the genre is not 100% visible, slide
     if (!isVisible(genreRef.current, 'left'))
@@ -148,71 +163,66 @@ const Genres = ({ onFinishLoading, ...props }) => {
       slideRight();
     
     let newGenres;
-    if (selectedGenres.includes(movieGenreName))
-      newGenres = selectedGenres.filter(g => g !== movieGenreName);
+    if (selectedGenres.includes(genre))
+      newGenres = selectedGenres.filter(g => g !== genre);
     else
-      newGenres = selectedGenres.concat(movieGenreName);
+      newGenres = selectedGenres.concat(genre);
     
     dispatch(updateFilter({ genres: newGenres }));
-  }
+  }, [genresRef, selectedGenres])
   
-  function renderGenres() {
+  const renderGenres = useCallback(() => {
     return genres.map(genre => {
-      const { genreId: id, movieGenreName: name } = genre;
       const isDisabled = browserHistory.location.pathname !== '/';
+      
       return (
         <SingleGenre
-          id={id}
-          key={id}
-          ref={genresRef[name]}
+          genre={genre}
+          onClick={genreClicked}
+          key={genre}
+          ref={genresRef[genre]}
           className='genre'
           isDisabled={isDisabled}
-          isActive={selectedGenres.includes(name)}
-          onClick={() => isDisabled ? {} : genreClicked(genre)}
-        >
-          <p>
-            {name}
-          </p>
-        </SingleGenre>);
+          isActive={selectedGenres.includes(genre)}
+        />
+      );
     });
-  }
+  }, [genres, genresRef, selectedGenres])
   
-  useEffect(() => {
-    if (!(isOverflow === null || isLoading))
-      onFinishLoading();
-  }, [isOverflow, isLoading])
+  const MemoizedLeftArrow = useMemo(() => isOverflow ? (<Arrow
+    flipped={'true'}
+    ref={leftArrowRef}
+    disabled={leftEnd}
+    onClickCapture={slideLeft}
+  />) : null, [leftArrowRef, leftEnd, slideLeft, isOverflow])
   
-  //TODO: rework loading logic
+  const MemoizedRightArrow = useMemo(() => isOverflow ? (<Arrow
+    ref={rightArrowRef}
+    disabled={rightEnd}
+    onClickCapture={slideRight}
+  />) : null, [rightArrowRef, leftEnd, slideRight, isOverflow])
+  
+  const MemoizedGenresCarousel = useMemo(() => (
+    <Carousel>
+      <GenresList
+        offset={offset}
+      >
+        {renderGenres()}
+      </GenresList>
+    </Carousel>
+  ), [offset, genres, genresRef, selectedGenres])
+  
   return (
     <GenresContainer
-      {...props}
+      className={className}
       isOverflow={isOverflow}
       isLoading={isOverflow === null || isLoading}  // if overflow is not yet calculated or if genres are loading
     >
-      {isOverflow &&
-      <Arrow
-        flipped={'true'}
-        ref={leftArrowRef}
-        disabled={leftEnd}
-        onClick={slideLeft}
-      />
-      }
-      <Carousel>
-        <GenresList
-          offset={offset}
-        >
-          {renderGenres()}
-        </GenresList>
-      </Carousel>
-      {isOverflow &&
-      <Arrow
-        ref={rightArrowRef}
-        disabled={rightEnd}
-        onClickCapture={slideRight}
-      />
-      }
+      {MemoizedLeftArrow}
+      {MemoizedGenresCarousel}
+      {MemoizedRightArrow}
     </GenresContainer>
   );
 };
 
-export default Genres;
+export default React.memo(Genres);

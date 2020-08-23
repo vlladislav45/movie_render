@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const RegisterForm = styled.form`
+export const StyledRegisterForm = styled.form`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@ export const RegisterForm = styled.form`
   }
 `;
 
-export const LoginForm = styled.form`
+export const StyledLoginForm = styled.form`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -41,14 +41,6 @@ export const FormTitle = styled.h3`
   font-family: 'Roboto', sans-serif;
   // align-self: start;
   color: ${props => props.theme.primary};
-`;
-
-export const LoginContainer = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
 `;
 
 export const ErrorMessage = styled.p`
