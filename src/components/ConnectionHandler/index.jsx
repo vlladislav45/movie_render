@@ -11,7 +11,6 @@ import Timer from '../Timer';
  * Utility component for managing connection
  */
 const ConnectionHandler = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const {
@@ -68,8 +67,8 @@ const ConnectionHandler = () => {
   ));
 
   useEffect(() => {
-    if (!serverOnline)
-      history.push('/error', { error: 'Server is not responding'})
+    // if (!serverOnline)
+    //   history.push('/error', { error: 'Server is not responding'})
       // enqueueError('Server is not responding!');
   }, [serverOnline]);
 
