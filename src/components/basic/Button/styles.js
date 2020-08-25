@@ -1,9 +1,7 @@
 import { rippleConstants } from 'config/animationConstants';
 import styled from 'styled-components';
 import { applyShadow, getOverlay } from 'utils/colorUtils';
-import { ACTIVE_RIPPLE_CLASS } from './index';
-
-const { SMALL_RIPPLE_DURATION } = rippleConstants;
+import { ACTIVE_RIPPLE_CLASS, RIPPLE_DURATION, WithRipple } from 'components/Styled/BaseRipple';
 
 export const LeadingIcon = styled.span`
   width: 24px;
@@ -25,7 +23,7 @@ export const ButtonWrapper = styled.div`
   align-items: center;
 `;
 
-export const BaseButton = styled.button`${props => {
+export const BaseButton = styled(WithRipple)`${props => {
   const { withIcon } = props;
   return `
     transition: all .3s ease;
@@ -52,36 +50,6 @@ export const BaseButton = styled.button`${props => {
     overflow: hidden;
     cursor: pointer;
     
-    // RIPPLE
-    &:after {
-     position: absolute;
-     content: "";
-     width: 0px;
-     height: 0px;
-     left: 0;
-     top: 0;
-     border-radius: 50%;
-     opacity: 0;
-     pointer-events: none;
-     transition: none;
-   }
-   
-   // tx and ty come from javascript
-   &.${ACTIVE_RIPPLE_CLASS}:after {
-      width: 1px;
-      height: 1px;
-      animation: doRipple ${SMALL_RIPPLE_DURATION}ms linear forwards;
-      opacity: 0.12;
-   }
-    @keyframes doRipple {
-      from {
-        transform: translate(var(--tx), var(--ty)) scale(0);
-      }
-      to {
-        transform: translate(var(--tx), var(--ty)) scale(250);
-      }
-    };
-   
    // HOVER override :before background color property and opacity on hover to use
    &:before {
     transition: all .2s ease;

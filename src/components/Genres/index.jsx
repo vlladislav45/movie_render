@@ -153,25 +153,32 @@ const Genres = ({ onFinishLoading, className }) => {
   }, [slide])
   
   // Add/remove the genre from the filter
-  const genreClicked = useCallback(genre => {
-    const genreRef = genresRef[genre];
+  const genreClicked = React.useMemo(() => {
+    if (!genresRef || Object.keys(genresRef).length === 0)
+      return null;
     
-    // If the genre is not 100% visible, slide
-    if (!isVisible(genreRef.current, 'left'))
-      slideLeft();
-    else if (!isVisible(genreRef.current, 'right'))
-      slideRight();
+    return genre => {
+      const genreRef = genresRef[genre];
+      
+      // If the genre is not 100% visible, slide
+      if (!isVisible(genreRef.current, 'left'))
+        slideLeft();
+      else if (!isVisible(genreRef.current, 'right'))
+        slideRight();
+      
+      let newGenres;
+      if (selectedGenres.includes(genre))
+        newGenres = selectedGenres.filter(g => g !== genre);
+      else
+        newGenres = selectedGenres.concat(genre);
+      
+      dispatch(updateFilter({ genres: newGenres }));
+    }
     
-    let newGenres;
-    if (selectedGenres.includes(genre))
-      newGenres = selectedGenres.filter(g => g !== genre);
-    else
-      newGenres = selectedGenres.concat(genre);
-    
-    dispatch(updateFilter({ genres: newGenres }));
   }, [genresRef, selectedGenres])
   
   const renderGenres = useCallback(() => {
+    if (!genreClicked) return null;
     return genres.map(genre => {
       const isDisabled = browserHistory.location.pathname !== '/';
       
@@ -187,30 +194,7 @@ const Genres = ({ onFinishLoading, className }) => {
         />
       );
     });
-  }, [genres, genresRef, selectedGenres])
-  
-  const MemoizedLeftArrow = useMemo(() => isOverflow ? (<Arrow
-    flipped={'true'}
-    ref={leftArrowRef}
-    disabled={leftEnd}
-    onClickCapture={slideLeft}
-  />) : null, [leftArrowRef, leftEnd, slideLeft, isOverflow])
-  
-  const MemoizedRightArrow = useMemo(() => isOverflow ? (<Arrow
-    ref={rightArrowRef}
-    disabled={rightEnd}
-    onClickCapture={slideRight}
-  />) : null, [rightArrowRef, leftEnd, slideRight, isOverflow])
-  
-  const MemoizedGenresCarousel = useMemo(() => (
-    <Carousel>
-      <GenresList
-        offset={offset}
-      >
-        {renderGenres()}
-      </GenresList>
-    </Carousel>
-  ), [offset, genres, genresRef, selectedGenres])
+  }, [genreClicked])
   
   return (
     <GenresContainer
@@ -218,9 +202,24 @@ const Genres = ({ onFinishLoading, className }) => {
       isOverflow={isOverflow}
       isLoading={isOverflow === null || isLoading}  // if overflow is not yet calculated or if genres are loading
     >
-      {MemoizedLeftArrow}
-      {MemoizedGenresCarousel}
-      {MemoizedRightArrow}
+      {isOverflow && <Arrow
+        flipped={'true'}
+        ref={leftArrowRef}
+        disabled={leftEnd}
+        onClickCapture={slideLeft}
+      />}
+      <Carousel>
+        <GenresList
+          offset={offset}
+        >
+          {renderGenres()}
+        </GenresList>
+      </Carousel>
+      {isOverflow && <Arrow
+        ref={rightArrowRef}
+        disabled={rightEnd}
+        onClickCapture={slideRight}
+      />}
     </GenresContainer>
   );
 };

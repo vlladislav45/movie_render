@@ -5,14 +5,14 @@ import MetaData from './MetaData';
 import Actors from './Actors';
 import MovieGenres from './MovieGenres';
 import { MovieForm, MovieFormLowerSection } from './styles';
+import useDeviceDimensions from '../../../../hooks/useDeviceDimensions';
 
 const AddMovieForm = () => {
-
+  const device = useDeviceDimensions();
   return (
     <MovieForm
       autoComplete="off"
     >
-      {/*Movie title, movie poster, movie video*/}
       <MovieTitleInput/>
       <MovieFormLowerSection>
         {/* Movie preview, upload movie */}

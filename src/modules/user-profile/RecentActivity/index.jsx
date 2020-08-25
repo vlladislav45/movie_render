@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabContentWrapper } from '../styles';
+import { TabContentWrapper } from '../RightSide/styles';
 
 const RecentActivity = () => {
 

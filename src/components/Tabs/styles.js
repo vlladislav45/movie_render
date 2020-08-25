@@ -2,8 +2,7 @@ import styled, { css, keyframes } from 'styled-components';
 import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import { applyShadow, getOverlay } from 'utils/colorUtils';
 import { rippleConstants } from 'config/animationConstants';
-
-const { SMALL_RIPPLE_DURATION } = rippleConstants;
+import { WithRipple } from '../Styled/BaseRipple';
 
 export const TabsContainer = styled.div`${props => {
   const { prominent, color, theme, activeTab } = props;
@@ -11,8 +10,8 @@ export const TabsContainer = styled.div`${props => {
   let left = 0, width = 0;
   // We use parentNode here, because tab is wrapped in RippleContainer
   if (activeTab && activeTab.current) {
-    left = activeTab.current.parentNode.offsetLeft;
-    width = activeTab.current.parentNode.offsetWidth;
+    left = activeTab.current.offsetLeft;
+    width = activeTab.current.offsetWidth;
   }
   
   return `
@@ -21,6 +20,7 @@ export const TabsContainer = styled.div`${props => {
     min-height: 48px;
     position: relative;
     width: max-content;
+    margin-bottom: 10px;
     
     &:focus {
       box-shadow: ${applyShadow(6)};
@@ -47,7 +47,7 @@ export const TabsContainer = styled.div`${props => {
 `;
 
 
-export const StyledSingleTab = styled.div`${props => {
+export const StyledSingleTab = styled(WithRipple)`${props => {
   const { isActive, prominent, color, theme } = props;
   
   const themedColor = theme[color];
@@ -102,3 +102,8 @@ export const StyledSingleTab = styled.div`${props => {
 }}
 `;
 
+export const TabContentContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;

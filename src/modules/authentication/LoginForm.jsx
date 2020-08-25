@@ -19,7 +19,9 @@ const LoginForm = React.memo(() => {
     dispatch(attemptLogin(username, password));
   }, [username, password])
 
-  const btnEnabled = username && password;
+  const btnEnabled = React.useMemo(() => username && password, [username, password]);
+  const usernameChanged = React.useCallback(e => setUsername(e.target.value), []);
+  const passwordChanged = React.useCallback(e => setPassword(e.target.value), []);
   return (
     <StyledLoginForm>
       <Loading isLoading={isLoading} elevation={18}/>
@@ -30,17 +32,17 @@ const LoginForm = React.memo(() => {
       </ErrorMessage>
       }
       <Input
-        onChange={e => setUsername(e.target.value)}
+        onChange={usernameChanged}
         label='Username'
       />
       <Input
-        onChange={e => setPassword(e.target.value)}
+        onChange={passwordChanged}
         label='Password'
         type='password'
       />
       <Button
         text='Login'
-        onClickCapture={login}
+        onClick={login}
         disabled={!btnEnabled}
       />
     </StyledLoginForm>

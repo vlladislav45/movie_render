@@ -127,7 +127,7 @@ const RegisterForm = React.memo((callback, deps) => {
       />
       <Button
         text='Register'
-        onClickCapture={register}
+        onClick={register}
         disabled={!btnEnabled}
       />
     </StyledRegisterForm>

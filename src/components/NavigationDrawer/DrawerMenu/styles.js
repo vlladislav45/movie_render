@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { WithRipple } from 'components/Styled/BaseRipple';
 
 /**
  * To maintain 16px padding from start of drawer to the icon (not the start of the item)
@@ -15,14 +15,16 @@ export const MenuItemTitle = styled.p`
   padding: 20px 4px;
 `;
 
-export const StyledDropDownItem = styled(Link)`
+export const StyledDropDownItem = styled(WithRipple)`
   padding: 10px 0;
   text-align: center;
   cursor: pointer;
   display: flex;
   align-items: center;
   height: 48px;
-
+  border-radius: 6px;
+  margin: 4px 0;
+  
   fill: ${props => props.theme.onSurface};
   color: ${props => props.theme.onSurface};
   ${props => props.$isActive && `
@@ -44,8 +46,10 @@ export const DropDownText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  pointer-events: none;
 `;
 
 export const IconContainer = styled.span`
   padding-left: 8px;
+  pointer-events: none;
 `;

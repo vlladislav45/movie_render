@@ -29,7 +29,7 @@ const DrawerMenu = () => {
     if (!selectedMovieInfo.movieId || location.pathname.split('/')[1] !== 'movie') return false;
     // If it is not in the bookmarks
     return !bookmarks.some(bookmark => Number(bookmark.movieId) === Number(selectedMovieInfo.movieId))
-  }, [selectedMovieInfo, location.pathname, isLoggedIn])
+  }, [selectedMovieInfo, location, isLoggedIn])
   
   function logOut() {
     dispatch(logout())
