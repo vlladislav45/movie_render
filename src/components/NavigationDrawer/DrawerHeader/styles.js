@@ -7,27 +7,27 @@ import { ReactComponent as DarkModeIcon } from 'assets/icons/moon.svg';
 
 export const StyledDrawerHeader = styled.div`
   position: relative;
-  height: 180px;
+  height: 150px;
   padding-top: 16px;
   padding-left: 16px;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: min-content min-content auto auto;
+  grid-template-rows: min-content 1fr 1fr;
 `;
 
 export const LoginButton = styled(Button)`
-  grid-area: -1 / 1 / -1 / span 3;
+  grid-area: 3 / 1 / 3 / span 3;
   align-self: end;
   margin-bottom: 4px;
 `
 export const RegisterButton = styled(Button)`
-  grid-area: -1 / 3 / -1 / span 3;
+  grid-area: 3 / 3 / 3 / span 3;
   align-self: end;
   margin-bottom: 4px;
 `
 
 export const DarkModeToggle = styled.span`
-  grid-area: -1 / 4 / -1 / -1;
+  grid-area: 1 / 4 / 1 / -1;
   align-self: start;
   
   display: flex;
@@ -96,4 +96,9 @@ export const DrawerLogo = styled(Logo)`
     right: 0;
     margin: auto;
   `};
+`;
+
+export const FormContainer = styled.div`
+  transition: opacity 500ms;
+  opacity: ${props => props.$isVisible ? 1 : 0};
 `;

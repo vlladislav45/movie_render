@@ -7,10 +7,10 @@ import { createSelector } from 'reselect';
  * @returns the selector for the auth
  */
 export const getSelector = errorType => createSelector(
-  store => store.auth,
-  store => store.connectionReducer,
-  (auth, { isOnline }) => ({
-    isLoading: auth.isLoading,
-    [errorType]: isOnline && auth[errorType],
+  store => store.auth.isLoading,
+  store => store.auth[errorType],
+  (isLoading, error) => ({
+    isLoading,
+    [errorType]: error
   })
 )

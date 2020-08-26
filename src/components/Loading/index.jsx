@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DARK_THEME } from 'utils/themes';
 import { createSelector } from 'reselect';
@@ -8,7 +8,7 @@ import {
   LoadingInner,
   LoadingLogo,
   LoadingOuter,
-  LogoAndAnimationContainer
+  LogoAndAnimationContainer, OPACITY_TRANSITION_DURATION
 } from './styles';
 
 const selector = createSelector(
@@ -18,6 +18,15 @@ const selector = createSelector(
 
 const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }) => {
   const { selectedTheme } = useSelector(selector);
+  const [shouldRender, setShouldRender] = useState(isLoading);
+  useEffect(() => {
+    if (!isLoading)
+    setTimeout(() => setShouldRender(false), OPACITY_TRANSITION_DURATION);
+    else
+      setShouldRender(true);
+  }, [isLoading])
+  
+  if (!shouldRender) return null;
   
   function renderLoading() {
     return (

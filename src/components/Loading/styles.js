@@ -3,8 +3,10 @@ import { MAX_Z_INDEX } from 'config/zIndexes';
 import { ReactComponent as CogWheelSVG } from 'assets/loading/cogwheel.svg';
 import Logo from '../Logo';
 
+
 // Position was changed to absolute, this means this should only be used inside
 //  relative positioned parent
+export const OPACITY_TRANSITION_DURATION = 800;
 export const LoadingOuter = styled.div`
   position: absolute;
   top: 0;
@@ -37,7 +39,7 @@ export const LoadingInner = styled.div`
   backdrop-filter: blur(4px);
   opacity: 1;
   ${props => !props.$loading && `
-    transition: opacity .8s;
+    transition: opacity ${OPACITY_TRANSITION_DURATION}ms;
     opacity: 0;
     backdrop-filter: none;
   `};
@@ -47,8 +49,7 @@ LoadingInner.displayName = 'LoadingInner';
 export const LogoAndAnimationContainer = styled.div`
   position: relative;
   margin: auto;
-  // width: var(--logoWidth);
-  // height: calc(var(--logoHeight) + var(--thirdHeight));
+  
   width: 100%;
   height: 100%;
   background: ${props => props.theme.surface}88;

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'components/basic';
 import { useDispatch } from 'react-redux';
-import { updateUploadInfo } from '../../../../../../reducers/moderatorReducer';
+import { updateUploadInfo } from '../../../../../reducers/moderatorReducer';
 import { VIDEO, VIDEO_PREVIEW_ERROR } from '../../UploadConstants';
 import { MovieUploadBtn } from './styles';
 

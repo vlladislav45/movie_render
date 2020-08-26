@@ -1,14 +1,15 @@
 import React from 'react';
-import LeftSide from './LeftSide';
-import RightSide from './RightSide';
+import { Tabs } from 'components';
+import tabsData from './tabsData';
 import { UserProfileWrapper } from './styles';
 
-const UserProfile = () => {
 
+const UserProfile = () => {
   return (
     <UserProfileWrapper>
-      <LeftSide/>
-      <RightSide />
+      <Tabs
+        tabs={tabsData}
+      />
     </UserProfileWrapper>
   );
 };

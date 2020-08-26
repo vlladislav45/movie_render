@@ -1,3 +1,114 @@
+// import React, { useCallback, useEffect, useMemo, useState } from 'react';
+// import ReactDOM from 'react-dom';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { finishRedirect } from 'reducers/auth';
+// import { setBaseTheme, setDarkTheme } from 'reducers/themeReducer';
+// import { createSelector } from 'reselect';
+// import { Modal, Switch } from 'components/basic';
+// import { Loading } from 'components';
+// import RegisterForm from 'modules/authentication/RegisterForm';
+// import LoginForm from 'modules/authentication/LoginForm';
+// import {
+//   DarkModeToggle,
+//   DrawerLogo, FormContainer,
+//   HeaderPrimaryText,
+//   HeaderSecondaryText,
+//   LoginButton,
+//   MoonIcon,
+//   ProfilePhoto,
+//   RegisterButton,
+//   StyledDrawerHeader
+// } from './styles';
+// import AuthenticationModal from './AuthenticationModal';
+//
+//
+//
+// const selector = createSelector(
+//   store => store.auth,
+//   store => store.themeReducer.themeColors,
+//   ({ isLoggedIn, loggedInUser, redirectToLogin, isLoading }, { isDark }) => ({
+//     isLoggedIn: isLoggedIn,
+//     loggedInUser: loggedInUser,
+//     redirectToLogin: redirectToLogin,
+//     isLoading: isLoading,
+//     isDark,
+//   })
+// )
+//
+// const DrawerHeader = () => {
+//   const dispatch = useDispatch();
+//   const [registerOpen, setRegisterOpen] = useState(false);
+//   const [loginOpen, setLoginOpen] = useState(false);
+//
+//   const {
+//     isLoggedIn, loggedInUser, redirectToLogin,
+//     isLoading, isDark
+//   } = useSelector(selector);
+//
+//   useEffect(() => {
+//     if (redirectToLogin) {
+//       setRegisterOpen(false);
+//       setLoginOpen(true);
+//       dispatch(finishRedirect());
+//     }
+//   }, [redirectToLogin]);
+//
+//
+//   const toggleTheme = useCallback(() => dispatch(isDark ? setBaseTheme() : setDarkTheme()), [isDark])
+//   // If passed a new state update it, else just toggle
+//   const toggleLoginModal = useCallback(() => setLoginOpen(isOpen => !isOpen), [])
+//   const toggleRegisterModal = useCallback(() => setRegisterOpen(isOpen => !isOpen), [])
+//   const modalStateChange = useCallback(nextState => setLoginOpen(nextState), []);
+//   const registerStateChange = useCallback(nextState => setRegisterOpen(nextState), []);
+//
+//   function renderAnonymousHeader() {
+//     return (
+//       <>
+//         <AuthenticationModal loginModalOpen={loginOpen} registerModalOpen={registerOpen} />
+//         <LoginButton
+//           type='text'
+//           text='login'
+//           color='secondary'
+//           onClick={toggleLoginModal}
+//         />
+//         <RegisterButton
+//           type='text'
+//           text='register'
+//           color='secondary'
+//           onClick={toggleRegisterModal}
+//         />
+//       </>
+//     )
+//   }
+//
+//   function renderAuthenticatedHeader() {
+//     return (
+//       <>
+//         <ProfilePhoto/>
+//         <HeaderPrimaryText>{loggedInUser.username}</HeaderPrimaryText>
+//         <HeaderSecondaryText>{loggedInUser.email}</HeaderSecondaryText>
+//       </>
+//     )
+//   }
+//
+//   return (
+//     <StyledDrawerHeader>
+//       {isLoggedIn
+//         ? renderAuthenticatedHeader()
+//         : renderAnonymousHeader()}
+//       <DarkModeToggle>
+//         <MoonIcon
+//           $isDark={isDark}
+//         />
+//         <Switch color='secondary' onCheckedStateChange={toggleTheme}/>
+//       </DarkModeToggle>
+//     </StyledDrawerHeader>
+//   );
+// };
+//
+// export default React.memo(DrawerHeader);
+
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,13 +136,11 @@ const modalsContainer = document.getElementById('modal');
 const selector = createSelector(
   store => store.auth,
   store => store.themeReducer.themeColors,
-  (auth, { isDark }) => ({
-    isLoggedIn: auth.isLoggedIn,
-    loggedInUser: auth.loggedInUser,
-    redirectToLogin: auth.redirectToLogin,
-    isLoading: auth.isLoading,
-    loginModal: auth.modalsOpen.login,
-    registerModal: auth.modalsOpen.register,
+  ({ isLoggedIn, loggedInUser, redirectToLogin, isLoading }, { isDark }) => ({
+    isLoggedIn: isLoggedIn,
+    loggedInUser: loggedInUser,
+    redirectToLogin: redirectToLogin,
+    isLoading: isLoading,
     isDark,
   })
 )
@@ -43,17 +152,8 @@ const DrawerHeader = () => {
   
   const {
     isLoggedIn, loggedInUser, redirectToLogin,
-    isLoading, isDark, loginModal, registerModal,
+    isLoading, isDark
   } = useSelector(selector);
-  
-  useEffect(() => {
-    if (loginModal !== loginModalOpen) {
-      setLoginModalOpen(loginModal);
-    }
-    if (registerModal !== registerModalOpen) {
-      setRegisterModalOpen(registerModal);
-    }
-  }, [loginModal, registerModal])
   
   useEffect(() => {
     if (redirectToLogin) {
@@ -121,9 +221,6 @@ const DrawerHeader = () => {
       {isLoggedIn
         ? renderAuthenticatedHeader()
         : renderAnonymousHeader()}
-      <DrawerLogo
-        textColor='onSurface' robotColor='onSurface' $isLoggedIn={isLoggedIn}
-      />
       <DarkModeToggle>
         <MoonIcon
           $isDark={isDark}
@@ -133,5 +230,4 @@ const DrawerHeader = () => {
     </StyledDrawerHeader>
   );
 };
-
 export default React.memo(DrawerHeader);

@@ -4,7 +4,7 @@ import Input from './basic/Input';
 import { Tabs } from './index';
 import { Chip } from './basic';
 import { ReactComponent as LeadingIcon } from '../assets/icons/error.svg';
-import { MetaDataContainer } from '../modules/user-profile/RightSide/Moderator/AddMovieForm/MetaData/styles';
+import { MetaDataContainer } from '../modules/user-profile/Moderator/AddMovieForm/MetaData/styles';
 
 // StoryBook alternative
 // TODO: Add story book for components

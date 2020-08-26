@@ -15,8 +15,7 @@ const selector = createSelector(
 )
 /**
  * Custom hook to get device dimensions and device type
- * * @param renderedBy - For debugging
  */
-const useDeviceDimensions = (renderedBy) => useSelector(selector);
+const useDeviceDimensions = () => useSelector(selector);
 
 export default useDeviceDimensions;
