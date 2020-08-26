@@ -71,15 +71,11 @@ class BaseAPI {
         // I cannot import at top level so im doing dynamic import
         // Since i dont expect this to happen so often (401 unauthorized)
         // I believe it will not make performance issues
-        Promise.all([() => import('reducers/auth'), () => import('redux-store')]).then(modules => {
-          console.group('imported');
-          console.log(modules);
-          console.groupEnd();
+        Promise.all([import('reducers/auth'), import('redux-store')]).then(([authModule, reduxStoreModule]) => {
+          const { tokenExpired } = authModule;
+          const { dispatch } = reduxStoreModule.default;
+          dispatch(tokenExpired());
         })
-        // import('reducers/auth').then(module => {
-        //   const { tokenExpired } = module;
-        //   reduxStore.dispatch(tokenExpired());
-        // })
       }
       console.group('Request error');
       console.log(status);
