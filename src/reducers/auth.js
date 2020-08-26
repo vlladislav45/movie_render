@@ -11,7 +11,7 @@ const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAILED = 'REGISTER_FAILED';
 const LOGOUT = 'LOGOUT';
 const FINISH_REDIRECT = 'FINISH_REDIRECT';
-const CHANGE_MODAL_STATE = 'CHANGE_MODAL_STATE';
+const REDIRECT_TO_LOGIN = 'REDIRECT_TO_LOGIN';
 
 export const checkToken = () => dispatch => {
   const jwt = localStorage.getItem(JWT_TOKEN);
@@ -77,6 +77,7 @@ export const attemptRegister = credentials => dispatch => {
     if (data.error)
       dispatch({
         type: REGISTER_FAILED,
+        payload: data.error,
       });
     else
       dispatch({
@@ -101,8 +102,8 @@ export const tokenExpired = () => dispatch => {
   dispatch(enqueueSnackbarMessage(
     'Session expired, please login again',
     {
-      ['Login']: () => dispatch(changeModalState({ login: true, register: false })),
-      ['Cancel']: () => {
+      'Login': () => dispatch({ type: REDIRECT_TO_LOGIN }),
+      'Cancel': () => {
       }
     },
     {
@@ -115,16 +116,6 @@ export const finishRedirect = () => ({
   type: FINISH_REDIRECT,
 });
 
-/**
- * Modal state should be with shape
- * login: isOpen :bool,
- * register: isOpen :bool
- */
-export const changeModalState = modalState => ({
-  type: CHANGE_MODAL_STATE,
-  payload: modalState,
-})
-
 const initialState = {
   loginError: null,
   registerError: null,
@@ -132,10 +123,6 @@ const initialState = {
   isLoggedIn: false,
   loggedInUser: {},
   redirectToLogin: false, // we just registered, redirect to login
-  modalsOpen: {
-    register: false,
-    login: false,
-  }
 };
 
 export default (state = initialState, action) => {
@@ -161,6 +148,7 @@ export default (state = initialState, action) => {
         isLoading: false,
         loginError: payload,
       };
+    case REDIRECT_TO_LOGIN:
     case REGISTER_SUCCESS:
       return {
         ...state,
@@ -182,16 +170,9 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: false,
+        isLoading: false,
         loggedInUser: {},
       };
-    case CHANGE_MODAL_STATE:
-      return {
-        ...state,
-        modalsOpen: {
-          ...state.modalsOpen,
-          ...payload,
-        }
-      }
     default:
       return state;
   }

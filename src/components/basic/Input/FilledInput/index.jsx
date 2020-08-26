@@ -15,6 +15,7 @@ export default React.forwardRef((props,
     rippleClass, inputId, label, LeadingIcon,
     onBlur, onFocus, onChange, withIconOnError,
     shouldShowPlaceholder, placeholder, value,
+    device,
     ...rest
   } = props;
 
@@ -35,6 +36,7 @@ export default React.forwardRef((props,
         withLeadingIcon={withLeadingIcon}
         hasError={hasError}
         isOnPrimary={onPrimary}
+        $device={device}
       >
         {label}
       </InputLabel>}

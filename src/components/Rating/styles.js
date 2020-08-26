@@ -9,12 +9,14 @@ export const StyledRating = styled.div`
 `;
 
 export const StarContainer = styled.div`
-  width: 1.5rem;
-  height: 1.5rem;
+  width: ${props => props.starSize};
+  height: ${props => props.starSize};
   display: inline-block;
   
-  ${({ rateable, color, theme }) => `
+  ${({ rateable, color, theme, starSize }) => `
     & > svg {
+      width: ${starSize}!important;
+      height: ${starSize}!important;
       fill: ${theme[color]};
     }
     ${rateable && `

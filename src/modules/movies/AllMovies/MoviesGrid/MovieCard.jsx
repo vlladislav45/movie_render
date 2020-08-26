@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { msToTime } from 'utils/DateTimeUtils';
 import { ReactComponent as BookMarkIcon } from 'assets/icons/bookmark.svg';
 import { ReactComponent as RemoveBookmark } from 'assets/icons/remove_bookmark.svg';
+import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
 import {
   CardLowerSection,
   MovieTitle,
   MoviePoster,
   SingleMovieLink,
   MovieRating,
-  Views,
-  Year,
   BookMarkFAB,
   BookMark,
   MovieSummaryContainer,
@@ -21,8 +21,10 @@ import {
 } from './MovieCardStyle';
 
 const MovieCard = ({
-                     movie: { id, year, movieName, movieRating, movieViews, summary, actors, genres },
-                     poster, onClick, onBookMarkClick, isBookmarked, showBookmark, isLoading
+                     movie: { id, year, movieName, movieRating, summary, actors, genres, duration },
+                     poster, onClick,
+                     onBookMarkClick, isBookmarked,
+                     showBookmark, isLoading
                    }) => {
   
   function handleClick() {
@@ -33,7 +35,6 @@ const MovieCard = ({
     e.stopPropagation();
     onBookMarkClick(id, movieName);
   }
-  
   
   return (
     <SingleMovieLink>
@@ -60,7 +61,7 @@ const MovieCard = ({
           {movieName}
         </MovieTitle>
         <MovieSubTitle>
-          <p>2h 32min</p>
+          <p>{msToTime(duration)}</p>
           <p>/</p>
           <p>{year}</p>
           {genres.length > 0 && (
@@ -79,11 +80,9 @@ const MovieCard = ({
         <Actors>
           {actors.join(', ')}
         </Actors>
-        {/*<Year>{year}</Year>*/}
-        {/*<MovieRating rating={movieRating} maxStars={5}/>*/}
-        {/*<Views><small>Views:</small> {movieViews}</Views>*/}
         <BottomBar>
           <WatchButton
+            Icon={PlayIcon}
             color='secondary'
             onClick={handleClick}
             type='text'

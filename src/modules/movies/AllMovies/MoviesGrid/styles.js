@@ -1,21 +1,21 @@
 import styled from 'styled-components';
-import { Rating } from 'components';
 import { transitionFunctions, transitionDurations } from 'config/animationConstants';
-import { applyShadow, calcDarkThemeOverlay } from 'utils/colorUtils';
+import { SM, XS_SM, M, L } from 'utils/mediaUtils';
 
 const { largeExpand, largeCollapsing } = transitionDurations;
 const { standardEasing, deceleratedEasing, acceleratedEasing } = transitionFunctions;
-const MAX_COLUMNS = 3;
+
 export const StyledMoviesGrid = styled.div`${props => {
-  const { fadeIn, moviesPerPage } = props;
-  const COLUMNS = Math.min(moviesPerPage, MAX_COLUMNS);
-  const ROWS = Math.ceil(moviesPerPage / COLUMNS);
+  const { fadeIn, moviesPerPage, $device } = props;
+
+  const columns = getColumns($device, moviesPerPage);
+  const rows = Math.ceil(moviesPerPage / columns);
   return `
     display: grid;
-    grid-template-columns: repeat(${COLUMNS}, 1fr);
-    grid-template-rows: repeat(${ROWS}, auto);
+    grid-template-columns: repeat(${columns}, 1fr);
+    grid-template-rows: repeat(${rows}, auto);
     grid-auto-rows: min-content;
-    grid-column-gap: 30px;
+    grid-column-gap: 10px;
     grid-row-gap: 10px;
     
     width: 100%;
@@ -23,7 +23,7 @@ export const StyledMoviesGrid = styled.div`${props => {
     position: relative;
     opacity: 0;
     ${fadeIn && `
-      transition: opacity 500ms;
+      transition: opacity 300ms;
       opacity: 1
     `};
     `;
@@ -41,17 +41,16 @@ export const Wrapper = styled.div`
   }
   &.page-transition-prev-enter-active, &.page-transition-prev-enter-done {
     transform: translateX(0);
-    transition: transform ${largeExpand}ms ${acceleratedEasing};
+    transition: transform ${largeExpand}ms ${deceleratedEasing};
   }
-  
+
   &.page-transition-prev-exit {
     transform: translateX(0);
-
   }
+  
   &.page-transition-prev-exit-active, &.page-transition-prev-exit-done {
-    filter: blur(10px);
     transform: translateX(120%);
-    transition: transform ${largeCollapsing}ms ${deceleratedEasing};
+    transition: transform ${largeCollapsing}ms ${acceleratedEasing};
   }
   
   &.page-transition-next-enter {
@@ -59,15 +58,27 @@ export const Wrapper = styled.div`
   }
   &.page-transition-next-enter-active, &.page-transition-next-enter-done {
     transform: translateX(0);
-    transition: transform ${largeExpand}ms ${acceleratedEasing};
+    transition: transform ${largeExpand}ms ${deceleratedEasing};
   }
-  
+
   &.page-transition-next-exit {
     transform: translateX(0);
   }
   &.page-transition-next-exit-active, &.page-transition-next-exit-done {
-    filter: blur(10px);
     transform: translateX(-120%);
-    transition: transform ${largeCollapsing}ms ${deceleratedEasing};
+    transition: transform ${largeCollapsing}ms ${acceleratedEasing};
   }
 `;
+
+function getColumns(device, moviesPerPage) {
+  switch (device) {
+    case XS_SM:
+    case SM:
+      return Math.min(1, moviesPerPage);
+    case M:
+    case L:
+      return Math.min(2, moviesPerPage);
+    default :
+      return Math.min(3, moviesPerPage);
+  }
+}

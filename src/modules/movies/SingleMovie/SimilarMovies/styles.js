@@ -1,9 +1,17 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { Card } from 'components';
 
-export const SimilarMoviesContainer = styled.div`
-  grid-area: m;
+export const SimilarMoviesContainer = styled(Card)`
+  grid-area: 5 / 1 / 5 / -1;
+  ${({ $oneColumn }) => $oneColumn && `
+    grid-area: 7 / 1 / 8 / -1;
+  `}
+  width: 100%;
+  height: 400px;
   overflow: hidden;
   color: ${props => props.theme.onSurface};
+  padding: 10px 10px 0;
 `;
 
 export const MoreMoviesTitle = styled.h3`
@@ -18,7 +26,8 @@ export const Movies = styled.div`
   overflow-x: auto; // TODO: Make this scrollable like genres or like a carousel
 `;
 
-export const MovieLink = styled.div`
+export const MovieLink = styled(Link)`
+  color: ${props => props.theme.onSurface};
   margin: 0 10px;
   scroll-snap-align: start;
 `;

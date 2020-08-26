@@ -23,6 +23,7 @@ export default {
     isDark: false,
     overlay: '#FFFFFF',
     contrast: '#000000',
+    transparent: '#00000000',
   },
   [DARK_THEME]: {
     primary: '#80ddea', // was #BB86FC
@@ -41,6 +42,7 @@ export default {
     isDark: true,
     overlay: '#121212', // was black
     contrast: '#FFFFFF',
+    transparent: '#00000000',
   }
 };
 //#465355

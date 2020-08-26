@@ -9,6 +9,7 @@ const INPUT_WIDTH = 200;
 export const StyledSearchBar = styled.div`
 	position: relative;
 `;
+StyledSearchBar.displayName = 'StyledSearchBar';
 
 export const ToggleButton = styled(SearchIcon)`
 	position: absolute;
@@ -23,6 +24,7 @@ export const ToggleButton = styled(SearchIcon)`
 		transform: translateX(-${INPUT_WIDTH}px);
 	`};
 `;
+ToggleButton.displayName = 'ToggleButton';
 
 
 export const EXTEND_STATES = {
@@ -72,9 +74,5 @@ export const SearchInputContainer = styled.div`
 export const SearchInput = styled(Input)`
 	& > div {
 		height: 48px;
-	}
-	
-	& label {
-		height: unset;
 	}
 `;

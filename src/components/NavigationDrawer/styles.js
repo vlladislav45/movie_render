@@ -3,7 +3,7 @@ import { transitionFunctions, transitionDurations } from 'config/animationConsta
 import { MAX_Z_INDEX } from 'config/zIndexes';
 import { MaterialSurface } from '../basic';
 import DrawerHeader from './DrawerHeader';
-import { L, lessThen, M, SM } from '../../utils/mediaUtils';
+import { L, lessThen, M, SM } from 'utils/mediaUtils';
 
 export const Overlay = styled.div`
   position: fixed;
@@ -18,13 +18,16 @@ export const Overlay = styled.div`
   display: flex;
   visibility:  ${props => props.isOpen ? 'visible' : 'hidden'};
   ${props => !props.isOpen && `
-    transition: visibility 300ms;
+    transition: visibility 200ms;
   `};
   
   align-items: center;
   justify-content: center;
 `;
+Overlay.displayName = 'DrawerOverlay'
 
+
+const FREE_SPACE_ON_MOBILE = 56;
 export const Drawer = styled(MaterialSurface)`
   position: absolute;
   left: 0;
@@ -34,28 +37,43 @@ export const Drawer = styled(MaterialSurface)`
   border-top-left-radius: 0!important;
   border-bottom-left-radius: 0!important;
   
-  transition: transform 300ms;
-  transform: translateX(-100%);
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Disable scrollbar Chrome/Safari/Webkit */
+  }
   
-  ${props => props.isOpen && `
-    transform: translateX(0);
-  `};
   
   ${props => {
-    const { responsive: { device, width } } = props;
-    const FREE_SPACE_ON_MOBILE = 56;
+    const { $device, $width, $isDragging, isOpen } = props;
+    
     return `
-      ${lessThen(device, SM) && `
-        width: ${width - FREE_SPACE_ON_MOBILE}px;
+      transition: transform ${transitionDurations.largeCollapsing}ms ${transitionFunctions.deceleratedEasing};
+      transform: translateX(-100%);
+      ${isOpen && `
+        transition: transform ${transitionDurations.largeExpand}ms ${transitionFunctions.acceleratedEasing};
+        transform: translateX(0);
+      `};
+      
+      ${$isDragging && `
+        transition: none;
+      `};
+      
+      ${lessThen($device, SM) && `
+        width: ${$width - FREE_SPACE_ON_MOBILE}px;
         max-width: 300px;
       `}
     `
     }
   }
 `;
+Drawer.displayName = 'DrawerContent'
 
-
-export const DrawerDivider = styled.hr`
-  color: ${props => props.theme.onSurface};
-  opacity: 0.3;
+export const DrawerDivider = styled.div`
+  background: ${props => props.theme.onSurface};
+  opacity: 0.1;
+  height: 1px;
+  width: 100%;
 `;

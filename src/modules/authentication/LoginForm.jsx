@@ -1,41 +1,30 @@
-import { debounce } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Loading } from 'components';
 import { Input, Button } from 'components/basic';
 import { attemptLogin } from 'reducers/auth';
-import { ErrorMessage, FormTitle, LoginContainer, LoginForm } from './styles';
+import { ErrorMessage, FormTitle, StyledLoginForm } from './styles';
+import { getSelector } from './utils';
 
-export default () => {
+const selector = getSelector('loginError');
+const LoginForm = React.memo(() => {
   const dispatch = useDispatch();
-  const { isLoading, loginError } = useSelector(({ auth, connectionReducer }) => ({
-    isLoading: auth.isLoading,
-    loginError: connectionReducer.isOnline && auth.loginError,
-  }));
-
-  //TODO: debounce checking for username availability
-  // const handleChange = React.useCallback(debounce(e => {
-  //   dispatch(updateFilter({ search: e.target.value }));
-  // }, 200), []);
-
+  const { isLoading, loginError } = useSelector(selector);
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [usernameError, setUsernameError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-
-  function login (e) {
+  const login = useCallback(e => {
     e.preventDefault();
     dispatch(attemptLogin(username, password));
-  }
+  }, [username, password])
 
-  const btnEnabled = (username && !usernameError) &&
-    (password && !passwordError);
+  const btnEnabled = React.useMemo(() => username && password, [username, password]);
+  const usernameChanged = React.useCallback(e => setUsername(e.target.value), []);
+  const passwordChanged = React.useCallback(e => setPassword(e.target.value), []);
   return (
-    <LoginForm>
-      <LoginContainer>
-        <Loading isLoading={isLoading} elevation={18}/>
-      </LoginContainer>
+    <StyledLoginForm>
+      <Loading isLoading={isLoading} elevation={18}/>
       <FormTitle>Login</FormTitle>
       {loginError &&
       <ErrorMessage>
@@ -43,21 +32,21 @@ export default () => {
       </ErrorMessage>
       }
       <Input
-        onChange={e => setUsername(e.target.value)}
+        onChange={usernameChanged}
         label='Username'
-        errorText={usernameError}
       />
       <Input
-        onChange={e => setPassword(e.target.value)}
+        onChange={passwordChanged}
         label='Password'
-        errorText={passwordError}
+        type='password'
       />
       <Button
         text='Login'
-        onClickCapture={login}
+        onClick={login}
         disabled={!btnEnabled}
       />
-    </LoginForm>
+    </StyledLoginForm>
   );
-}
+})
 
+export default LoginForm;

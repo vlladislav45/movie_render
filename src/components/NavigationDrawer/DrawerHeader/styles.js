@@ -1,31 +1,40 @@
 import styled from 'styled-components';
+import React from 'react';
 import { Button, ProfileImage } from 'components/basic';
+import Logo from 'components/Logo';
 import { ReactComponent as DarkModeIcon } from 'assets/icons/moon.svg';
 
 
 export const StyledDrawerHeader = styled.div`
-  height: 180px;
+  position: relative;
+  height: 150px;
   padding-top: 16px;
   padding-left: 16px;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: min-content min-content min-content auto;
+  grid-template-rows: min-content 1fr 1fr;
 `;
 
 export const LoginButton = styled(Button)`
-  grid-area: 1 / 1 / 1 / span 3;
+  grid-area: 3 / 1 / 3 / span 3;
+  align-self: end;
+  margin-bottom: 4px;
 `
 export const RegisterButton = styled(Button)`
-  grid-area: 1 / 3 / 1 / span 3;
+  grid-area: 3 / 3 / 3 / span 3;
+  align-self: end;
+  margin-bottom: 4px;
 `
 
 export const DarkModeToggle = styled.span`
-  grid-area: 4 / 3 / 4 / -2;
+  grid-area: 1 / 4 / 1 / -1;
+  align-self: start;
+  
   display: flex;
-  justify-self: end;
+  justify-self: center;
   align-items: center;
-  min-width: 80px;
-  width: 80px;
+  min-width: 70px;
+  width: 70px;
   justify-content: space-between;
 `;
 
@@ -50,7 +59,7 @@ export const HeaderSecondaryText = styled.p`
   color: ${props => props.theme.onSurfaceMD};
 `;
 
-export const MoonIcon = styled(DarkModeIcon)`
+export const MoonIcon = React.memo(styled(DarkModeIcon)`
   width: 24px;
   height: 24px;
   
@@ -73,4 +82,23 @@ export const MoonIcon = styled(DarkModeIcon)`
       }
     }
   `};
+`);
+
+export const DrawerLogo = styled(Logo)`
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 65%;
+  height: 45%;
+  ${({ $isLoggedIn }) => !$isLoggedIn && `
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  `};
+`;
+
+export const FormContainer = styled.div`
+  transition: opacity 500ms;
+  opacity: ${props => props.$isVisible ? 1 : 0};
 `;

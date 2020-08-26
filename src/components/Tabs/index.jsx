@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'components';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import SingleTab from './SingleTab';
-import { TabsContainer } from './styles';
+import { TabContentContainer, TabsContainer } from './styles';
 
 const Tabs = props => {
     const {
@@ -11,18 +11,18 @@ const Tabs = props => {
       color = 'secondary',
       prominent = false,
     } = props;
-
+    
     const [tabs, setTabs] = useState({});
     const [activeTab, setActiveTab] = useState(null);
     // used to force render when changing dimensions
-    const ignored = useDeviceDimensions();
-
+    const ignored = useDeviceDimensions('Tabs');
+    
     // Map all the tabs from props to state
     useEffect(() => {
       const tabsState = {};
       propTabs.forEach(tab => {
         const { tabName, tabContent, isActive = false } = tab;
-
+        
         tabsState[tabName] = {
           ref: React.createRef(),
           tabName,
@@ -32,75 +32,67 @@ const Tabs = props => {
       });
       setTabs(tabsState);
     }, [propTabs]);
-
+    
     // Execute only if there is no active tab
     useEffect(() => {
       if (activeTab) return;
-
+      
       for (let tabsKey in tabs) {
         const { isActive, tabName } = tabs[tabsKey];
-
+        
         
         if (isActive && tabs[tabsKey].ref.current !== null) {
           setActiveTab({ ...tabs[tabsKey].ref, tabName: tabName });
         }
       }
     }, [tabs]);
-
-    function updateTabState(tabName, stateName, stateValue, moreStates) {
-      setTabs({
-        ...tabs,
-        [tabName]: {
-          ...tabs[tabName],
-          [stateName]: stateValue,
-          ...moreStates,
-        },
-      });
-    }
-
-    function tabClicked(tabName) {
-      setActiveTab({ ...tabs[tabName].ref, tabName });
-    }
-
-    const renderTabs = () => Object.values(tabs).map(tab => {
+    
+    const tabClicked = useCallback((tabName) => {
+      setActiveTab(() => ({
+        ...tabs[tabName].ref,
+        tabName
+      }));
+    }, [tabs])
+    
+    const renderTabs = useCallback(() => Object.values(tabs).map(tab => {
       const { tabName } = tab;
-
+      
       return (
         <SingleTab
           key={tabName}
           ref={tabs[tabName].ref}
           tabIndex={0}
           prominent={prominent}
-          denseRipple={prominent}
           color={color}
-          rippleColor={color}
           isActive={activeTab?.tabName === tabName}
           onClick={tabClicked}
           tabName={tabName}
+          denseRipple={prominent}
+          rippleColor={color}
         />
       );
-    });
-
-    function cycleTabs(direction) {
+    }), [tabs]);
+    
+    const cycleTabs = useCallback((direction) => {
       // Cycle between tabs and switch to first after the last
       const tabObjects = direction.toUpperCase() === 'R' ?
         Object.values(tabs) : Object.values(tabs).reverse();
-
+      
       const hasActiveTab = tabObjects.some((tab, index) => {
         if (document.activeElement === tab.ref.current) {
           // Next or first
           const nextIndex = index === tabObjects.length - 1 ? 0 : index + 1;
           tabObjects[nextIndex].ref.current.focus();
-
+          
           return true;
         }
       });
-
+      
       if (!hasActiveTab)
         tabObjects[0].ref.current.focus();
-    }
-
-    function keyPressed(e) {
+    }, [tabs])
+    
+    const keyPressed = useCallback(e => {
       switch (e.keyCode) {
         // TAB and Right, same behaviour
         case 39:
@@ -111,7 +103,7 @@ const Tabs = props => {
           e.preventDefault();
           cycleTabs('l');
           break;
-
+        
         // Enter
         case 13: {
           e.preventDefault();
@@ -121,19 +113,19 @@ const Tabs = props => {
             const currentTab = tabs[currentTabName];
             const { current } = currentTab.ref;
             if (document.activeElement === current) {
-              setActiveTab({ ...tabs[currentTabName].ref, tabName: currentTabName });
+              setActiveTab(() => ({ ...tabs[currentTabName].ref, tabName: currentTabName }));
             }
           }
         }
           break;
       }
-    }
-
+    }, [cycleTabs])
+    
     const TabContent = React.useMemo(() => {
       return tabs[activeTab?.tabName]?.tabContent;
     }, [activeTab]);
-
-
+    
+    
     return (
       <>
         <TabsContainer
@@ -145,13 +137,13 @@ const Tabs = props => {
         >
           {renderTabs()}
         </TabsContainer>
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <TabContentContainer>
           {TabContent && (
             <React.Suspense fallback={<Loading/>}>
               <TabContent/>
             </React.Suspense>
           )}
-        </div>
+        </TabContentContainer>
       </>
     );
   }

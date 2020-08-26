@@ -1,52 +1,80 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { closeNavigationDrawer } from 'reducers/uiReducer';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import DrawerHeader from './DrawerHeader';
 import DrawerMenu from './DrawerMenu';
 import { Drawer, DrawerDivider, Overlay } from './styles';
+import { createSelector } from 'reselect';
 
-const NavigationDrawer = props => {
+const selector = createSelector(
+  store => store.uiReducer.drawerOpen,
+  drawerOpen => ({
+    drawerOpen,
+  }))
+const NavigationDrawer = () => {
   const dispatch = useDispatch();
   const drawerRef = useRef();
   
-  const { drawerOpen } = useSelector(({ uiReducer }) => ({
-    drawerOpen: uiReducer.drawerOpen,
-  }))
-  const { device, width } = useDeviceDimensions();
+  const { drawerOpen } = useSelector(selector)
+  const { device, width } = useDeviceDimensions('Drawer');
   
-  //Close drawer on swipe left https://stackoverflow.com/a/23230280
-  // TODO: Make it on scroll left also
-  // TODO: Make it slide a little bit and close after a certain threshold is reached
+  const [isDragging, setIsDragging] = useState(false);
+  
+  const CLOSE_THRESHOLD = useMemo(
+    () => drawerRef.current ? drawerRef.current.offsetWidth / 2 : 150,
+    [drawerRef, width]);
+  
+  // Close drawer on swipe left https://stackoverflow.com/a/23230280
   useEffect(() => {
     if (!drawerOpen || !drawerRef.current) return;
+    const { current: drawer } = drawerRef;
     
-    drawerRef.current.addEventListener('touchstart', handleTouchStart, false)
-    drawerRef.current.addEventListener('touchmove', handleTouchMove, false)
+    drawer.addEventListener('touchstart', handleTouchStart, false);
+    drawer.addEventListener('touchmove', handleTouchMove, false);
+    drawer.addEventListener('touchend', handleTouchEnd, false);
     
-    let xDown = null;
+    let xLeft = null;
+    let prevXDiff = 0;
     
     function handleTouchStart(evt) {
       if (!evt.touches) return;
       const firstTouch = evt.touches[0];
-      xDown = firstTouch.clientX;
+      xLeft = firstTouch.clientX;
+      prevXDiff = 0;
+      setIsDragging(true);
     }
     
+    
     function handleTouchMove(evt) {
-      if (!xDown || !evt.touches) {
+      if (!xLeft || !evt.touches) {
         return;
       }
       
-      let xUp = evt.touches[0].clientX;
-      let xDiff = xDown - xUp;
+      let xRight = evt.touches[0].clientX;
+      let xDiff = xLeft - xRight;
+      prevXDiff = xDiff;
       
-      if (xDiff > 0) {
-        /* left swipe or scroll */
-        dispatch(closeNavigationDrawer())
+      if (xDiff >= CLOSE_THRESHOLD) {
+        setIsDragging(false);
+        drawer.removeEventListener('touchmove', handleTouchMove, false);
+        handleTouchEnd(evt);
+      } else {
+        drawer.style.transform = 'translateX(' + Math.min((-xDiff), 0) + 'px)';
       }
-      /* reset values */
-      xDown = null;
+    }
+    
+    function handleTouchEnd() {
+      setIsDragging(false);
+      if (prevXDiff >= CLOSE_THRESHOLD)
+        dispatch(closeNavigationDrawer());
+      drawer.style.transform = '';
+    }
+    
+    return () => {
+      drawer.removeEventListener('touchstart', handleTouchStart, false);
+      drawer.removeEventListener('touchmove', handleTouchMove, false);
+      drawer.removeEventListener('touchend', handleTouchEnd, false);
     }
   }, [drawerOpen])
   
@@ -56,19 +84,23 @@ const NavigationDrawer = props => {
     }
   }
   
+  if (!device || !width) return null;
+ 
   return (
     <Overlay
       onClick={handleClick}
       isOpen={drawerOpen}
+      displayName='DrawerOverlay'
     >
       <Drawer
         ref={drawerRef}
-        responsive={{
-          device, width
-        }}
+        $isDragging={isDragging}
+        $width={width}
+        $device={device}
         isOpen={drawerOpen}
         id='navigation-drawer'
         elevation={16}
+        displayName='DrawerContent'
       >
         <DrawerHeader/>
         <DrawerDivider/>
@@ -77,7 +109,5 @@ const NavigationDrawer = props => {
     </Overlay>
   );
 };
-
-NavigationDrawer.propTypes = {};
 
 export default NavigationDrawer;

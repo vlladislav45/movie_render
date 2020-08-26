@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { rippleConstants } from 'config/animationConstants';
+import { uniqueId } from 'lodash';
+import { ACTIVE_RIPPLE_CLASS, RIPPLE_DURATION } from 'components/Styled/BaseRipple';
+import { addRipple } from 'utils/rippleUtils';
 import {
   ButtonWrapper,
   ContainedButton,
@@ -8,84 +10,37 @@ import {
   LeadingIcon,
 } from './styles';
 
-const { SMALL_RIPPLE_DURATION } = rippleConstants;
 const Button = React.forwardRef((
   props,
   ref) => {
-
-  const timeout = React.useRef(0);
-  const time = React.useRef(0);
   const {
-    type = 'contained', color = 'primary', disabled = false,
-    Icon, text, children, onClick, onClickCapture, ...rest
+    id, type = 'contained', color = 'primary', disabled = false,
+    Icon, text, children, onClick, ...rest
   } = props;
-
-  const [isPressed, setIsPressed] = useState(false);
-  const [coordinates, setCoordinates] = useState();
-
-  // Clear ripple timeout when unmounting
-  useEffect(() => () => clearTimeout(timeout.current), []);
-
+  
+  const btnId = React.useMemo(() => id || `btn_${uniqueId()}`, [id]);
+  
   useEffect(() => {
-    if (isPressed)
-      time.current = Date.now();
-  }, [isPressed]);
-
-  function mouseDown (evt) {
-    const x = evt.clientX - evt.target.getBoundingClientRect().left;
-    const y = evt.clientY - evt.target.getBoundingClientRect().top;
-    // noinspection JSCheckFunctionSignatures
-    setCoordinates({ x, y });
-    setIsPressed(true);
-  }
-
-  function mouseUp (e) {
-    if (!isPressed) return;
-    cancelRipple();
-  }
-
-  function hoverOut () {
-    if (!isPressed) return;
-    cancelRipple();
-  }
-
-  function buttonClicked (e) {
-    cancelRipple();
-
-    if (onClick)
-      onClick(e);
-    if (onClickCapture)
-      onClickCapture(e);
-
-    e.stopPropagation();
-  }
-
-  function cancelRipple () {
-    const timeLeft = Date.now() - time.current;
-    clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => {
-      setIsPressed(false);
-    }, SMALL_RIPPLE_DURATION - timeLeft);
-  }
-
+    const el = document.getElementById(btnId);
+    if (el)
+      addRipple(el);
+  }, [btnId]);
+  
   const buttonProps = {
-    isActive: isPressed,
-    coordinates: coordinates,
-    onMouseDownCapture: mouseDown,
-    onMouseUpCapture: mouseUp,
-    onMouseOut: hoverOut,
-    onClickCapture: buttonClicked,
+    id: btnId,
+    onClickCapture: onClick,
     disabled: disabled,
     color: color,
     withIcon: !!Icon,
+    as: 'button',
   };
-
+  
   return (
     <ButtonWrapper
       ref={ref}
       {...rest}
     >
-
+      
       {type === 'contained' &&
       <ContainedButton
         {...buttonProps}
@@ -101,6 +56,10 @@ const Button = React.forwardRef((
       <TextButton
         {...buttonProps}
       >
+        {Icon &&
+        <LeadingIcon>
+          <Icon/>
+        </LeadingIcon>}
         {text || children}
       </TextButton>
       }
@@ -111,7 +70,6 @@ const Button = React.forwardRef((
 Button.propTypes = {
   type: PropTypes.oneOf(['contained', 'outlined', 'text']),
   color: PropTypes.oneOf(['primary', 'secondary', 'surface']), //NOTE: surface should be used for dark theme only
-  emphasis: PropTypes.oneOf(['high', 'medium', 'low']),
   disabled: PropTypes.bool,
   text: PropTypes.string,
   Icon: PropTypes.elementType,

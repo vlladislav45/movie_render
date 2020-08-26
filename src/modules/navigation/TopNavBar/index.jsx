@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import { toggleNavigationDrawer } from 'reducers/uiReducer';
 import { Loading } from 'components';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import {
+  LogoContainer,
+  NavBarLogo,
   StyledTopNav,
   TopNavExpand,
   TopNavGenres,
@@ -17,39 +20,46 @@ import {
 const NAVBAR_EXTENDED_STATE = 'NAVBAR_EXTENDED_STATE';
 const TopNavBar = () => {
   const dispatch = useDispatch();
-  const { device, width } = useDeviceDimensions();
-  
-  const [isExpanded, setIsExpanded] = useState(false);
-  
-  useEffect(() => {
-    setIsExpanded(JSON.parse(localStorage.getItem(NAVBAR_EXTENDED_STATE)));
-  }, [])
-  
-  function toggleExtendedNavbar() {
+  const history = useHistory();
+
+  const [isExpanded, setIsExpanded] = useState(JSON.parse(localStorage.getItem(NAVBAR_EXTENDED_STATE)));
+  const [isLoading, setIsLoading] = useState(true);
+
+  const toggleExtendedNavbar = useCallback(() => {
     setIsExpanded(isExpanded => !isExpanded);
     localStorage.setItem(NAVBAR_EXTENDED_STATE, JSON.stringify(!isExpanded));
-  }
-  
-  function toggleDrawer() {
+  }, [])
+
+  const toggleDrawer = useCallback(() => {
     dispatch(toggleNavigationDrawer())
-  }
+  }, [dispatch])
+
+  const stopLoading = useCallback(() => {
+    setIsLoading(false)
+  }, [])
+
+  const openMainPage = useCallback(() => {
+    if (history.location.pathname !== '/')
+      history.push('/')
+  }, [history])
   
   return (
-    <StyledTopNav
-      displayName='TapAppBar'
-      id='top-nav'
-      device={device}
-      isExtended={isExpanded}
-    >
-      {!!device
-        ? (
+    <>
+      <Loading onlyCogWheel isLoading={isLoading}/>
+      <StyledTopNav
+        displayName='TapAppBar'
+        id='top-nav'
+        isExtended={isExpanded}
+      >
           <TopNavInner>
             <TopNavRow>
               <TopNavMenu
                 className='navbar-action'
                 onClick={toggleDrawer}
               />
-              <TopNavTitle $deviceWidth={width}/>
+              <LogoContainer>
+                <NavBarLogo onClick={openMainPage} textColor='transparent'/>
+              </LogoContainer>
               <TopNavSearch/>
               <TopNavExpand
                 onClick={toggleExtendedNavbar}
@@ -58,14 +68,13 @@ const TopNavBar = () => {
               />
             </TopNavRow>
             <TopNavRow>
-              <TopNavGenres/>
+              <TopNavGenres onFinishLoading={stopLoading}/>
             </TopNavRow>
           </TopNavInner>
         )
-        : <Loading/>
-      }
-    </StyledTopNav>
+      </StyledTopNav>
+    </>
   );
 };
 
-export default TopNavBar;
+export default React.memo(TopNavBar);

@@ -1,39 +1,74 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { CogWheel, LoadingInner, LoadingOuter } from './styles';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { DARK_THEME } from 'utils/themes';
+import { createSelector } from 'reselect';
+import {
+  CogWheel,
+  CogWheelContainer,
+  LoadingInner,
+  LoadingLogo,
+  LoadingOuter,
+  LogoAndAnimationContainer, OPACITY_TRANSITION_DURATION
+} from './styles';
 
-const Loading = ({ isLoading = true, elevation = 0 }, ref) => {
-  const timeout = useRef(0);
-  const [render, toggleRender] = useState(true);
-  useEffect(() => () => clearTimeout(timeout.current), [])
+const selector = createSelector(
+  ({ themeReducer }) => themeReducer.themeName,
+  themeName => ({ selectedTheme: themeName }),
+);
+
+const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }) => {
+  const { selectedTheme } = useSelector(selector);
+  const [shouldRender, setShouldRender] = useState(isLoading);
   useEffect(() => {
-    if(!isLoading)
-      timeout.current = setTimeout(() => toggleRender(false), 700) // Loading fade out delay
+    if (!isLoading)
+    setTimeout(() => setShouldRender(false), OPACITY_TRANSITION_DURATION);
+    else
+      setShouldRender(true);
   }, [isLoading])
   
-  if (!render)
-    return null;
-  function renderLoading () {
+  if (!shouldRender) return null;
+  
+  function renderLoading() {
     return (
-        <LoadingOuter
-          ref={ref}
-          className='loading'
+      <LoadingOuter
+        className='loading'
+        elevation={elevation}
+        $loading={isLoading}
+      >
+        <LoadingInner
           elevation={elevation}
+          $loading={isLoading}
         >
-          <LoadingInner
-            elevation={elevation}
-            $loading={isLoading}
-          >
-            <CogWheel className="first"/>
-            <CogWheel className="second"/>
-            <CogWheel className="third"/>
-          </LoadingInner>
-        </LoadingOuter>
+          {!onlyCogWheel
+            ? (
+              <LogoAndAnimationContainer>
+                <LoadingLogo
+                  textColor={selectedTheme === DARK_THEME ? 'primary' : 'secondary'}
+                  robotColor={selectedTheme === DARK_THEME ? 'primary' : 'secondary'}
+                />
+                <CogWheelContainer>
+                  <CogWheel className="first"/>
+                  <CogWheel className="second"/>
+                  <CogWheel className="third"/>
+                </CogWheelContainer>
+              </LogoAndAnimationContainer>
+            )
+            : (
+              <CogWheelContainer>
+                <CogWheel $onlyCogWheel={onlyCogWheel} className="first"/>
+                <CogWheel $onlyCogWheel={onlyCogWheel} className="second"/>
+                <CogWheel $onlyCogWheel={onlyCogWheel} className="third"/>
+              </CogWheelContainer>
+            )
+          }
+        </LoadingInner>
+      </LoadingOuter>
     );
   }
-
+  
   return (
     renderLoading()
   );
 };
 
-export default React.forwardRef(Loading);
+export default React.memo(Loading);

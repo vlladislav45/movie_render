@@ -51,7 +51,14 @@ export const MultiLineInput = styled.textarea`${props => {
 
   return `
     // Make the scrollbar invisible
-    box-sizing: content-box;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* Disable scrollbar Chrome/Safari/Webkit */
+    }
+    
     background: transparent;
     position: absolute;
     left: 0;
@@ -61,7 +68,7 @@ export const MultiLineInput = styled.textarea`${props => {
     height: calc(100% - 30px);
     border: none;
     outline: none;
-    font-size: 1rem;
+    font-size: 1em;
     resize: none;
     padding: 0 16px;   
     color: ${onSurface};

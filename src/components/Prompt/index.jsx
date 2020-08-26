@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Modal, Button, Input } from 'components/basic';
-import { useDispatch } from 'react-redux';
-import { promptUser } from '../../reducers/uiReducer';
+import useDeviceDimensions from 'hooks/useDeviceDimensions';
+import { promptUser } from 'reducers/uiReducer';
+import { M, lessThen } from 'utils/mediaUtils';
 import {
   ActionsBar,
   FormField,
@@ -11,49 +13,63 @@ import {
   PromptTitle,
 } from './styles';
 
+const getDefaultGrid = isCompact => isCompact ? { rows: 2, cols: 4 } : { rows: 4, cols: 6 };
 const Prompt = props => {
   const {
     type = 'default',
     isOpen = false,
     title = 'Confirm',
     text = 'Confirm your action',
-    onConfirm = review => {},
+    onConfirm = review => {
+    },
     formField = false,
     formFieldData = {},
     buttons = null,
-    gridDimensions = {},
+    gridDimensions = null,
   } = props;
   const dispatch = useDispatch();
   const [promptOpen, setIsOpen] = useState(isOpen);
   const [formFieldValue, setFormFieldValue] = useState(null);
-
+  const [grid, setGrid] = useState(gridDimensions || getDefaultGrid(type === 'compact'));
+  
+  const { device } = useDeviceDimensions('Prompt');
+  
   useEffect(() => {
     if (isOpen !== promptOpen)
       setIsOpen(isOpen);
   }, [isOpen]);
-
-
+  
+  useEffect(() => {
+    if (lessThen(device, M))
+      setGrid({
+        ...grid,
+        cols: 2,
+      })
+    else
+      setGrid(getDefaultGrid(type === 'compact'))
+  }, [device])
+  
   // Currently hacking store to update state there with timeout
   // Because otherwise Prompt goes to default props and changes appearance
   // before its closed
   // TODO: Find more clever way
-  function updateReduxStore () {
+  function updateReduxStore() {
     setTimeout(() => dispatch(promptUser({ isOpen: false })), 250);
   }
-
-  function cancel () {
+  
+  function cancel() {
     setIsOpen(false);
     updateReduxStore();
   }
-
-  function confirm () {
+  
+  function confirm() {
     setIsOpen(false);
     updateReduxStore();
-
+    
     onConfirm(formFieldValue);
   }
-
-  function renderFormField () {
+  
+  function renderFormField() {
     const { helperText, label, type, ...more } = formFieldData;
     return (
       <FormField isCompact={isCompact}>
@@ -68,8 +84,8 @@ const Prompt = props => {
       </FormField>
     );
   }
-
-  function renderActionBar () {
+  
+  function renderActionBar() {
     if (buttons)
       return (
         <>
@@ -99,27 +115,26 @@ const Prompt = props => {
       </>
     );
   }
-
+  
+  const isSmallDevice = useMemo(() => lessThen(device, M), [device]);
   const isCompact = type === 'compact';
-  let { rows, cols } = gridDimensions;
-  if (!rows)
-    rows = isCompact ? 2 : 4;
-  if (!cols)
-    cols = isCompact ? 4 : 6;
+  let { rows, cols } = grid;
+  
   return (
     <Modal
       isOpen={promptOpen}
       closeOnClickOutside={false}
       slideDirection='toBottom'
-      fade={true}
+      fade
     >
       <PromptContainer
         rows={formField ? rows + 1 : rows}
         cols={cols}
+        $isSmall={isSmallDevice}
         isCompact={isCompact}
       >
-        <PromptTitle>{title}</PromptTitle>
-        {!isCompact && <PromptText>{text}</PromptText>}
+        <PromptTitle $smallDevice={isSmallDevice}>{title}</PromptTitle>
+        {!isCompact && <PromptText $smallDevice={isSmallDevice}>{text}</PromptText>}
         {formField && renderFormField()}
         <ActionsBar>
           {renderActionBar()}

@@ -1,5 +1,4 @@
 import Loading from './Loading';
-import SuspenseLoading from './Loading/SuspenseLoading';
 import Genres from './Genres';
 import ProfileButton from './ProfileButton';
 import Rating from './Rating';
@@ -9,6 +8,8 @@ import Tabs from './Tabs';
 import ConnectionHandler from './ConnectionHandler';
 import Prompt from './Prompt';
 import NavigationDrawer from './NavigationDrawer';
+import Card from './Card';
+import Logo from './Logo';
 import ErrorBoundary from './ErrorBoundary';
 
 export {
@@ -22,6 +23,7 @@ export {
   ConnectionHandler,
   Prompt,
   NavigationDrawer,
-  SuspenseLoading,
+  Logo,
+  Card,
   ErrorBoundary,
 };

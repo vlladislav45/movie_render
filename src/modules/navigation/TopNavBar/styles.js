@@ -1,10 +1,8 @@
 import styled from 'styled-components';
-import { applyShadow } from 'utils/colorUtils';
-import { FULL_HD, L, M, SM, XL, XS_SM } from 'utils/mediaUtils';
-import { transitionDurations } from 'config/animationConstants';
+import { applyShadow, calcDarkThemeOverlay } from 'utils/colorUtils';
+import { transitionDurations, transitionFunctions } from 'config/animationConstants';
 import { VERY_HIGH_Z_INDEX } from 'config/zIndexes';
-import { calcDarkThemeOverlay } from 'utils/colorUtils';
-import { Genres } from 'components';
+import { Genres, Logo } from 'components';
 import { ReactComponent as MenuIcon } from 'assets/icons/menu-24px.svg';
 import { ReactComponent as ExpandIcon } from 'assets/icons/expand.svg';
 import Title from '../Title';
@@ -13,7 +11,7 @@ import SearchBar from '../SearchBar';
 
 const { smallArea } = transitionDurations;
 export const StyledTopNav = styled.div`
-    ${({ theme: { primary, isDark, surface }, device, isExtended, isScrolled }) => {
+    ${({ theme: { primary, isDark, surface }, isExtended }) => {
 
     
 	return `
@@ -39,6 +37,12 @@ export const StyledTopNav = styled.div`
     ${isExtended && `
       height: 128px;
     `};
+    
+    & > .loading {
+      top: 0;
+      bottom: 0;
+      margin: auto;
+    }
 `;
 }}`;
 
@@ -54,6 +58,8 @@ export const TopNavInner = styled.div`
   }
   
   & svg.navbar-action {
+    min-width: 24px;
+    min-height: 24px;
     width: 24px;
     height: 24px;
     cursor: pointer;
@@ -62,8 +68,8 @@ export const TopNavInner = styled.div`
       fill: ${props => props.theme.onSurface + 88};
     }
   }
-
 `;
+TopNavInner.displayName = 'TopNavInner';
 
 
 export const TopNavRow = styled.div`
@@ -81,7 +87,7 @@ export const TopNavTitle = styled(Title)`
   flex: 1 1 auto;
   padding-left: 32px;
   align-self: center;
-  ${props => props.$deviceWidth < 360 && 'padding-left: 12px'};
+  // ${props => props.$deviceWidth < 360 && 'padding-left: 12px'};
 `;
 
 export const TopNavExpand = styled(ExpandIcon)`
@@ -90,14 +96,50 @@ export const TopNavExpand = styled(ExpandIcon)`
     transform: rotate(180deg);
   `};
 `;
+TopNavExpand.displayName = 'ExpandIcon';
 
 export const TopNavSearch = styled(SearchBar)`
   width: 24px;
   height: 24px;
   margin-right: 24px;
 `;
+TopNavSearch.displayName = 'StyledSearchBar';
 
 export const TopNavGenres = styled(Genres)`
   align-self: center;
   margin: 0 auto;
+`;
+
+export const LogoContainer = styled.div`
+  flex: 1 1 auto;
+  padding-left: 32px;
+  align-self: center;
+  display: flex;
+  height: 80px;
+  // ${props => props.$deviceWidth < 360 && 'padding-left: 12px'};
+`;
+
+export const NavBarLogo = styled(Logo)`
+  cursor: pointer;
+  width: 160px;
+  height: 80px;
+  margin: auto;
+ 
+  // & g#robotLayer > .fill, & g#robotLayer > .stroke {
+  //   transition: all .5s ${transitionFunctions.standardEasing};
+  // }
+  // &:hover {
+  //   & g#robotLayer > rect {
+  //     transform: matrix(1,0,0.32557287,0.94551695,-15,0);
+  //     fill: ${props => props.theme.primary}!important;
+  //   }
+  //   & g#robotLayer > .fill:not(rect) {
+  //     fill: ${props => props.theme.primary}!important;
+  //     transform: translateX(-15px);
+  //   }
+  //   & g#robotLayer > .stroke:not(rect) {
+  //     stroke: ${props => props.theme.primary}!important;
+  //     transform: translateX(-15px);
+  //   }
+  }
 `;
