@@ -5,15 +5,21 @@ import { API_URL } from 'api/BaseAPI';
 import ResourcesAPI from 'api/ResourcesAPI';
 import useFakePromise from 'hooks/useFakePromise';
 import { StyledProfileCircle } from './styles';
+import { createSelector } from 'reselect';
 
+const selector = createSelector(
+  store => store.auth.loggedInUser.profileImage,
+  store => store.userReducer.user.userInfo.photoUrl,
+  store => store.auth.loggedInUser.username,
+  (profileImage, photoUrl, username) => ({
+    username,
+    profileImage: photoUrl || profileImage
+  })
+)
 export const IMAGE_BASE_PATH = API_URL + 'user/picture/';
 const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
   const fakePromise = useFakePromise();
-  const { profileImage, username } = useSelector(
-    ({ auth: { loggedInUser }, userReducer: { user } }) => ({
-      profileImage: user.userInfo['photoUrl']?.['imageName'] || loggedInUser.profileImage?.imageName,
-      username: loggedInUser.username,
-    }));
+  const { profileImage, username } = useSelector(selector);
   
   const [imageUrl, setImageUrl] = useState(null);
   

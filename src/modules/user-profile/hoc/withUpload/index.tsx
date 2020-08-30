@@ -71,7 +71,7 @@ const WithUpload =
             } else {
               // @ts-ignore
               dispatch(enqueueSnackbarMessage(data.success));
-              dispatch(updateUserData('photoUrl', { imageName: fileName }));
+              dispatch(updateUserData('photoUrl', fileName ));
               closePreview();
             }
           });
