@@ -1,5 +1,9 @@
-import React, { useMemo } from 'react';
-import { msToTime } from 'utils/DateTimeUtils';
+import React, { useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { closeDialog, enqueueSnackbarMessage, openDialog } from 'reducers/uiReducer';
+import { rateMovie } from 'reducers/moviesReducer';
+import { RateDialog } from 'components';
+import { msToTime } from 'utils/dateTimeUtils';
 import { ReactComponent as BookMarkIcon } from 'assets/icons/bookmark.svg';
 import { ReactComponent as RemoveBookmark } from 'assets/icons/remove_bookmark.svg';
 import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
@@ -22,10 +26,11 @@ import {
 
 const MovieCard = ({
                      movie: { id, year, movieName, movieRating, summary, actors, genres, duration },
-                     poster, onClick,
+                     poster, onClick, userId,
                      onBookMarkClick, isBookmarked,
                      showBookmark, isLoading
                    }) => {
+  const dispatch = useDispatch();
   
   function handleClick() {
     onClick(id);
@@ -35,6 +40,28 @@ const MovieCard = ({
     e.stopPropagation();
     onBookMarkClick(id, movieName);
   }
+  
+  const doRate = React.useCallback(async (review, rate) => {
+    const { error } = await dispatch(rateMovie(id, userId, rate, review));
+    const message = error
+      ? `Error: ${error}`
+      : `Successfully rated ${movieName} with ${rate} stars`;
+    dispatch(enqueueSnackbarMessage(message, null, {
+      // Base theme error color doesnt contrast with snackbar background
+      useColor: error ? '#CF6679' : 'primary',
+    }));
+  }, [id, userId])
+  
+  const openRateDialog = React.useCallback((rate) => {
+    dispatch(openDialog(<RateDialog
+      title={`Rate with ${rate} stars`}
+      onCancel={() => dispatch(closeDialog())}
+      onConfirm={review => {
+        dispatch(closeDialog());
+        doRate(review, rate)
+      }}
+    />))
+  }, [])
   
   return (
     <SingleMovieLink>
@@ -89,7 +116,7 @@ const MovieCard = ({
           >
             Watch
           </WatchButton>
-          <MovieRating color='secondary' rating={movieRating} maxStars={5}/>
+          <MovieRating rateable color='secondary' rating={movieRating} maxStars={5} onRate={openRateDialog}/>
         </BottomBar>
       </CardLowerSection>
     </SingleMovieLink>

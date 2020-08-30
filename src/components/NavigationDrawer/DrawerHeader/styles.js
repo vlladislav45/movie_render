@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React from 'react';
-import { Button, ProfileImage } from 'components/basic';
-import Logo from 'components/Logo';
+import { ProfileImage } from 'components/basic';
+import Button from 'components/basic/Button';
 import { ReactComponent as DarkModeIcon } from 'assets/icons/moon.svg';
 
 
@@ -63,7 +63,7 @@ export const MoonIcon = React.memo(styled(DarkModeIcon)`
   width: 24px;
   height: 24px;
   
-  ${({ $isDark, theme }) => $isDark && `
+  ${({ $isDark, theme }) => !$isDark && `
     & >.moon {
       fill: ${theme.onSurface};
       &.moonShadow {
@@ -83,20 +83,6 @@ export const MoonIcon = React.memo(styled(DarkModeIcon)`
     }
   `};
 `);
-
-export const DrawerLogo = styled(Logo)`
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  width: 65%;
-  height: 45%;
-  ${({ $isLoggedIn }) => !$isLoggedIn && `
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-  `};
-`;
 
 export const FormContainer = styled.div`
   transition: opacity 500ms;

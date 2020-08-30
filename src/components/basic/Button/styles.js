@@ -100,7 +100,7 @@ export const ContainedButton = styled(BaseButton)`${props => {
     ${disabled && `
         box-shadow: none;
         background: ${theme.disabled};
-        color: ${getOverlay(textColor, '#FFFFFF', 0.38)};
+        // color: ${getOverlay(textColor, '#FFFFFF', 0.18)};
         cursor: default;
     `};
     

@@ -16,20 +16,23 @@ import { DrawerDivider } from '../styles';
 const selector = createSelector(
   store => store.userReducer.bookmarks,
   store => store.auth.isLoggedIn,
-  store => store.moviesReducer.selectedMovie.movieInfo.selectedMovieInfo,
-  (bookmarks, isLoggedIn, selectedMovieInfo) => ({ bookmarks, isLoggedIn, selectedMovieInfo })
+  store => store.moviesReducer.selectedMovie.movieInfo.movieId,
+  store => store.moviesReducer.selectedMovie.movieInfo.movieName,
+  (bookmarks, isLoggedIn, selectedMovieId, selectedMovieName) => ({
+    bookmarks, isLoggedIn, selectedMovieId, selectedMovieName
+  })
 );
 const DrawerMenu = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   
-  const { bookmarks, isLoggedIn, selectedMovieInfo = {} } = useSelector(selector)
+  const { bookmarks, isLoggedIn, selectedMovieId, selectedMovieName } = useSelector(selector)
   
   const shouldRenderCurrentMovie = React.useMemo(() => {
-    if (!selectedMovieInfo.movieId || location.pathname.split('/')[1] !== 'movie') return false;
+    if (!selectedMovieId || location.pathname.split('/')[1] !== 'movie') return false;
     // If it is not in the bookmarks
-    return !bookmarks.some(bookmark => Number(bookmark.movieId) === Number(selectedMovieInfo.movieId))
-  }, [selectedMovieInfo, location, isLoggedIn])
+    return !bookmarks.some(bookmark => Number(bookmark.movieId) === Number(selectedMovieId))
+  }, [selectedMovieId, location, isLoggedIn])
   
   function logOut() {
     dispatch(logout())
@@ -44,7 +47,7 @@ const DrawerMenu = () => {
           <MenuItem
             autoFocus
             to={location.pathname}
-            name={selectedMovieInfo.movieName}
+            name={selectedMovieName}
             icon={SelectedMovieIcon}
             isActive={true}
           />

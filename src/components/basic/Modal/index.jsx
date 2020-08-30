@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { ModalInner, ModalWrapper } from './styles';
 
+export const modalsContainer = document.getElementById('modal');
 const Modal = props => {
   const wrapperRef = useRef();
   const {

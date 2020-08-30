@@ -6,7 +6,7 @@ import ResourcesAPI from 'api/ResourcesAPI';
 import useFakePromise from 'hooks/useFakePromise';
 import { StyledProfileCircle } from './styles';
 
-export const IMAGE_BASE_PATH = API_URL + 'user/';
+export const IMAGE_BASE_PATH = API_URL + 'user/picture/';
 const ProfileImage = ({ size = 50, shape = 'circle', ...rest }) => {
   const fakePromise = useFakePromise();
   const { profileImage, username } = useSelector(

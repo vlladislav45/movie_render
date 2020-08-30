@@ -46,6 +46,7 @@ export const SearchInputContainer = styled.div`
   top: -12px;
 	
 	animation: ${props => stateToAnimation[props.extendedstate]};
+	animation-delay: ${p => p.extendedstate === 1 && '1ms'};
 
 	@keyframes extend {
 		from {

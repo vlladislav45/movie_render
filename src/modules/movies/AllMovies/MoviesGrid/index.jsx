@@ -55,6 +55,7 @@ const MoviesGrid = ({ isLoading, movies, posters, className }, ref) => {
             isBookmarked={isBookmarked}
             isLoading={bookmarksLoading[movie.id]}
             movie={movie}
+            userId={userId}
             poster={posters[movie.id]}
           />
         );

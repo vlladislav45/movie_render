@@ -41,13 +41,13 @@ export const ModalInner = styled.div`${props => {
     border-radius: 6px;
     padding: 24px;
     animation-duration: ${mediumCollapsing}ms;
-    animation-timing-function: ${deceleratedEasing};
+    animation-timing-function: ${acceleratedEasing};
     animation-fill-mode: forwards;
     max-width: 80%;
     
     ${isOpen && `
       animation-duration: ${mediumExpand}ms;
-      animation-timing-function: ${acceleratedEasing};   
+      animation-timing-function: ${deceleratedEasing};
     `}
     
     ${direction === 'toRight' && `

@@ -10,7 +10,7 @@ class UserAPI extends BaseAPI {
   
   updateData = data => this.post('user/userInfo', data);
   
-  changeTheme = theme => this.post('user/userPreferences/theme', { selectedTheme: theme });
+  changeTheme = theme => this.post('settings/userPreferences/theme', { selectedTheme: theme });
   
   getByUsername = username => this.get(`user?username=${username}`);
 }

@@ -8,7 +8,8 @@ import {
   LoadingInner,
   LoadingLogo,
   LoadingOuter,
-  LogoAndAnimationContainer, OPACITY_TRANSITION_DURATION
+  LogoAndAnimationContainer,
+  OPACITY_TRANSITION_DURATION
 } from './styles';
 
 const selector = createSelector(
@@ -18,12 +19,14 @@ const selector = createSelector(
 
 const Loading = ({ isLoading = true, elevation = 0, onlyCogWheel = false }) => {
   const { selectedTheme } = useSelector(selector);
+  const timeout = React.useRef(0);
   const [shouldRender, setShouldRender] = useState(isLoading);
   useEffect(() => {
     if (!isLoading)
-    setTimeout(() => setShouldRender(false), OPACITY_TRANSITION_DURATION);
+    timeout.current = setTimeout(() => setShouldRender(false), OPACITY_TRANSITION_DURATION);
     else
       setShouldRender(true);
+    return () => clearTimeout(timeout.current);
   }, [isLoading])
   
   if (!shouldRender) return null;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const RecentActivity = React.lazy(() => import('./RecentActivity'));
+// const RecentActivity = React.lazy(() => import('./RecentActivity'));
 const Moderator = React.lazy(() => import('./Moderator'));
 const Security = React.lazy(() => import('./Security'));
 // const Preferences = React.lazy(() => import('./Preferences'));
@@ -12,13 +12,13 @@ export default [
     tabContent: Profile,
     isActive: true,
   },
-  {
-    tabName: 'Recent activity',
-    tabContent: RecentActivity,
-  },
+  // {
+  //   tabName: 'Recent activity',
+  //   tabContent: RecentActivity,
+  // },
   {
     tabName: 'Security',
-    tabContent: Security
+    tabContent: Security,
   },
   {
     tabName: 'Moderator',

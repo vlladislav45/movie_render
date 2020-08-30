@@ -1,31 +1,48 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import ExtraInfo from './ExtraInfo';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+import { capitalize } from 'lodash';
+import { updateUserData } from 'reducers/userReducer';
+import EditablePair from './EditablePair';
 import ProfilePicture from './ProfilePicture';
 import {
-  BaseInfo,
-  BaseInfoLine,
+  EditableInfo,
+  ProfilePictureContainer, ReadOnlyInfo,
   Wrapper,
 } from './styles';
-import { Card } from '../../../components';
 
-const Profile = props => {
 
-  const { username, email } = useSelector(({ auth: { loggedInUser }}) => ({
-    username: loggedInUser.username,
-    email: loggedInUser.email
-  }));
-
+const UNKNOWN = 'Unknown';
+const GENDER_VALIDATOR = /^(male|female)$/;
+const selector = createSelector(
+  store => store.userReducer.user.userInfo,
+  store => store.auth.loggedInUser.userId,
+  (userInfo, userId) => ({ ...userInfo, userId })
+);
+const Profile = () => {
+  const dispatch = useDispatch();
+  const { firstName, gender, lastName, userId } = useSelector(selector);
+  
+  const handleChange = useCallback((parameterName, parameterValue) => {
+    dispatch(updateUserData(parameterName, parameterValue, userId));
+  }, [])
   return (
     <Wrapper>
-      {/*<Card>*/}
+      <ProfilePictureContainer>
         <ProfilePicture/>
-      {/*</Card>*/}
-      {/*<BaseInfo>*/}
-      {/*  <BaseInfoLine title='You need to go to security to change username'>{username}</BaseInfoLine>*/}
-      {/*  <BaseInfoLine title='You need to go to security to change email'>{email}</BaseInfoLine>*/}
-      {/*</BaseInfo>*/}
-      {/*<ExtraInfo/>*/}
+      </ProfilePictureContainer>
+      <ReadOnlyInfo>
+      
+      </ReadOnlyInfo>
+      <EditableInfo>
+        <EditablePair label='First Name:' value={firstName || UNKNOWN} pairLabelRaw='firstName'
+                      onChange={handleChange}/>
+        <EditablePair label='Last Name:' value={lastName || UNKNOWN} pairLabelRaw='lastName' onChange={handleChange}/>
+        <EditablePair
+          validator={GENDER_VALIDATOR} helperText={'"male" or "female"'}
+          label='Gender:' value={capitalize(gender) || UNKNOWN} pairLabelRaw='gender' onChange={handleChange}
+        />
+      </EditableInfo>
     </Wrapper>
   );
 };

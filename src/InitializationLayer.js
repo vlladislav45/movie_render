@@ -1,17 +1,15 @@
 import React from 'react';
+import { Router } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Route, Router, Switch, Redirect } from 'react-router-dom';
-import { debounce, throttle } from 'lodash';
 import { ThemeProvider } from 'styled-components';
+import { debounce } from 'lodash';
+import { SnackBar } from 'components/basic';
+import { Dialog, ErrorBoundary, NavigationDrawer } from 'components';
+import { checkToken } from 'reducers/auth';
+import { changeWindowDimensions } from 'reducers/uiReducer';
+import TopNavBar from 'modules/navigation/TopNavBar';
 import browserHistory from 'utils/browserHistory';
-import { ConnectionHandler, ErrorBoundary, Loading, NavigationDrawer } from './components';
-import { SnackBar } from './components/basic';
-import { Prompt } from 'components';
-import { checkToken } from './reducers/auth';
-import { changeWindowDimensions } from './reducers/uiReducer';
-// import RoutingLayer from './RoutingLayer';
-import TopNavBar from './modules/navigation/TopNavBar';
-import { checkMedia } from './utils/mediaUtils';
+import { checkMedia } from 'utils/mediaUtils';
 import { MainContent } from './baseStyles';
 
 const RoutingLayer = React.lazy(() => import('./RoutingLayer'));
@@ -42,8 +40,8 @@ class InitializationLayer extends React.Component {
   }
   
   componentDidMount() {
-    setTimeout(() => this.setState({ shouldMount: true }), 200);
     this.props.checkToken();
+    setTimeout(() => this.setState({ shouldMount: true }), 300);
     
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
@@ -57,12 +55,10 @@ class InitializationLayer extends React.Component {
   render() {
     return (
       <ThemeProvider theme={this.props.themeColors}>
-        {/*<ConnectionHandler/>*/}
         <Router history={browserHistory}>
           <TopNavBar/>
           <NavigationDrawer/>
-          
-          <Prompt {...this.props.promptProps} />
+          <Dialog {...this.props.dialog} />
           <SnackBar/>
           <MainContent>
             <ErrorBoundary>
@@ -78,9 +74,9 @@ class InitializationLayer extends React.Component {
   }
 }
 
-const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { prompt: { props } } }) => ({
+const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { dialog } }) => ({
   themeColors,
-  promptProps: props,
+  dialog
 });
 
 const mapDispatchToProps = {

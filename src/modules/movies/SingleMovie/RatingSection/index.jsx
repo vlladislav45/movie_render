@@ -1,25 +1,28 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { enqueueSnackbarMessage, promptUser } from 'reducers/uiReducer';
+import { createSelector } from 'reselect';
+import { closeDialog, enqueueSnackbarMessage, openDialog } from 'reducers/uiReducer';
 import { getReviewsByMovie, rateMovie } from 'reducers/moviesReducer';
+import { Loading, RateDialog } from 'components';
 import SingleReview from './SingleReview';
-import { NoReviewsText, RateMovieBtn, ReviewsContainer, StyledRatingSection } from './styles';
 import { CardTitle } from '../styles';
-import Loading from '../../../../components/Loading';
+import { NoReviewsText, RateMovieBtn, ReviewsContainer, StyledRatingSection } from './styles';
 
+
+const selector = createSelector(
+  store => store.moviesReducer.selectedMovie.reviews,
+  store => store.moviesReducer.selectedMovie.reviewsLoading,
+  store => store.moviesReducer.selectedMovie.movieInfo.movieRating,
+  store => store.auth.loggedInUser,
+  (reviews, reviewsLoading, movieRating, loggedInUser) => ({
+      reviews, reviewsLoading, movieRating, isLoggedIn: loggedInUser !== null,
+      userId: loggedInUser.userId, username: loggedInUser.username
+  })
+);
 const RatingSection = ({ movieName, movieId, oneColumn }) => {
   const dispatch = useDispatch();
   
-  const { isLoggedIn, movieRating, userId, username, reviews, reviewsLoading } = useSelector(
-    ({
-       moviesReducer: { selectedMovie: { movieInfo, reviews, reviewsLoading } },
-       auth: { loggedInUser, isLoggedIn },
-     }) => ({
-      movieRating: movieInfo.movieRating,
-      userId: loggedInUser.userId,
-      username: loggedInUser.username,
-      isLoggedIn, reviews, reviewsLoading,
-    }));
+  const { isLoggedIn, movieRating, userId, username, reviews, reviewsLoading } = useSelector(selector);
   
   const [sortedReviews, setSortedReviews] = useState([]);
   
@@ -40,11 +43,6 @@ const RatingSection = ({ movieName, movieId, oneColumn }) => {
   
   const isUserRated = useMemo(() => isLoggedIn && reviews.some(r => r.username === username), [reviews]);
   
-  useEffect(() => {
-    console.group('isUserRated');
-    console.log(isUserRated);
-    console.groupEnd();
-  }, [isUserRated])
   async function doRate(review, rate) {
     const { error } = await dispatch(rateMovie(movieId, userId, rate, review));
     const message = error
@@ -59,19 +57,13 @@ const RatingSection = ({ movieName, movieId, oneColumn }) => {
   }
   
   function openRateDialog(rate) {
-    dispatch(promptUser({
-      isOpen: true,
-      text: `You are about to rate ${movieName} with ${rate} stars`,
-      formField: true,
-      formFieldData: {
-        label: 'Add review',
-        helperText: 'Review text is optional',
-        type: 'textarea',
-        onPrimary: true, //Not actually on primary, but use secondary color for accent
-        withCharacterCount: true,
-      },
-      onConfirm: review => doRate(review, rate),
-    }));
+    dispatch(openDialog(<RateDialog
+      title={`Rate with ${rate} stars`}
+      onCancel={() => dispatch(closeDialog())}
+      onConfirm={review => {
+        dispatch(closeDialog());
+        doRate(review, rate);
+      }} />))
   }
   
   return (

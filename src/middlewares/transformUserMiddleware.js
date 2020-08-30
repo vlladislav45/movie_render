@@ -12,12 +12,12 @@ export default store => next => action => {
     console.log(payload);
     console.groupEnd();
     const { email, username, userId, bookmarks } = payload;
-    const { userImages, firstName, gender, lastName } = payload.userInfo;
-    const { selectedTheme } = payload['userPreferences'];
+    const { userImages, firstName, gender, lastName } = payload.userInfoViewModel;
+    const { selectedTheme } = payload.userPreferences;
     localStorage.setItem(SELECTED_THEME, selectedTheme);
     dispatch(setTheme(selectedTheme));
     action.payload = {
-      email, username, profileImage: last(userImages),
+      email, username, profileImage: last(userImages).imageName,
       userImages, userId,
     };
     

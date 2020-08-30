@@ -3,7 +3,7 @@ import { transitionFunctions, transitionDurations } from 'config/animationConsta
 import { SM, XS_SM, M, L } from 'utils/mediaUtils';
 
 const { largeExpand, largeCollapsing } = transitionDurations;
-const { standardEasing, deceleratedEasing, acceleratedEasing } = transitionFunctions;
+const { deceleratedEasing, acceleratedEasing } = transitionFunctions;
 
 export const StyledMoviesGrid = styled.div`${props => {
   const { fadeIn, moviesPerPage, $device } = props;
@@ -18,7 +18,7 @@ export const StyledMoviesGrid = styled.div`${props => {
     grid-column-gap: 10px;
     grid-row-gap: 10px;
     
-    width: 100%;
+    width: 80%;
     height: 100%;
     position: relative;
     opacity: 0;
