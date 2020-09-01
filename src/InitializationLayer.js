@@ -13,13 +13,15 @@ import { checkMedia } from 'utils/mediaUtils';
 import { MainContent } from './baseStyles';
 
 const RoutingLayer = React.lazy(() => import('./RoutingLayer'));
+const LazyDrawer = React.lazy(() => import('./components/NavigationDrawer'));
 
 class InitializationLayer extends React.Component {
   constructor(props) {
     super(props);
     this.getWindowDimensions = debounce(this.getWindowDimensions, 300).bind(this);
     this.state = {
-      shouldMount: false,
+      renderContent: false,
+      renderDrawer: false,
     };
   }
   
@@ -41,7 +43,8 @@ class InitializationLayer extends React.Component {
   
   componentDidMount() {
     this.props.checkToken();
-    setTimeout(() => this.setState({ shouldMount: true }), 300);
+    setTimeout(() => this.setState({ renderContent: true }), 300);
+    setTimeout(() => this.setState({ renderDrawer: true }), 800);
     
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
@@ -57,13 +60,15 @@ class InitializationLayer extends React.Component {
       <ThemeProvider theme={this.props.themeColors}>
         <Router history={browserHistory}>
           <TopNavBar/>
-          <NavigationDrawer/>
+          <React.Suspense fallback={<></>}>
+            {this.state.renderDrawer && <LazyDrawer />}
+          </React.Suspense>
           <Dialog {...this.props.dialog} />
           <SnackBar/>
           <MainContent>
             <ErrorBoundary>
               <React.Suspense fallback={<></>}>
-                {this.state.shouldMount && <RoutingLayer/>}
+                {this.state.renderContent && <RoutingLayer/>}
               </React.Suspense>
             </ErrorBoundary>
           </MainContent>

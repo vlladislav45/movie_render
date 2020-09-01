@@ -10,6 +10,7 @@ import {
   ProfilePictureContainer, ReadOnlyInfo,
   Wrapper,
 } from './styles';
+import { msToTime } from '../../../utils/dateTimeUtils';
 
 
 const UNKNOWN = 'Unknown';
@@ -21,7 +22,7 @@ const selector = createSelector(
 );
 const Profile = () => {
   const dispatch = useDispatch();
-  const { firstName, gender, lastName, userId } = useSelector(selector);
+  const { firstName, gender, lastName, createdTime, userId } = useSelector(selector);
   
   const handleChange = useCallback((parameterName, parameterValue) => {
     dispatch(updateUserData(parameterName, parameterValue, userId));
@@ -32,7 +33,7 @@ const Profile = () => {
         <ProfilePicture/>
       </ProfilePictureContainer>
       <ReadOnlyInfo>
-      
+      <div>{createdTime}</div>
       </ReadOnlyInfo>
       <EditableInfo>
         <EditablePair label='First Name:' value={firstName || UNKNOWN} pairLabelRaw='firstName'
