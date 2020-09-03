@@ -16,8 +16,9 @@ export default store => next => action => {
     const { selectedTheme } = payload.userPreferences;
     localStorage.setItem(SELECTED_THEME, selectedTheme);
     dispatch(setTheme(selectedTheme));
+    const profileImage = userImages ? last(userImages).imageName : null
     action.payload = {
-      email, username, profileImage: last(userImages).imageName,
+      email, username, profileImage,
       userImages, userId,
     };
     
