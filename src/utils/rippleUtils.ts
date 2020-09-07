@@ -1,4 +1,4 @@
-import {ACTIVE_RIPPLE_CLASS, RIPPLE_DURATION} from 'components/Styled/BaseRipple';
+import { ACTIVE_RIPPLE_CLASS, RIPPLE_DURATION } from 'components/Styled/BaseRipple';
 
 let timeClicked = 0
 function startRipple(e :MouseEvent) {

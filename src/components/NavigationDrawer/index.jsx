@@ -17,7 +17,7 @@ const NavigationDrawer = () => {
   const drawerRef = useRef();
   
   const { drawerOpen } = useSelector(selector)
-  const { device, width } = useDeviceDimensions('Drawer');
+  const { device, width, isMobileOrTablet } = useDeviceDimensions('Drawer');
   
   const [isDragging, setIsDragging] = useState(false);
   
@@ -27,7 +27,7 @@ const NavigationDrawer = () => {
   
   // Close drawer on swipe left https://stackoverflow.com/a/23230280
   useEffect(() => {
-    if (!drawerOpen || !drawerRef.current) return;
+    if (!drawerOpen || !drawerRef.current || !isMobileOrTablet) return;
     const { current: drawer } = drawerRef;
     
     drawer.addEventListener('touchstart', handleTouchStart, false);
@@ -76,7 +76,7 @@ const NavigationDrawer = () => {
       drawer.removeEventListener('touchmove', handleTouchMove, false);
       drawer.removeEventListener('touchend', handleTouchEnd, false);
     }
-  }, [drawerOpen])
+  }, [drawerOpen, isMobileOrTablet])
   
   function handleClick(e) {
     if (e.target.closest('#navigation-drawer') === null) {

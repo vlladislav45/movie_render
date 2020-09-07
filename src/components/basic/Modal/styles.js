@@ -1,10 +1,8 @@
 import styled from 'styled-components';
 import { MAX_Z_INDEX } from 'config/zIndexes';
 import { applyShadow } from 'utils/colorUtils';
-import {
-  transitionDurations,
-  transitionFunctions,
-} from 'config/animationConstants';
+import { transitionDurations, transitionFunctions, } from 'config/animationConstants';
+import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
 
 const { acceleratedEasing, deceleratedEasing, standardEasing } = transitionFunctions;
 const { mediumExpand, mediumCollapsing } = transitionDurations;
@@ -126,4 +124,16 @@ export const ModalInner = styled.div`${props => {
     }
   `;
 }}  
+`;
+
+export const CloseButton = styled(CloseIcon)`
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  cursor: pointer;
+  z-index: 10;
+  fill: ${p => p.theme.onPrimary};
+  &:hover {
+    fill: ${p => p.theme.onPrimary}66;
+  }
 `;

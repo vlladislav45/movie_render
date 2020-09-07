@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Button } from 'components/basic';
 import { ProfileImage } from 'components/basic';
 import { getOverlay } from 'utils/colorUtils';
 

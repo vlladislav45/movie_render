@@ -1,6 +1,6 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
-import { ModalInner, ModalWrapper } from './styles';
+import { CloseButton, ModalInner, ModalWrapper } from './styles';
 
 export const modalsContainer = document.getElementById('modal');
 const Modal = props => {
@@ -9,28 +9,31 @@ const Modal = props => {
     isOpen = false, stateChanged,
     slideDirection = 'toRight', fade = false,
     closeOnClickOutside = true, children,
+    withCloseBtn,
   } = props;
-
+  
   const [isModalOpen, setIsOpen] = useState(isOpen);
-
+  
   useEffect(() => {
     if (isOpen !== isModalOpen) {
       setIsOpen(isOpen);
     }
   }, [isOpen]);
-
+  
   useEffect(() => {
     if (stateChanged)
       stateChanged(isModalOpen);
   }, [isModalOpen]);
-
-  function wrapperClicked (e) {
+  
+  const wrapperClicked = useCallback(e => {
     if (closeOnClickOutside && e.target === wrapperRef?.current)
-      setIsOpen(false);
-    
+      setIsOpen(() => false);
+  
     e.stopPropagation();
-  }
-
+  }, [])
+  
+  const closeModal = useCallback(() => setIsOpen(() => false), [])
+  
   return (
     <ModalWrapper
       ref={wrapperRef}
@@ -42,6 +45,7 @@ const Modal = props => {
         fade={fade}
         direction={slideDirection}
       >
+        {withCloseBtn && <CloseButton onClick={closeModal} />}
         {children}
       </ModalInner>
     </ModalWrapper>
@@ -56,6 +60,7 @@ Modal.propTypes = {
     ['toRight', 'toLeft', 'toBottom', 'toTop', 'none']),
   fade: PropTypes.bool,
   closeOnClickOutside: PropTypes.bool,
+  withCloseBtn: PropTypes.bool,
 };
 
 export default React.memo(Modal);

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import { MaterialSurface } from 'components/basic';
-import { applyShadow } from 'utils/colorUtils';
 
 export const BaseDataWrapper = styled.div`
   width: 48%;

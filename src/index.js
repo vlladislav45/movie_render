@@ -5,16 +5,15 @@ import InitializationLayer from './InitializationLayer';
 import store from './redux-store';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import disableDevTools from './utils/disableDevTools';
 
-if (process.env.NODE_ENV === 'development') {
-  const whyDidYouRender = require('@welldone-software/why-did-you-render');
-  whyDidYouRender(React, {
-    // logOnDifferentValues: true,
-    trackAllPureComponents: true,
-    trackExtraHooks: [[ReactRedux, "useSelector"]]
-  });
-}
+// if (process.env.NODE_ENV === 'development') {
+//   const whyDidYouRender = require('@welldone-software/why-did-you-render');
+//   whyDidYouRender(React, {
+//     // logOnDifferentValues: true,
+//     trackAllPureComponents: true,
+//     trackExtraHooks: [[ReactRedux, "useSelector"]]
+//   });
+// }
 
 // disableDevTools();
 const { Provider } = ReactRedux;

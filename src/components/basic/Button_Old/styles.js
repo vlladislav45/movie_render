@@ -1,7 +1,6 @@
-import { rippleConstants } from 'config/animationConstants';
 import styled from 'styled-components';
 import { applyShadow, getOverlay } from 'utils/colorUtils';
-import { ACTIVE_RIPPLE_CLASS, RIPPLE_DURATION, WithRipple } from 'components/Styled/BaseRipple';
+import { ACTIVE_RIPPLE_CLASS, WithRipple } from 'components/Styled/BaseRipple';
 
 export const LeadingIcon = styled.span`
   width: 24px;
@@ -40,6 +39,10 @@ export const BaseButton = styled(WithRipple)`${props => {
     text-transform: uppercase;
     border-radius: 4px;
     font-size: 0.875rem;
+    & svg {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
     font-family: 'Roboto', sans-serif;
     letter-spacing: 1.25px;
     white-space: nowrap;

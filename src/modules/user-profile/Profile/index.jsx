@@ -1,16 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { capitalize } from 'lodash';
 import { updateUserData } from 'reducers/userReducer';
 import EditablePair from './EditablePair';
 import ProfilePicture from './ProfilePicture';
-import {
-  EditableInfo,
-  ProfilePictureContainer, ReadOnlyInfo,
-  Wrapper,
-} from './styles';
-import { msToTime } from '../../../utils/dateTimeUtils';
+import { EditableInfo, ProfilePictureContainer, ReadOnlyInfo, Wrapper, } from './styles';
+import UserAPI from '../../../api/UserAPI';
 
 
 const UNKNOWN = 'Unknown';
@@ -27,13 +23,22 @@ const Profile = () => {
   const handleChange = useCallback((parameterName, parameterValue) => {
     dispatch(updateUserData(parameterName, parameterValue, userId));
   }, [])
+  
+  useEffect(() => {
+    UserAPI.getReviewsByUser(userId, 15, 0).then(({ data }) => {
+      console.group('res');
+      console.log(data);
+      console.groupEnd();
+    });
+  }, [])
+  
   return (
     <Wrapper>
       <ProfilePictureContainer>
         <ProfilePicture/>
       </ProfilePictureContainer>
       <ReadOnlyInfo>
-      <div>{createdTime}</div>
+        <div>{createdTime}</div>
       </ReadOnlyInfo>
       <EditableInfo>
         <EditablePair label='First Name:' value={firstName || UNKNOWN} pairLabelRaw='firstName'

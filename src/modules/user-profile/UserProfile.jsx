@@ -5,7 +5,7 @@ import { UserProfileWrapper } from './styles';
 
 
 const flippedScreenStyle = `
- @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
+ @media screen and (max-width: 767px) and (orientation: portrait) {
     html {
       transform: rotate(-90deg);
       transform-origin: left top;

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { ReactComponent as Logo } from 'assets/logo/robot_logo.svg';
 
 
-
 export const StyledLogo = styled(Logo)`
   // Text
   & g#textLayer > g#textLayerInner > path {

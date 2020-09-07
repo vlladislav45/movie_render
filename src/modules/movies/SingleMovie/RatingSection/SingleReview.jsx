@@ -4,7 +4,9 @@ import { IMAGE_BASE_PATH } from 'components/basic/ProfileImage';
 import useFakePromise from 'hooks/useFakePromise';
 import {
   AuthorImage,
-  AuthorsName, DateCreated, OwnImage,
+  AuthorsName,
+  DateCreated,
+  OwnImage,
   ReviewContent,
   ReviewRating,
   StyledSingleReview
@@ -37,7 +39,7 @@ const SingleReview = ({ review: { comment, userRating, username, profileImage, c
       console.groupEnd();
       if (!res) return;
       const { data } = res;
-      setUserImage(data);
+      setUserImage(URL.createObjectURL(data));
     })
   }, [fakePromise])
   

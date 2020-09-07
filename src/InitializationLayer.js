@@ -2,9 +2,9 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { SnackBar } from 'components/basic';
-import { Dialog, ErrorBoundary, NavigationDrawer } from 'components';
+import { Dialog, ErrorBoundary } from 'components';
 import { checkToken } from 'reducers/auth';
 import { changeWindowDimensions } from 'reducers/uiReducer';
 import TopNavBar from 'modules/navigation/TopNavBar';
@@ -28,7 +28,7 @@ class InitializationLayer extends React.Component {
   
   getWindowDimensions() {
     const media = checkMedia();
-    // TODO: FIX THIS SHIET
+    
     const mobileAndTabletCheck = function () {
       let check = false;
       (function (a) {
@@ -36,9 +36,10 @@ class InitializationLayer extends React.Component {
       })(navigator.userAgent || navigator.vendor || window.opera);
       return check;
     };
-    const width = mobileAndTabletCheck() ? window.screen.width : window.innerWidth;
-    const height = mobileAndTabletCheck() ? window.screen.height : window.innerHeight;
-    this.props.changeWindowDimensions(width, height, media);
+    const isMobileOrTablet = mobileAndTabletCheck();
+    const width = isMobileOrTablet ? window.screen.width : window.innerWidth;
+    const height = isMobileOrTablet ? window.screen.height : window.innerHeight;
+    this.props.changeWindowDimensions(width, height, media, isMobileOrTablet);
   }
   
   componentDidMount() {
@@ -89,5 +90,4 @@ const mapDispatchToProps = {
   checkToken,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  InitializationLayer);
+export default connect(mapStateToProps, mapDispatchToProps)(InitializationLayer);

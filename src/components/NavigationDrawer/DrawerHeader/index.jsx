@@ -63,12 +63,14 @@ const DrawerHeader = () => {
     return (
       <>
         <LoginButton
+          // test
           type='text'
           text='login'
           color='secondary'
           onClickCapture={toggleLoginModal}
         />
         <RegisterButton
+          // test
           type='text'
           text='register'
           color='secondary'

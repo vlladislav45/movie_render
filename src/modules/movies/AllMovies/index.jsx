@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import moviesReducer, { changePage, fetchMovies, getMoviesCount, resetFilter } from 'reducers/moviesReducer';
+import { changePage, resetFilter } from 'reducers/moviesReducer';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import ImageWorker from 'service-workers/imageLoader.worker';
 import { API_URL } from 'api/BaseAPI';
@@ -11,8 +11,7 @@ import { transitionFunctions } from 'config/animationConstants';
 import { addHorizontalDrag } from 'utils/DomUtils';
 import MoviesPagination from './MoviesPagination';
 import MoviesGrid from './MoviesGrid';
-import { NoMovies, StyledMoviesContainer } from './styles';
-import { Wrapper } from './MoviesGrid/styles';
+import { NoMovies, ResetFilterButton, StyledMoviesContainer } from './styles';
 
 const DEFAULT_THRESHOLD = 300;
 const selector = createSelector(
@@ -36,7 +35,7 @@ const AllMovies = () => {
   const isDragging = useRef();
   const containerRef = useRef();
   
-  const { width: screenWidth } = useDeviceDimensions();
+  const { width: screenWidth, isMobileOrTablet } = useDeviceDimensions();
   const { movies = [], isLoading } = useSelector(selector);
   
   const [posters, setPosters] = useState({});
@@ -128,10 +127,10 @@ const AllMovies = () => {
   }, [swipeThreshold])
   
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !isMobileOrTablet) return;
     const drag = addHorizontalDrag(containerRef.current, onDragStart, onDrag, onDragEnd);
     return () => drag.dispose()
-  }, [containerRef, onDrag, onDragEnd])
+  }, [containerRef, onDrag, onDragEnd, isMobileOrTablet])
   
   function dispatchResetFilter() {
     dispatch(resetFilter());
@@ -145,7 +144,7 @@ const AllMovies = () => {
       <NoMovies>
         <p>No movies found</p>
         <br/>
-        <Button type='text' text='Reset filters' onClick={dispatchResetFilter}/>
+        <ResetFilterButton type='text' text='Reset filters' onClick={dispatchResetFilter}/>
       </NoMovies>
       }
       <MoviesPagination className='pagination' onPageChange={pageChanged} />

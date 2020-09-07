@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import { Card, Rating } from 'components';
-import { Button, Input } from '../../../../components/basic';
-import { L, lessThen } from '../../../../utils/mediaUtils';
 
 export const StyledRatingSection = styled.div`
   grid-area: 2 / 1 / 3 / 1;

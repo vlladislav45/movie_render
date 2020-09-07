@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import withRipple from 'HOC/withRipple';
 import { SuggestionItem } from './styles';
 

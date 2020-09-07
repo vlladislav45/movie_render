@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import useDeviceDimensions from 'hooks/useDeviceDimensions';
-import { SummaryCard, StyledMovieSummary, CardTitle } from './styles';
+import React from 'react';
+import { CardTitle, StyledMovieSummary, SummaryCard } from './styles';
 
 const BIG_SUMMARY_THRESHOLD = 600;
 const DEFAULT_TEXT = 'No summary available';

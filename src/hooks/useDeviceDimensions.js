@@ -5,10 +5,11 @@ import { createSelector } from 'reselect';
 
 const selector = createSelector(
   shop => shop.uiReducer.windowDimensions,
-  ({ width, height, device }) => ({
+  ({ width, height, device, isMobileOrTablet }) => ({
     width,
     height,
     device,
+    isMobileOrTablet,
     vmin: Math.min(width, height),
     vmax: Math.max(width, height)
   })

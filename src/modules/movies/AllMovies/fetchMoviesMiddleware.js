@@ -1,9 +1,9 @@
 import {
   CHANGE_SELECTED_PAGE,
-  UPDATE_FILTER,
-  RESET_FILTER,
   fetchMovies,
   getMoviesCount,
+  RESET_FILTER,
+  UPDATE_FILTER,
 } from 'reducers/moviesReducer';
 
 /**

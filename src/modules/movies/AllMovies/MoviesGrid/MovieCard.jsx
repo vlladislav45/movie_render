@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { closeDialog, enqueueSnackbarMessage, openDialog } from 'reducers/uiReducer';
 import { rateMovie } from 'reducers/moviesReducer';
@@ -8,40 +8,41 @@ import { ReactComponent as BookMarkIcon } from 'assets/icons/bookmark.svg';
 import { ReactComponent as RemoveBookmark } from 'assets/icons/remove_bookmark.svg';
 import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
 import {
-  CardLowerSection,
-  MovieTitle,
-  MoviePoster,
-  SingleMovieLink,
-  MovieRating,
-  BookMarkFAB,
-  BookMark,
-  MovieSummaryContainer,
-  SummaryTitle,
-  Summary,
-  MovieSubTitle,
   Actors,
-  WatchButton,
+  BookMark,
+  BookMarkFAB,
   BottomBar,
+  CardLowerSection,
+  MoviePoster,
+  MovieRating,
+  MovieSubTitle,
+  MovieSummaryContainer,
+  MovieTitle,
+  SingleMovieLink,
+  Summary,
+  SummaryTitle,
+  WatchButton,
 } from './MovieCardStyle';
 
 const MovieCard = ({
                      movie: { id, year, movieName, movieRating, summary, actors, genres, duration },
-                     poster, onClick, userId,
+                     poster, onClick, userId, isLoggedIn,
                      onBookMarkClick, isBookmarked,
                      showBookmark, isLoading
                    }) => {
   const dispatch = useDispatch();
   
-  function handleClick() {
+  const handleClick = useCallback(() => {
     onClick(id);
-  }
+  }, [id]);
   
-  function bookmarkMovie(e) {
+  const bookmarkMovie = useCallback((e) => {
     e.stopPropagation();
     onBookMarkClick(id, movieName);
-  }
+  }, [onBookMarkClick, id, movieName])
   
-  const doRate = React.useCallback(async (review, rate) => {
+  const doRate = useCallback(async (review, rate) => {
+    if (!isLoggedIn) return;
     const { error } = await dispatch(rateMovie(id, userId, rate, review));
     const message = error
       ? `Error: ${error}`
@@ -50,9 +51,10 @@ const MovieCard = ({
       // Base theme error color doesnt contrast with snackbar background
       useColor: error ? '#CF6679' : 'primary',
     }));
-  }, [id, userId])
+  }, [id, isLoggedIn])
   
-  const openRateDialog = React.useCallback((rate) => {
+  const openRateDialog = useCallback((rate) => {
+    if (!isLoggedIn) return;
     dispatch(openDialog(<RateDialog
       title={`Rate with ${rate} stars`}
       onCancel={() => dispatch(closeDialog())}
@@ -61,7 +63,7 @@ const MovieCard = ({
         doRate(review, rate)
       }}
     />))
-  }, [])
+  }, [isLoggedIn])
   
   return (
     <SingleMovieLink>
@@ -116,7 +118,8 @@ const MovieCard = ({
           >
             Watch
           </WatchButton>
-          <MovieRating rateable color='secondary' rating={movieRating} maxStars={5} onRate={openRateDialog}/>
+          <MovieRating rateable={isLoggedIn} color='secondary' rating={movieRating} maxStars={5}
+                       onRate={openRateDialog} starSize='1rem'/>
         </BottomBar>
       </CardLowerSection>
     </SingleMovieLink>
@@ -124,4 +127,4 @@ const MovieCard = ({
   );
 };
 
-export default MovieCard;
+export default React.memo(MovieCard);

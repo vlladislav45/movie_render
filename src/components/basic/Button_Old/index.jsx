@@ -1,15 +1,10 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { uniqueId } from 'lodash';
-import { ACTIVE_RIPPLE_CLASS, RIPPLE_DURATION } from 'components/Styled/BaseRipple';
 import { addRipple } from 'utils/rippleUtils';
-import {
-  ButtonWrapper,
-  ContainedButton,
-  TextButton,
-  LeadingIcon,
-} from './styles';
+import { ButtonWrapper, ContainedButton, LeadingIcon, TextButton, } from './styles';
 
+// const ContainedButton = React.lazy(() => import(''))
 const Button = React.forwardRef((
   props,
   ref) => {
@@ -35,12 +30,21 @@ const Button = React.forwardRef((
     as: 'button',
   };
   
+  useEffect(() => {
+    if (rest.test) {
+    console.group('UPDATED BUTTON');
+      console.log(text)
+      console.log(buttonProps)
+    console.groupEnd();
+    }
+  });
+  // const InnerButton = useMemo(() => {} , [type, Icon])
+  
   return (
     <ButtonWrapper
       ref={ref}
       {...rest}
     >
-      
       {type === 'contained' &&
       <ContainedButton
         {...buttonProps}
@@ -74,5 +78,6 @@ Button.propTypes = {
   text: PropTypes.string,
   Icon: PropTypes.elementType,
 };
-
-export default Button;
+const ExportedButton = React.memo(Button);
+ExportedButton.displayName = 'Button'
+export default ExportedButton;

@@ -1,5 +1,4 @@
 import themes, { BASE_THEME, DARK_THEME } from 'utils/themes';
-import MovieAPI from '../api/MovieAPI';
 import UserAPI from '../api/UserAPI';
 
 const CHANGE_THEME = 'CHANGE_THEME';

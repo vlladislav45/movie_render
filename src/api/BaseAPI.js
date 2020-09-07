@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { JWT_TOKEN } from 'config/authConstants';
 
-// const API_SERVER = 'http://localhost';
+const API_SERVER = 'http://localhost';
 // const API_SERVER = 'http://91.139.236.5';
-const API_SERVER = 'http://192.168.0.103';
+// const API_SERVER = 'http://192.168.0.105';
 // const API_PORT = '8090';
 const API_PORT = '8080';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
@@ -20,6 +20,7 @@ class BaseAPI {
   initialize = () => {
     this.api = axios.create({
       baseURL: API_URL,
+      // baseURL: API_URL,
       timeout: RETRY_CONNECTION_TIMEOUT,
       headers: {
         'Content-Type': 'application/json',

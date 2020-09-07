@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Chip, Input } from 'components/basic';
+import React from 'react';
+import { Input } from 'components/basic';
 import { useSelector } from 'react-redux';
 import { MetaDataContainer } from './styles';
 

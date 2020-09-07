@@ -1,5 +1,3 @@
-import { DialogType } from 'components/Dialog';
-
 export const CHANGE_WINDOW_DIMENSIONS = 'CHANGE_WINDOW_DIMENSIONS';
 const TOGGLE_NAVIGATION_DRAWER = 'TOGGLE_NAVIGATION_DRAWER';
 const CLOSE_DRAWER = 'CLOSE_DRAWER';
@@ -8,9 +6,9 @@ const DEQUEUE_SNACKBAR_NOTIFICATION = 'DEQUEUE_SNACKBAR_NOTIFICATION';
 const PROMPT = 'PROMPT';
 const TOGGLE_DIALOG = 'TOGGLE_DIALOG';
 
-export const changeWindowDimensions = (width, height, device) => ({
+export const changeWindowDimensions = (width, height, device, isMobileOrTablet) => ({
   type: CHANGE_WINDOW_DIMENSIONS,
-  payload: { width, height, device },
+  payload: { width, height, device, isMobileOrTablet },
 });
 
 export const toggleNavigationDrawer = () => ({

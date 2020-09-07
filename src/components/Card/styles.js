@@ -7,7 +7,7 @@ export const CardWrapper = styled(MaterialSurface)`
   border-radius: 6px;
   padding: 20px;
   
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
   &::-webkit-scrollbar {

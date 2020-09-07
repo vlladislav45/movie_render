@@ -9,7 +9,7 @@ import onPageChangeMiddleware from './modules/movies/AllMovies/fetchMoviesMiddle
 const middleware = [
   thunk,
   transformUserMiddleware,
-  // dimensionsChangedMiddleware,
+  dimensionsChangedMiddleware,
   onPageChangeMiddleware,
   // Chain more middleWares here
 ];

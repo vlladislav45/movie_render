@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import { lessThen, M } from 'utils/mediaUtils';
-import {
-  transitionDurations,
-  transitionFunctions,
-} from 'config/animationConstants';
+import { transitionDurations, transitionFunctions, } from 'config/animationConstants';
 import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import { ReactComponent as ErrorSvg } from 'assets/icons/error.svg';
 
