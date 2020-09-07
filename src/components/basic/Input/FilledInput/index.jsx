@@ -1,10 +1,6 @@
 import React from 'react';
 import { ErrorIcon, RippleElem } from '../baseStyles';
-import {
-  InputLabel,
-  StyledFilledInput,
-  StyledFilledInputContainer,
-} from './styles';
+import { InputLabel, StyledFilledInput, StyledFilledInputContainer, } from './styles';
 
 export default React.forwardRef((props,
   ref) => {

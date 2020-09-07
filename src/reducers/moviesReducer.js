@@ -1,6 +1,7 @@
 import MovieAPI from 'api/MovieAPI';
 import ReviewsAPI from 'api/ReviewsAPI';
-import { getMoviesPerPage } from 'config/MoviesConfig';
+
+const DEFAULT_MOVIES_PER_PAGE = 3;
 
 //Genres
 const START_LOADING_GENRES = 'START_LOADING_GENRES';
@@ -125,7 +126,7 @@ export const changePage = (nextOrPrev) =>  (dispatch, getState) => {
 
 export const changeMoviesPerPage = moviesPerPage => ({
   type: CHANGE_MOVIES_PER_PAGE,
-  payload: moviesPerPage || getMoviesPerPage(),
+  payload: moviesPerPage,
 });
 
 // FILTER
@@ -172,7 +173,7 @@ const initialState = {
   movies: [],
   count: 0,
   selectedPage: undefined,
-  moviesPerPage: getMoviesPerPage(),
+  moviesPerPage: DEFAULT_MOVIES_PER_PAGE,
   isLoading: true, // Start with loading
   genresLoading: false,
   selectedMovie: {

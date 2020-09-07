@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const PageItem = styled.div`${props => {
+export const StyledPageItem = styled.div`${props => {
   const { theme, isDisabled, isActive } = props;
   const { onSurface, primary, onSurfaceMD, disabled } = theme;
   return `
@@ -43,6 +43,7 @@ export const StyledPagination = styled.div`
   grid-template-rows: auto;
   grid-gap: 10px;
   grid-auto-flow: column;
+  justify-content: center;
   
   & > :first-child, & > :last-child {
     grid-column: span 2;

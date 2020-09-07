@@ -1,7 +1,6 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { NORMAL_Z_INDEX } from 'config/zIndexes';
 import { applyShadow, getOverlay } from 'utils/colorUtils';
-import { rippleConstants } from 'config/animationConstants';
 import { WithRipple } from '../Styled/BaseRipple';
 
 export const TabsContainer = styled.div`${props => {

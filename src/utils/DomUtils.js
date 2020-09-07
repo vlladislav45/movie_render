@@ -1,6 +1,4 @@
 //https://stackoverflow.com/a/41698614
-import { transitionFunctions } from '../config/animationConstants';
-import { changeSelectedPage } from '../reducers/moviesReducer';
 
 /**
  * Check if element is visible

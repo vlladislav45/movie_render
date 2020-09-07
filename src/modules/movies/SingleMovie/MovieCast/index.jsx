@@ -1,5 +1,5 @@
 import React from 'react';
-import { CastCard, CastContainer, CastSection, CastSectionTitle, GenresCard, GenresContainer } from './styles';
+import { CastCard, CastContainer, CastSection, CastSectionTitle } from './styles';
 import { Chip } from 'components/basic';
 import { CardTitle } from '../styles';
 

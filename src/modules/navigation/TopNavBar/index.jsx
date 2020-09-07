@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { toggleNavigationDrawer } from 'reducers/uiReducer';
 import { Loading } from 'components';
-import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import {
   LogoContainer,
   NavBarLogo,
@@ -13,8 +12,7 @@ import {
   TopNavInner,
   TopNavMenu,
   TopNavRow,
-  TopNavSearch,
-  TopNavTitle
+  TopNavSearch
 } from './styles';
 
 const NAVBAR_EXTENDED_STATE = 'NAVBAR_EXTENDED_STATE';

@@ -1,0 +1,1 @@
+export const MOVIE_CARD_WIDTH = 260;

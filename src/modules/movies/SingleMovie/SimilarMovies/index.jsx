@@ -1,13 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MovieAPI from 'api/MovieAPI';
 import { API_URL } from 'api/BaseAPI';
 import useFakePromise from 'hooks/useFakePromise';
-import {
-  MoreMoviesTitle,
-  MovieLink, MovieName,
-  MoviePoster, Movies,
-  SimilarMoviesContainer,
-} from './styles';
+import { MoreMoviesTitle, MovieLink, MovieName, MoviePoster, Movies, SimilarMoviesContainer, } from './styles';
 
 function promiseFunc(resolve, reject) {
   return resolve;

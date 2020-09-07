@@ -32,6 +32,7 @@ export const StyledDropDownItem = styled(WithRipple)`
     color: ${props.theme.secondary};
     fill: ${props.theme.secondary}
   `};
+
 `;
 
 export const DropDownText = styled.span`

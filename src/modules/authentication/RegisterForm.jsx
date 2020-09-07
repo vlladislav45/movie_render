@@ -3,13 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { debounce } from 'lodash';
 import { attemptRegister } from 'reducers/auth';
 import AuthAPI from 'api/AuthAPI';
-import { Input, Button } from 'components/basic';
+import { Button, Input } from 'components/basic';
 import { Loading } from 'components';
-import {
-  ErrorMessage,
-  FormTitle,
-  StyledRegisterForm,
-} from './styles';
+import { ErrorMessage, FormTitle, StyledRegisterForm, } from './styles';
 import { getSelector } from './utils';
 
 function validateEmail (email) {

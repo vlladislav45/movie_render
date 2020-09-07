@@ -1,34 +1,34 @@
 import React from 'react';
+import { Router } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Route, Router, Switch, Redirect } from 'react-router-dom';
-import { debounce, throttle } from 'lodash';
 import { ThemeProvider } from 'styled-components';
+import debounce from 'lodash/debounce';
+import { SnackBar } from 'components/basic';
+import { Dialog, ErrorBoundary } from 'components';
+import { checkToken } from 'reducers/auth';
+import { changeWindowDimensions } from 'reducers/uiReducer';
+import TopNavBar from 'modules/navigation/TopNavBar';
 import browserHistory from 'utils/browserHistory';
-import { ConnectionHandler, ErrorBoundary, Loading, NavigationDrawer } from './components';
-import { SnackBar } from './components/basic';
-import { Prompt } from 'components';
-import { checkToken } from './reducers/auth';
-import { changeWindowDimensions } from './reducers/uiReducer';
-// import RoutingLayer from './RoutingLayer';
-import TopNavBar from './modules/navigation/TopNavBar';
-import { checkMedia } from './utils/mediaUtils';
+import { checkMedia } from 'utils/mediaUtils';
 import { MainContent } from './baseStyles';
 
 const RoutingLayer = React.lazy(() => import('./RoutingLayer'));
+const LazyDrawer = React.lazy(() => import('./components/NavigationDrawer'));
 
 class InitializationLayer extends React.Component {
   constructor(props) {
     super(props);
     this.getWindowDimensions = debounce(this.getWindowDimensions, 300).bind(this);
     this.state = {
-      shouldMount: false,
+      renderContent: false,
+      renderDrawer: false,
     };
   }
   
   
   getWindowDimensions() {
     const media = checkMedia();
-    // TODO: FIX THIS SHIET
+    
     const mobileAndTabletCheck = function () {
       let check = false;
       (function (a) {
@@ -36,14 +36,16 @@ class InitializationLayer extends React.Component {
       })(navigator.userAgent || navigator.vendor || window.opera);
       return check;
     };
-    const width = mobileAndTabletCheck() ? window.screen.width : window.innerWidth;
-    const height = mobileAndTabletCheck() ? window.screen.height : window.innerHeight;
-    this.props.changeWindowDimensions(width, height, media);
+    const isMobileOrTablet = mobileAndTabletCheck();
+    const width = isMobileOrTablet ? window.screen.width : window.innerWidth;
+    const height = isMobileOrTablet ? window.screen.height : window.innerHeight;
+    this.props.changeWindowDimensions(width, height, media, isMobileOrTablet);
   }
   
   componentDidMount() {
-    setTimeout(() => this.setState({ shouldMount: true }), 200);
     this.props.checkToken();
+    setTimeout(() => this.setState({ renderContent: true }), 300);
+    setTimeout(() => this.setState({ renderDrawer: true }), 800);
     
     this.getWindowDimensions();
     window.addEventListener('resize', this.getWindowDimensions);
@@ -57,17 +59,17 @@ class InitializationLayer extends React.Component {
   render() {
     return (
       <ThemeProvider theme={this.props.themeColors}>
-        {/*<ConnectionHandler/>*/}
         <Router history={browserHistory}>
           <TopNavBar/>
-          <NavigationDrawer/>
-          
-          <Prompt {...this.props.promptProps} />
+          <React.Suspense fallback={<></>}>
+            {this.state.renderDrawer && <LazyDrawer />}
+          </React.Suspense>
+          <Dialog {...this.props.dialog} />
           <SnackBar/>
           <MainContent>
             <ErrorBoundary>
               <React.Suspense fallback={<></>}>
-                {this.state.shouldMount && <RoutingLayer/>}
+                {this.state.renderContent && <RoutingLayer/>}
               </React.Suspense>
             </ErrorBoundary>
           </MainContent>
@@ -78,9 +80,9 @@ class InitializationLayer extends React.Component {
   }
 }
 
-const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { prompt: { props } } }) => ({
+const mapStateToProps = ({ themeReducer: { themeColors }, uiReducer: { dialog } }) => ({
   themeColors,
-  promptProps: props,
+  dialog
 });
 
 const mapDispatchToProps = {
@@ -88,5 +90,4 @@ const mapDispatchToProps = {
   checkToken,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  InitializationLayer);
+export default connect(mapStateToProps, mapDispatchToProps)(InitializationLayer);

@@ -1,11 +1,4 @@
 import styled from 'styled-components';
-import { Button } from 'components/basic';
-import { DEFAULT_Z_INDEX } from 'config/zIndexes';
-import {
-  transitionDurations,
-  transitionFunctions,
-} from 'config/animationConstants';
-import { applyShadow } from 'utils/colorUtils';
 import { Card } from 'components';
 
 

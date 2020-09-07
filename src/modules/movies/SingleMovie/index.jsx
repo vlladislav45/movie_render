@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Loading, Rating } from 'components';
+import { Loading } from 'components';
 import { API_URL } from 'api/BaseAPI';
-import { fetchSingleMovie, updateFilter, clearSingleMovie } from 'reducers/moviesReducer';
+import { clearSingleMovie, fetchSingleMovie, updateFilter } from 'reducers/moviesReducer';
 import useDeviceDimensions from 'hooks/useDeviceDimensions';
 import { L, lessThen } from 'utils/mediaUtils';
 import MovieSummary from './MovieSummary';
@@ -11,11 +11,7 @@ import RatingSection from './RatingSection';
 import SimilarMovies from './SimilarMovies';
 import MovieGenres from './MovieGenres';
 import MovieCast from './MovieCast';
-import {
-  MovieTitle,
-  SingleMovieWrapper,
-  MovieVideoContainer,
-} from './styles';
+import { MovieTitle, MovieVideoContainer, SingleMovieWrapper, } from './styles';
 
 const MOVIE_RATIO = 16 / 10;
 const BASE_POSTER_URL = API_URL + 'movies/single/hdPoster/';

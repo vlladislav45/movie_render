@@ -4,18 +4,17 @@ import { Rating } from 'components';
 import { Button } from 'components/basic';
 import { transitionDurations, transitionFunctions } from 'config/animationConstants';
 import { ReactComponent as BookMarkIcon } from 'assets/icons/bookmark.svg';
-import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
+import { MOVIE_CARD_WIDTH } from '../constants';
 
-const { largeExpand, largeCollapsing } = transitionDurations;
-const { standardEasing, deceleratedEasing, acceleratedEasing } = transitionFunctions;
+const { standardEasing } = transitionFunctions;
 export const SingleMovieLink = styled.div`${props => {
   const { theme } = props;
-  const { isDark, surface, secondary } = theme;
+  const { isDark } = theme;
   
   return `
     position: relative;
     overflow: hidden;
-    width: 260px;
+    width: ${MOVIE_CARD_WIDTH}px;
     height: 450px;
     border-radius: 4px;
     margin: 0 auto;
@@ -130,7 +129,7 @@ export const MovieTitle = styled.p`
 export const MovieSubTitle = styled.div`
   display: flex;
   flex-wrap: wrap;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   & > :not(:first-child), & > :not(:last-child) {
     margin: 0 2px;
   }
@@ -147,13 +146,13 @@ export const MovieSummaryContainer = styled.div`
 `;
 
 export const SummaryTitle = styled.p`
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: ${props => props.theme.onSurface};
   margin-bottom: 8px;
 `;
 
 export const Summary = styled.p`
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: ${props => props.theme.onSurfaceMD};
   overflow-y: scroll;
   scrollbar-width: none;
@@ -178,7 +177,9 @@ export const BottomBar = styled.div`
 `;
 
 export const WatchButton = styled(Button)`
-  & > button {font-size: 0.7rem!important;}
+  & button {
+    font-size: 0.75rem!important;
+  }
 `;
 
 export const Year = styled.p`
@@ -190,8 +191,4 @@ export const Year = styled.p`
 export const MovieRating = styled(Rating)`
   margin-left: auto;
   margin-right: 8px;
-  & > div {
-    width: 1.1rem;
-    height: 1.1rem;
-  }
 `;

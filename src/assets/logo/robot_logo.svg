@@ -1,37 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   id="svg8"
-   version="1.1"
    viewBox="0 0 121.55833 49.483582"
    height="49.483582mm"
    width="121.55833mm">
-<!--   viewBox="0 0 121.55833 49.483582"-->
-<!--   height="49.483582mm"-->
-<!--   width="121.55833mm"-->
-  <defs
-     id="defs2">
-  </defs>
-  <sodipodiNamedview
-     fit-margin-bottom="0"
-     fit-margin-right="0"
-     fit-margin-left="0"
-     fit-margin-top="0"
-     borderopacity="1.0"
-     bordercolor="#666666"
-     pagecolor="red"
-     id="base" />
-  <metadata
-     id="metadata5">
-<!--    <rdf:RDF>-->
-<!--      <cc:Work-->
-<!--         rdf:about="">-->
-<!--        <dc:format>image/svg+xml</dc:format>-->
-<!--        <dc:type-->
-<!--           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />-->
-<!--        <dc:title></dc:title>-->
-<!--      </cc:Work>-->
-<!--    </rdf:RDF>-->
-  </metadata>
   <g
      transform="translate(-4.117648,-119.18628)"
      id="textLayer"

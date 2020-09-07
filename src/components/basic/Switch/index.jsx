@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { transitionDurations } from 'config/animationConstants';
-import { SwitchContainer, SwitchInput, SwitchThumb, SwitchTrack, RIPPLE_STATE } from './styles';
+import { RIPPLE_STATE, SwitchContainer, SwitchInput, SwitchThumb, SwitchTrack } from './styles';
 
 const { INITIAL, RIPPLE_ON, RIPPLE_OFF } = RIPPLE_STATE;
 const { mediumExpand } = transitionDurations;

@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Loading } from 'components';
-import { Input, Button } from 'components/basic';
+import { Button, Input } from 'components/basic';
 import { attemptLogin } from 'reducers/auth';
 import { ErrorMessage, FormTitle, StyledLoginForm } from './styles';
 import { getSelector } from './utils';
@@ -14,14 +14,16 @@ const LoginForm = React.memo(() => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const login = useCallback(e => {
+  function login(e) {
     e.preventDefault();
     dispatch(attemptLogin(username, password));
-  }, [username, password])
+  }
 
   const btnEnabled = React.useMemo(() => username && password, [username, password]);
   const usernameChanged = React.useCallback(e => setUsername(e.target.value), []);
   const passwordChanged = React.useCallback(e => setPassword(e.target.value), []);
+  
+  
   return (
     <StyledLoginForm>
       <Loading isLoading={isLoading} elevation={18}/>
@@ -41,6 +43,7 @@ const LoginForm = React.memo(() => {
         type='password'
       />
       <Button
+        test
         text='Login'
         onClick={login}
         disabled={!btnEnabled}

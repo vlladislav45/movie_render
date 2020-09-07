@@ -4,10 +4,11 @@ const CLOSE_DRAWER = 'CLOSE_DRAWER';
 const ENQUEUE_SNACKBAR_NOTIFICATION = 'ENQUEUE_SNACKBAR_NOTIFICATION';
 const DEQUEUE_SNACKBAR_NOTIFICATION = 'DEQUEUE_SNACKBAR_NOTIFICATION';
 const PROMPT = 'PROMPT';
+const TOGGLE_DIALOG = 'TOGGLE_DIALOG';
 
-export const changeWindowDimensions = (width, height, device) => ({
+export const changeWindowDimensions = (width, height, device, isMobileOrTablet) => ({
   type: CHANGE_WINDOW_DIMENSIONS,
-  payload: { width, height, device },
+  payload: { width, height, device, isMobileOrTablet },
 });
 
 export const toggleNavigationDrawer = () => ({
@@ -39,17 +40,29 @@ export const dequeueSnackbarMessage = () => ({
   type: DEQUEUE_SNACKBAR_NOTIFICATION,
 });
 
-export const promptUser = promptProps => ({
-  type: PROMPT,
-  payload: promptProps,
-});
+export const openDialog = children => ({
+  type: TOGGLE_DIALOG,
+  payload: {
+    children,
+    isOpen: true,
+  }
+})
+
+export const closeDialog = () => ({
+  type: TOGGLE_DIALOG,
+  payload: {
+    children: null,
+    isOpen: false,
+  }
+})
 
 const initialState = {
   windowDimensions: {},
   drawerOpen: false,
   snackbarQueue: [],
-  prompt: {
-    props: {},
+  dialog: {
+    isOpen: false,
+    children: null,
   }
 };
 
@@ -92,6 +105,12 @@ export default (state = initialState, action) => {
       ...state,
       prompt: {
         props: payload,
+      }
+    };
+    case TOGGLE_DIALOG: return {
+      ...state,
+      dialog: {
+        ...payload,
       }
     };
     default:

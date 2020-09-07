@@ -5,7 +5,7 @@ import { Input } from 'components/basic';
 import { Loading } from 'components';
 import { clearSuggestions, getSuggestionData, suggestTitles } from 'reducers/moderatorReducer';
 import Suggestion from './Suggestion';
-import { InputWrapper, SuggestionItem, Suggestions, SuggestionsError } from './styles';
+import { InputWrapper, Suggestions, SuggestionsError } from './styles';
 
 const MovieTitleInput = props => {
   const dispatch = useDispatch();

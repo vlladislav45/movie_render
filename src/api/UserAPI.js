@@ -10,9 +10,11 @@ class UserAPI extends BaseAPI {
   
   updateData = data => this.post('user/userInfo', data);
   
-  changeTheme = theme => this.post('user/userPreferences/theme', { selectedTheme: theme });
+  changeTheme = theme => this.post('settings/userPreferences/theme', { selectedTheme: theme });
   
   getByUsername = username => this.get(`user?username=${username}`);
+  
+  getReviewsByUser = (userId, count, offset) => this.get(`user/userInfo/reviewsByAuthor?userId=${userId}&page=${offset}&size=${count}`);
 }
 
 export default new UserAPI();

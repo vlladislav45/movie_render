@@ -4,11 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import qs from 'query-string';
 import { Pagination } from 'components';
-import {
-  changeMoviesPerPage,
-  changeSelectedPage,
-  getMoviesCount,
-} from 'reducers/moviesReducer';
+import { changeMoviesPerPage, changeSelectedPage, getMoviesCount, } from 'reducers/moviesReducer';
 
 const selector = createSelector(
   store => store.moviesReducer,
@@ -43,12 +39,15 @@ const MoviesPagination = ({ style, className, onPageChange }) => {
         setCurrentPage(page - 1);
         dispatch(changeSelectedPage(page - 1));
       }
+    } else {
+      dispatch(changeSelectedPage(0))
     }
   }
   
   useEffect(() => {
     dispatch(getMoviesCount());
   }, [])
+  
   useEffect(() => {
     if (!search) {
       dispatch(changeSelectedPage(0));

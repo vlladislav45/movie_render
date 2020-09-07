@@ -5,19 +5,34 @@ export const RIPPLE_DURATION = 180;
 export const WithRipple = styled.div`
     position: relative;
     overflow: hidden;
-    --opacity: ${({ $denseRipple }) =>  $denseRipple ? 0.32 : 0.12};
-    &:after {
+    --opacity: ${({ $denseRipple }) => $denseRipple ? 0.32 : 0.12};
+    &:after, &:before {
         position: absolute;
         content: "";
-        width: 0px;
-        height: 0px;
         left: 0;
         top: 0;
-        border-radius: 50%;
         opacity: 0;
         pointer-events: none;
         transition: none;
         background: ${({ theme, $rippleColor }) => $rippleColor ? theme[$rippleColor] : theme.overlay};
+   }
+   
+   // ripple
+   &:after {
+    width: 0px;
+    height: 0px;
+    border-radius: 50%;
+   }
+   
+   // hover
+   :before {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+   }
+   
+   &:hover:not(:disabled):before {
+    opacity: 0.08;
    }
    
    &.${ACTIVE_RIPPLE_CLASS}:after {
@@ -31,7 +46,7 @@ export const WithRipple = styled.div`
         transform: translate(var(--tx), var(--ty)) scale(0);
       }
       to {
-        transform: translate(var(--tx), var(--ty)) scale(350);
+        transform: translate(var(--tx), var(--ty)) scale(var(--scale));
       }
     };
 `;

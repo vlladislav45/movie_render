@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Label,
-  MultiLineInput,
-  MultiLineInputContainer, MultiLineRipple,
-} from './styles';
+import { Label, MultiLineInput, MultiLineInputContainer, MultiLineRipple, } from './styles';
 
 export default React.forwardRef((props, ref) => {
   const {

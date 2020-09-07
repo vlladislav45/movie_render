@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 import { getOverlay } from 'utils/colorUtils';
-import { lessThen, M } from 'utils/mediaUtils';
-import {
-  transitionDurations,
-} from 'config/animationConstants';
-import { BaseLabel, BaseInput } from '../baseStyles';
+import { transitionDurations, } from 'config/animationConstants';
+import { BaseInput, BaseLabel } from '../baseStyles';
 
 export const StyledFilledInputContainer = styled.div`${props => {
   const { theme, focused, error, isOnPrimary, disabled: isDisabled } = props;

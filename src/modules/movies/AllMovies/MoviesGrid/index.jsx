@@ -1,33 +1,26 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useHistory } from 'react-router';
 import { addBookmark, removeBookmark } from 'reducers/userReducer';
 import { Loading } from 'components';
-import useDeviceDimensions from 'hooks/useDeviceDimensions';
-import { isVisible } from 'utils/DomUtils';
 import MovieCard from './MovieCard';
 import { StyledMoviesGrid, Wrapper, } from './styles';
 
 const selector = createSelector(
   store => store.userReducer,
   store => store.auth,
-  store => store.moviesReducer,
-  (userReducer, auth, moviesReducer) => ({
+  (userReducer, auth) => ({
     bookmarks: userReducer.bookmarks,
     userId: auth.loggedInUser.userId,
     isLoggedIn: auth.isLoggedIn,
     bookmarksLoading: userReducer.bookmarksLoading,
-    selectedPage: moviesReducer.selectedPage,
-    moviesPerPage: moviesReducer.moviesPerPage,
   }))
 const MoviesGrid = ({ isLoading, movies, posters, className }, ref) => {
   const dispatch = useDispatch();
   const history = useHistory();
   
-  const { device } = useDeviceDimensions('MoviesGrid');
-  
-  const { bookmarks, bookmarksLoading, userId, isLoggedIn, selectedPage, moviesPerPage } = useSelector(selector)
+  const { bookmarks, bookmarksLoading, userId, isLoggedIn } = useSelector(selector)
   
   const openMovie = useCallback(movieId => {
     history.push('/movie/' + movieId);
@@ -43,7 +36,7 @@ const MoviesGrid = ({ isLoading, movies, posters, className }, ref) => {
   }, [bookmarks])
   
   const renderMovies = useCallback(() => {
-    return movies.map((movie, index) => {
+    return movies.map((movie) => {
         // if (!movie) return <MovieCard key={`movie_${index}`} isEmpty={true}/>
         const isBookmarked = bookmarks.some(bookmark => bookmark.movieId === movie.id && bookmark.movieName === movie.movieName)
         return (
@@ -55,26 +48,24 @@ const MoviesGrid = ({ isLoading, movies, posters, className }, ref) => {
             isBookmarked={isBookmarked}
             isLoading={bookmarksLoading[movie.id]}
             movie={movie}
+            userId={userId}
+            isLoggedIn={isLoggedIn}
             poster={posters[movie.id]}
           />
         );
       },
     );
-  }, [movies, posters, bookmarks, bookmarksLoading])
+  }, [movies, posters, bookmarks, bookmarksLoading, isLoggedIn])
   
   
   return (
     <Wrapper className={className} ref={ref}>
-      <Loading isLoading={isLoading || !device} key='loading'/>
-      {!!device &&
-        <StyledMoviesGrid
-          $device={device}
-          fadeIn={!isLoading}
-          moviesPerPage={moviesPerPage}
-        >
-          {renderMovies()}
-        </StyledMoviesGrid>
-      }
+      <Loading isLoading={isLoading} key='loading'/>
+      <StyledMoviesGrid
+        fadeIn={!isLoading}
+      >
+        {renderMovies()}
+      </StyledMoviesGrid>
     </Wrapper>
   
   );

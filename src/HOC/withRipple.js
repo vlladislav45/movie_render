@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import {
-  rippleConstants,
-  transitionFunctions,
-} from 'config/animationConstants';
+import { rippleConstants, transitionFunctions, } from 'config/animationConstants';
 import themes, { DARK_THEME } from 'utils/themes';
 
 const { SMALL_RIPPLE_DURATION, MEDIUM_RIPPLE_DURATION, LARGE_RIPPLE_DURATION } = rippleConstants;

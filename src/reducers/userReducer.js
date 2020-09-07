@@ -13,15 +13,22 @@ export const updateUserData = (dataKey, dataValue, userId) => dispatch => {
     UserAPI.updateData({
       [dataKey]: dataValue,
       userId,
-    }).then(res => {
-      console.log(res);
+    }).then(({ data }) => {
+      if (data.error) {
+        alert('error see console')
+        console.group('eror');
+        console.log(data.error);
+        console.groupEnd();
+      } else {
+        dispatch(enqueueSnackbarMessage(data.success));
+      }
       
       dispatch({
         type: UPDATE_USER_DATA,
         payload: { dataKey, dataValue },
       });
     });
-  } else {
+  } else { // This is called to only update redux state, used in transformUserMiddleware
     dispatch({
       type: UPDATE_USER_DATA,
       payload: { dataKey, dataValue },

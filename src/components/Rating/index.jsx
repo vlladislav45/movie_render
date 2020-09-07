@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { uniqueId } from 'lodash';
 import themes, { BASE_THEME } from '../../utils/themes';
 import Star from './Star';
-import { StarContainer, StyledRating } from './styles';
+import { StyledRating } from './styles';
 
 const DEFAULT_STARS = 5;
 const Rating = ({
@@ -30,13 +30,7 @@ const Rating = ({
         key={uniqueId('star_')}
         type='empty'
       />);
-
-    // if we pass more rating then max stars, percentage = 1
-    const percentage = Math.min(rating, maxStars) / maxStars;
-    //TODO: Check this out
-    // console.group('Rating');
-    // console.log(rating);
-    // console.groupEnd();
+    
     const filledStars = Math.min(rating, maxStars) - 1;
 
     const stars = [...Array(Math.floor(filledStars))].map((u, i) =>
@@ -76,7 +70,8 @@ const Rating = ({
 
     return stars;
   }
-
+  
+  
   return (
     <StyledRating
       title={'Rating: ' + rating}

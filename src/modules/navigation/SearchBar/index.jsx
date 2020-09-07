@@ -9,7 +9,6 @@ import { EXTEND_STATES, SearchInput, SearchInputContainer, StyledSearchBar, Togg
 
 
 const selector = createSelector(
-  // ({ moviesReducer: { filters } }) => filters,
   store => store.moviesReducer.filters.search,
   search => ({ search }));
 /**
@@ -60,7 +59,7 @@ const SearchBar = props => {
       >
         <SearchInput
           autoFocus={extendedState === EXTENDED}
-          autoFocusDelay={150}
+          autoFocusDelay={220}
           disabled={browserHistory.location.pathname !== '/'}
           onPrimary
           onChange={handleChange}
