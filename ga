@@ -1,0 +1,193 @@
+[33mcommit 70308131ee5df57c8630ef1966865337afd65ad3[m
+Author: Stefan <a582hs@gmail.com>
+Date:   Thu Jul 2 12:00:05 2020 +0300
+
+    Single movie page (#8)
+    
+    * Move video title and summary
+    
+    * Authentication, Material Button and more
+    
+    * Added Modal
+    
+    * Added Tabs
+    
+    Co-authored-by: Stefan Ivanov
+    Co-authored-by: Vladislav
+
+[1mdiff --git a/src/InitializationLayer.js b/src/InitializationLayer.js[m
+[1mindex 11d18c9..d0180e5 100644[m
+[1m--- a/src/InitializationLayer.js[m
+[1m+++ b/src/InitializationLayer.js[m
+[36m@@ -1,11 +1,12 @@[m
+[32m+[m[32mimport { throttle } from 'lodash';[m
+ import React from 'react';[m
+ import { connect } from 'react-redux';[m
+ import { Route, Router, Switch } from 'react-router-dom';[m
+ import { ThemeProvider } from 'styled-components';[m
+[31m-import { throttle } from 'lodash';[m
+ import browserHistory from 'utils/browserHistory';[m
+ import { Wrapper } from './baseStyles';[m
+[31m-import { Loading } from './components';[m
+[32m+[m[32mimport { ConnectionHandler, Loading } from './components';[m
+[32m+[m[32mimport browserHistory from 'utils/browserHistory';[m
+ import { SnackBar } from './components/basic';[m
+ import { TopNavBar } from './modules/navigation';[m
+ import { changeWindowDimensions } from './reducers/uiReducer';[m
+[36m@@ -14,18 +15,21 @@[m [mimport { checkMedia } from './utils/mediaUtils';[m
+ const MainPage = React.lazy(() => import('pages/MainPage'));[m
+ const ProfilePage = React.lazy(() => import('pages/ProfilePage'));[m
+ const SingleMoviePage = React.lazy(() => import('pages/SingleMoviePage'));[m
+[31m-const Register = React.lazy(() => import('modules/authentication/RegisterForm'));[m
+ [m
+[32m+[m[32mconst Register = React.lazy([m
+[32m+[m[32m  () => import('modules/authentication/RegisterForm'));[m
+ [m
+ class InitializationLayer extends React.Component {[m
+   constructor (props) {[m
+     super(props);[m
+[31m-    this.getWindowDimensions = throttle(this.getWindowDimensions, 300).bind(this);[m
+[32m+[m[32m    this.getWindowDimensions = throttle(this.getWindowDimensions, 300).[m
+[32m+[m[32m      bind(this);[m
+   }[m
+ [m
+[31m-  getWindowDimensions() {[m
+[32m+[m[32m  getWindowDimensions () {[m
+     const media = checkMedia();[m
+[31m-    this.props.changeWindowDimensions(window.innerWidth, window.innerHeight, media);[m
+[32m+[m[32m    this.props.changeWindowDimensions(window.innerWidth, window.innerHeight,[m
+[32m+[m[32m      media);[m
+   }[m
+ [m
+   componentDidMount () {[m
+[36m@@ -40,16 +44,17 @@[m [mclass InitializationLayer extends React.Component {[m
+   render () {[m
+     return ([m
+       <ThemeProvider theme={this.props.themeColors}>[m
+[32m+[m[32m        <ConnectionHandler/>[m
+         <SnackBar />[m
+         <TopNavBar/>[m
+         <Wrapper>[m
+           <Router history={browserHistory}>[m
+             <Switch>[m
+[31m-              <React.Suspense fallback={<Loading elevation={0} />}>[m
+[32m+[m[32m              <React.Suspense fallback={<Loading elevation={0}/>}>[m
+                 <Route path='/profile' component={ProfilePage}/>[m
+                 <Route path='/movie/:movieId' component={SingleMoviePage}/>[m
+                 <Route exact path='/' component={MainPage}/>[m
+[31m-                <Route path='/register' component={Register} />[m
+[32m+[m[32m                <Route path='/register' component={Register}/>[m
+                 {/*TODO: Redirect not working properly*/}[m
+                 {/*<Redirect to={{ pathname: '/', search: browserHistory.location.search}} />*/}[m
+               </React.Suspense>[m
+[1mdiff --git a/src/api/BaseAPI.js b/src/api/BaseAPI.js[m
+[1mindex 8c76767..98d444f 100644[m
+[1m--- a/src/api/BaseAPI.js[m
+[1m+++ b/src/api/BaseAPI.js[m
+[36m@@ -1,11 +1,24 @@[m
+ import axios from 'axios';[m
+[31m-import { serverDown } from 'reducers/connectionReducer';[m
+[32m+[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  finishedRequest,[m
+[32m+[m[32m  initiatedRequest, internetDown, networkDown,[m
+[32m+[m[32m  serverDown,[m
+[32m+[m[32m} from 'reducers/connectionReducer';[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  checkInternetConnection,[m
+[32m+[m[32m  ConnectionStatus,[m
+[32m+[m[32m} from 'utils/apiUtils';[m
+ [m
+ const API_SERVER = 'http://localhost';[m
+ // const API_SERVER = 'http://192.168.1.115';[m
+ const API_PORT = '8090';[m
+ export const API_URL = `${API_SERVER}:${API_PORT}/`;[m
+ [m
+[32m+[m[32mexport const RETRY_CONNECTION_TIMEOUT = 5000;[m
+[32m+[m
+[32m+[m[32m//TODO: maybe i dont need to save unfinished requests[m
+[32m+[m[32m// because i cannot execute their callbacks[m
+ class BaseAPI {[m
+ [m
+   constructor () {[m
+[36m@@ -15,7 +28,7 @@[m [mclass BaseAPI {[m
+   initialize = () => {[m
+     this.api = axios.create({[m
+       baseURL: API_URL,[m
+[31m-      timeout: 10000,[m
+[32m+[m[32m      timeout: RETRY_CONNECTION_TIMEOUT,[m
+       headers: {[m
+         'Content-Type': 'application/json',[m
+         'Access-Control-Allow-Origin': '*',[m
+[36m@@ -29,20 +42,57 @@[m [mclass BaseAPI {[m
+   addInterceptors () {[m
+     import('redux-store').then(module => {[m
+       const { default: reduxStore } = module;[m
+[31m-      this.api.interceptors.response.use(response => response,[m
+[31m-        error => {[m
+[31m-          if (error.response)[m
+[31m-            return Promise.reject(error);[m
+[31m-[m
+[31m-          reduxStore.dispatch(serverDown());[m
+[31m-            return Promise.reject('Error handled in axios interceptor');[m
+[31m-        });[m
+[32m+[m
+[32m+[m[32m      this.api.interceptors.request.use(req => {[m
+[32m+[m[32m        reduxStore.dispatch(initiatedRequest(req));[m
+[32m+[m[32m        return req;[m
+[32m+[m[32m      });[m
+[32m+[m
+[32m+[m[32m      // noinspection JSCheckFunctionSignatures[m
+[32m+[m[32m      this.api.interceptors.response.use([m
+[32m+[m[32m        resp => this.responseSuccessInterceptor(resp, reduxStore),[m
+[32m+[m[32m        err => this.responseFailureInterceptor(err, reduxStore));[m
+[32m+[m
+[32m+[m[32m      axios.interceptors.response.use([m
+[32m+[m[32m        resp => this.responseSuccessInterceptor(resp, reduxStore),[m
+[32m+[m[32m        err => this.responseFailureInterceptor(err, reduxStore));[m
+     });[m
+   }[m
+ [m
+[32m+[m[32m  //RIP OOP[m
+[32m+[m[32m  static request = req => axios.request(req);[m
+[32m+[m
+   get = (url, options) => this.api.get(url, options);[m
+ [m
+   post = (url, data, options) => this.api.post(url, data, options);[m
+[32m+[m
+[32m+[m[32m  responseSuccessInterceptor = (response, reduxStore) => {[m
+[32m+[m[32m    reduxStore.dispatch(finishedRequest(response.config));[m
+[32m+[m[32m    return Promise.resolve(response);[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  responseFailureInterceptor = async (error, reduxStore) => {[m
+[32m+[m[32m    if (error.response) {[m
+[32m+[m[32m      console.log('error occurred ');[m
+[32m+[m[32m      console.log(error);[m
+[32m+[m[32m      return Promise.reject(error.response);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    const connectionStatus = await checkInternetConnection();[m
+[32m+[m[32m    switch (connectionStatus) {[m
+[32m+[m[32m      case ConnectionStatus.ONLINE:[m
+[32m+[m[32m        reduxStore.dispatch(serverDown());[m
+[32m+[m[32m        break;[m
+[32m+[m[32m      case ConnectionStatus.OFFLINE:[m
+[32m+[m[32m        reduxStore.dispatch(networkDown());[m
+[32m+[m[32m        break;[m
+[32m+[m[32m      case ConnectionStatus.INTERNET_PROBLEM:[m
+[32m+[m[32m        reduxStore.dispatch(internetDown());[m
+[32m+[m[32m        break;[m
+[32m+[m[32m    }[m
+[32m+[m[32m    return Promise.reject('Connection error');[m
+[32m+[m[32m  };[m
+[32m+[m
+ }[m
+ [m
+ export default BaseAPI;[m
+[1mdiff --git a/src/components/ConnectionHandler/index.jsx b/src/components/ConnectionHandler/index.jsx[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8b7f39a[m
+[1m--- /dev/null[m
+[1m+++ b/src/components/ConnectionHandler/index.jsx[m
+[36m@@ -0,0 +1,8
