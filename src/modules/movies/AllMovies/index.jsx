@@ -77,7 +77,7 @@ const AllMovies = () => {
     });
   }, [movies, imageWorker]);
   
-  const swipeThreshold = useMemo(() => screenWidth / 2 || DEFAULT_THRESHOLD, [screenWidth]);
+  const swipeThreshold = useMemo(() => screenWidth / 2.15 || DEFAULT_THRESHOLD, [screenWidth]);
 
   const onDragStart = useCallback(e => {
     if (e.target.closest('.pagination') !== null) {

@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { JWT_TOKEN } from 'config/authConstants';
 
-const API_SERVER = 'http://localhost';
+// const API_SERVER = 'http://localhost';
 // const API_SERVER = 'http://91.139.236.5';
-// const API_SERVER = 'http://192.168.0.105';
-// const API_PORT = '8090';
-const API_PORT = '8080';
+const API_SERVER = 'http://192.168.0.146';
+const API_PORT = '8090';
+// const API_PORT = '8080';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
 //TODO: Revert back to reasonable amount of time

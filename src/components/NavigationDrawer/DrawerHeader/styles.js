@@ -72,11 +72,11 @@ export const MoonIcon = React.memo(styled(DarkModeIcon)`
     }
     
     & >.stars {
-      fill: ${theme.disabled};
+      fill: ${theme.surface};
     }
     
     & > .crescent {
-      fill: ${theme.disabled};
+      fill: ${theme.surface};
       &.crescentDark {
         fill: ${theme.disabled}AA;
       }
