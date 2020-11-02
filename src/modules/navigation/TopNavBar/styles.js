@@ -13,8 +13,8 @@ const { smallArea } = transitionDurations;
 export const StyledTopNav = styled.div`
     ${({ theme: { primary, isDark, surface }, isExtended }) => {
 
-    
-	return `
+
+    return `
     position: relative;
     width: 100%;
     height: 56px;
@@ -44,7 +44,7 @@ export const StyledTopNav = styled.div`
       margin: auto;
     }
 `;
-}}`;
+  }}`;
 
 export const TopNavInner = styled.div`
   display: flex;
@@ -107,7 +107,7 @@ TopNavSearch.displayName = 'StyledSearchBar';
 
 export const TopNavGenres = styled(Genres)`
   align-self: center;
-  margin: 0 auto;
+  margin: 10px auto;
 `;
 
 export const LogoContainer = styled.div`
@@ -121,9 +121,9 @@ export const LogoContainer = styled.div`
 
 export const NavBarLogo = styled(Logo)`
   cursor: pointer;
-  width: 160px;
+  width: 135px;
   height: 80px;
-  margin: auto;
+  margin: -6px auto 0 auto;
  
   // & g#robotLayer > .fill, & g#robotLayer > .stroke {
   //   transition: all .5s ${transitionFunctions.standardEasing};

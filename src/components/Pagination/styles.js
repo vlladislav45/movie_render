@@ -8,9 +8,9 @@ export const StyledPageItem = styled.div`${props => {
     border: 1px solid ${onSurfaceMD};
     cursor: pointer;
     padding: 10px;
+    margin-bottom: 8px;
     font-size: 0.7rem;
     transition: all .2s ease;
-    
     user-select: none;
     text-align: center;
     
