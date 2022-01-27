@@ -3,8 +3,8 @@ import { JWT_TOKEN } from 'config/authConstants';
 
 // const API_SERVER = 'http://localhost';
 // const API_SERVER = 'http://91.139.236.5';
-const API_SERVER = 'http://192.168.0.146';
-const API_PORT = '8090';
+const API_SERVER = 'http://127.0.0.1';
+// const API_PORT = '8090';
 // const API_PORT = '8080';
 export const API_URL = `${API_SERVER}:${API_PORT}/`;
 
@@ -12,11 +12,11 @@ export const API_URL = `${API_SERVER}:${API_PORT}/`;
 export const RETRY_CONNECTION_TIMEOUT = 1000000;
 
 class BaseAPI {
-  
+
   constructor() {
     this.initialize();
   }
-  
+
   initialize = () => {
     this.api = axios.create({
       baseURL: API_URL,
@@ -27,10 +27,10 @@ class BaseAPI {
         'Access-Control-Allow-Origin': '*',
       },
     });
-    
+
     this.addInterceptors();
   };
-  
+
   addInterceptors() {
       this.api.interceptors.request.use(req => {
         const jwt = localStorage.getItem(JWT_TOKEN);
@@ -38,18 +38,18 @@ class BaseAPI {
           req.headers['Authorization'] = `Bearer ${jwt}`;
         return req;
       });
-      
+
       // noinspection JSCheckFunctionSignatures
       this.api.interceptors.response.use(
         res => res,
         err => this.responseFailureInterceptor(err));
   }
-  
-  
+
+
   get = (url, options) => this.api.get(url, options);
-  
+
   post = (url, data, options) => this.api.post(url, data, options);
-  
+
   responseFailureInterceptor = error => {
     if (error.response) {
       const { response: { status, data } } = error;
