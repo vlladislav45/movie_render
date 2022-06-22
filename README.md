@@ -1,5 +1,5 @@
 #Movies front-end app
-[Lets go to backend][https://www.quora.com](https://github.com/vlladislav45/moviesite)
+[Lets go to backend](https://github.com/vlladislav45/moviesite)
 
 ### Quick Start
 ```
